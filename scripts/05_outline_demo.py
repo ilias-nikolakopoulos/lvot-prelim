@@ -14,13 +14,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.path import Path as MPath
 from matplotlib.patches import Polygon
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.config import load_config  # noqa: E402
-from src.lvot import measure_mesh, polygon_area_perim  # noqa: E402
+from src.lvot import measure_mesh, moment_ellipse, polygon_area_perim  # noqa: E402
 from src.provenance import log_run  # noqa: E402
 
 mid = sys.argv[1] if len(sys.argv) > 1 else "female_age_65_bmi_26"
@@ -85,6 +86,15 @@ ax.set_title("(a) LV endocardium around the LVOT (cut open)\nflat planes perpend
 ax.legend(fontsize=7.5, loc="lower center", bbox_to_anchor=(0.5, -0.02), ncol=2, frameon=False)
 
 
+def caliper(xy, u):
+    """End points of the line through the outline's area centroid along u, clipped to the outline."""
+    el = moment_ellipse(xy)
+    c = np.array([el["cx"], el["cy"]])
+    t = np.linspace(-30, 30, 6001)
+    inside = MPath(xy).contains_points(c + t[:, None] * u)
+    return c + t[inside].min() * u, c + t[inside].max() * u
+
+
 def enface(ax, sec, dep, col, title):
     ax.plot(*(rp.T), "-", color="0.6", lw=1, label="aortic ring (projected)")
     if sec.get("kept"):
@@ -104,6 +114,10 @@ def enface(ax, sec, dep, col, title):
         ax.plot(*ch.T, "o", color=CHORD, ms=7, mfc="white", mew=2)
         sub = (f"open on the mitral side → closed by a chord\n"
                f"area {area:.0f} mm² → area-derived diameter {sec['cc_d_area']:.1f} mm")
+    a_, b_ = caliper(xy, mdir)
+    dpl = sec["d_plax"] if sec.get("kept") else sec["cc_d_plax"]
+    ax.plot(*np.vstack([a_, b_]).T, "-", color="tab:red", lw=1.8, marker="|", ms=12, mew=2,
+            label=f"echo PLAX diameter {dpl:.1f} mm → circle {np.pi / 4 * dpl ** 2:.0f} mm²")
     ax.annotate("", xy=mdir * 19, xytext=mdir * 12, arrowprops=dict(arrowstyle="->", color="tab:red", lw=1.5))
     ax.text(*(mdir * 21), "mitral", color="tab:red", ha="center", va="center", fontsize=9)
     ax.set_title(f"{title}\n{sub}", fontsize=10)

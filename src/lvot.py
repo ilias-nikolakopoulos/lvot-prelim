@@ -92,6 +92,33 @@ def moment_ellipse(xy: np.ndarray) -> dict:
             "feret_max": w.max(), "feret_min": w.min()}
 
 
+def chord_through(xy: np.ndarray, c: np.ndarray, u: np.ndarray) -> float:
+    """Length of the straight line through point c in direction u that lies across the closed polygon xy
+    (edge-to-edge distance, as an echo caliper measures it)."""
+    p, q = xy, np.roll(xy, -1, axis=0)
+    w = q - p
+    den = u[0] * w[:, 1] - u[1] * w[:, 0]
+    ok = np.abs(den) > 1e-12
+    dp = p - c
+    t = (dp[:, 0] * w[:, 1] - dp[:, 1] * w[:, 0])[ok] / den[ok]   # position along the line
+    sgm = (dp[:, 0] * u[1] - dp[:, 1] * u[0])[ok] / den[ok]      # position along the edge
+    t = t[(sgm >= 0) & (sgm < 1)]
+    return float(t.max() - t.min()) if len(t) >= 2 else np.nan
+
+
+def echo_diams(xy: np.ndarray, u: np.ndarray) -> dict:
+    """Diameters an echo would measure on this outline. u = unit in-plane direction of the parasternal
+    long-axis (PLAX) cut, i.e. towards the mitral valve (septum -> aorto-mitral side).
+    d_plax: line through the area centroid along u; d_perp: the orthogonal line; plax_vs_minor_deg:
+    angle between u and the minor axis of the moment ellipse (0 = PLAX measures the minor axis)."""
+    el = moment_ellipse(xy)
+    c = np.array([el["cx"], el["cy"]])
+    v = np.array([-u[1], u[0]])
+    minor = el["theta"] + np.pi / 2
+    ang = abs(np.degrees(np.angle(np.exp(2j * (np.arctan2(u[1], u[0]) - minor))))) / 2  # axis angle 0..90
+    return {"d_plax": chord_through(xy, c, u), "d_perp": chord_through(xy, c, v), "plax_vs_minor_deg": ang}
+
+
 def polygon_area_perim(xy: np.ndarray) -> tuple[float, float]:
     x, y = xy[:, 0], xy[:, 1]
     area = 0.5 * abs(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
@@ -276,6 +303,11 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
     ao, mv = rings["ao"], rings["mv"]
     out["ao_mv_centre_dist"] = np.linalg.norm(ao["centre"] - mv["centre"])
     out["ao_mv_angle"] = np.degrees(np.arccos(np.clip(ao["normal"] @ mv["normal"], -1, 1)))
+    # STEP 3.7 — echo-style diameters of the annulus: along the PLAX direction (towards the mitral centre) and orthogonal
+    dm = mv["centre"] - ao["centre"]
+    u_ring = np.array([dm @ ao["e1"], dm @ ao["e2"]]); u_ring /= np.linalg.norm(u_ring)
+    for k, v in echo_diams(ao["poly"], u_ring).items():
+        out[f"ao_{k}"] = v
 
     # STEP 3.6 — LV long axis: mitral ring centre -> farthest LV endo point (apex); LV length; aortic axis angle
     dist = np.linalg.norm(endo_pts - mv["centre"], axis=1)
@@ -289,6 +321,7 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
     origin = ao["centre"] + ao["band_max_depth"] * n
     mv_dir = mv["centre"] - origin
     mv_ang = np.arctan2(mv_dir @ e2, mv_dir @ e1)  # in-plane direction of the mitral centre
+    u_plax = np.array([np.cos(mv_ang), np.sin(mv_ang)])  # echo PLAX caliper direction in the section plane
     axis_pt = np.zeros(2)  # in-plane axis position = centre of the last strictly closed section
     rmax = P_["cc_radius_factor"] * ao["d_area"]  # chord-closed sections: wall points within this radius of the axis
     sections, cents, run = [], [], "waiting"
@@ -308,7 +341,7 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
             el = moment_ellipse(xy)
             rec.update(closed=True, area=area, d_area=2 * np.sqrt(area / np.pi), d_perim=perim / np.pi,
                        dmax=el["dmax"], dmin=el["dmin"], feret_max=el["feret_max"], feret_min=el["feret_min"],
-                       xy=xy, ell=el, gap_deg=0.0)
+                       xy=xy, ell=el, gap_deg=0.0, **echo_diams(xy, u_plax))
             if rec["d_area"] > P_["loop_too_large_factor"] * ao["d_area"]:
                 rec.update(closed=False, reason=f"loop too large ({rec['d_area']:.1f} mm): opened into cavity")
             else:
@@ -349,7 +382,9 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
                     area, perim = polygon_area_perim(arc)
                     el = moment_ellipse(arc)
                     rec.update(cc=True, cc_area=area, cc_d_area=2 * np.sqrt(area / np.pi),
-                               cc_dmax=el["dmax"], cc_dmin=el["dmin"], cc_xy=arc, cc_ell=el)
+                               cc_dmax=el["dmax"], cc_dmin=el["dmin"], cc_feret_max=el["feret_max"],
+                               cc_feret_min=el["feret_min"], cc_xy=arc, cc_ell=el,
+                               **{f"cc_{k}": v for k, v in echo_diams(arc, u_plax).items()})
         sections.append(rec)
     # STEP 4.5 — strict run: contiguous closed sections from the first closed depth, which must be 0 or 1 mm
     closed = [s_["closed"] for s_ in sections]
@@ -365,7 +400,8 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
         if d not in REPORT_DEPTHS:
             continue
         dd = f"{d:g}".replace(".", "p")
-        for k in ("dmax", "dmin", "feret_max", "feret_min", "d_area", "d_perim", "area"):
+        for k in ("dmax", "dmin", "feret_max", "feret_min", "d_area", "d_perim", "area",
+                  "d_plax", "d_perp", "plax_vs_minor_deg"):
             out[f"lvot{dd}_{k}"] = s_.get(k, np.nan) if s_["kept"] else np.nan
         out[f"lvot{dd}_ellip_ratio"] = out[f"lvot{dd}_dmax"] / out[f"lvot{dd}_dmin"]
         out[f"lvot{dd}_ellip_index"] = 1 - out[f"lvot{dd}_dmin"] / out[f"lvot{dd}_dmax"]
@@ -375,6 +411,8 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
         out[f"lvot{dd}cc_d_area"], out[f"lvot{dd}cc_dmax"], out[f"lvot{dd}cc_dmin"] = \
             (np.nan if v is None else v for v in src)
         out[f"lvot{dd}cc_ellip_ratio"] = out[f"lvot{dd}cc_dmax"] / out[f"lvot{dd}cc_dmin"]
+        for k in ("area", "feret_max", "feret_min", "d_plax", "d_perp", "plax_vs_minor_deg"):
+            out[f"lvot{dd}cc_{k}"] = s_.get(k, np.nan) if s_["kept"] else s_.get(f"cc_{k}", np.nan)
         out[f"lvot{dd}cc_gap_deg"] = s_.get("gap_deg", np.nan)
         out[f"lvot{dd}cc_gap_vs_mitral_deg"] = s_.get("gap_vs_mitral_deg", np.nan)
     # STEP 4.7 — closed-tube length and centreline tilt

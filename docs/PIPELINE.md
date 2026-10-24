@@ -46,14 +46,15 @@ Check: `n_regions == 3`, otherwise flag `surface_regions_k`.
 | 3.4 Diameters / shape | **Moment-equivalent ellipse** of the polygon (same area and second moments) → major/minor diameter, ellipticity = major/minor and 1 − minor/major. Feret (caliper) max/min as a cross-check. | `moment_ellipse()` [`src/lvot.py:73`](../src/lvot.py:73) |
 | 3.5 Aorto-mitral | Angle between the two ring-plane normals; distance between the ring centres | [`STEP 3.5`](../src/lvot.py:275) |
 | 3.6 LV axes | Apex = LV endo point farthest from the mitral ring centre. LV length = that distance. LV long axis = mitral centre → apex. `ao_axis_vs_lv_long_angle` = angle between the aortic-ring normal and the long axis (aorto-septal angle proxy). | [`STEP 3.6`](../src/lvot.py:280) |
+| 3.7 Echo-style annulus diameters | `d_plax` = edge-to-edge line through the outline's area centroid towards the mitral centre (the parasternal long-axis direction, septum → aorto-mitral side). `d_perp` = the orthogonal line. `plax_vs_minor_deg` = angle between the PLAX line and the minor axis of the moment ellipse. | [`STEP 3.7`](../src/lvot.py), `echo_diams()`, `chord_through()` |
 
 ## STEP 4 — LVOT cross-sections
 | Sub-step | Method | Code |
 |---|---|---|
 | 4.1 Planes | Perpendicular to the aortic-ring normal, at depths 0–15 mm in 1 mm steps. Depth 0 = the ventricular edge of the aortic ring band, where the plug meets the LV endocardium. | [`STEP 4.1`](../src/lvot.py:287) |
 | 4.2 Intersection | Exact intersection of the plane with the LV endocardium (`endo.slice`). The 2-point segments are chained into polylines, merging duplicate points; each polyline is closed (every vertex has 2 neighbours) or open. | [`STEP 4.2`](../src/lvot.py:298), `chain_loops()` [`src/lvot.py:129`](../src/lvot.py:129) |
-| 4.3 Strict section | Keep a closed loop that encircles the LVOT axis (taking the outermost if there are several). Reject it if its area-derived diameter is > 1.6 × the annulus diameter, which means it has opened into the cavity. The axis point = centre of the previous closed section, starting at the ring centre. Measures: area, area/perimeter-derived diameter, moment-ellipse major/minor, Feret. | [`STEP 4.3`](../src/lvot.py:302) |
-| 4.4 Chord-closed section (secondary) | Used when the section is open. Take wall points within 0.9 × annulus diameter of the axis. Find the largest empty angular sector (72 bins) = the gap, and record its size and its angle from the mitral direction. If the gap is ≤ 120°, order the points by angle, close with a straight chord, and measure as in 4.3. | [`STEP 4.4`](../src/lvot.py:319) |
+| 4.3 Strict section | Keep a closed loop that encircles the LVOT axis (taking the outermost if there are several). Reject it if its area-derived diameter is > 1.6 × the annulus diameter, which means it has opened into the cavity. The axis point = centre of the previous closed section, starting at the ring centre. Measures: area (shoelace formula on the outline), area/perimeter-derived diameter, moment-ellipse major/minor, Feret, echo-style `d_plax` / `d_perp` (as in 3.7). | [`STEP 4.3`](../src/lvot.py:302) |
+| 4.4 Chord-closed section (secondary) | Used when the section is open. Take wall points within 0.9 × annulus diameter of the axis. Find the largest empty angular sector (72 bins) = the gap, and record its size and its angle from the mitral direction. If the gap is ≤ 120°, order the points by angle, close with a straight chord, and measure as in 4.3 (including `cc_area`, Feret, `d_plax`, `d_perp`). | [`STEP 4.4`](../src/lvot.py:319) |
 | 4.5 Contiguity | Strict sections count only as a contiguous run starting at 0 or 1 mm | [`STEP 4.5`](../src/lvot.py:354) |
 | 4.6 Report depths | Write `lvot{0,2,4,6,8,10}_*` (strict) and `lvot{d}cc_*` (chord-closed, plus `gap_deg` and `gap_vs_mitral_deg`) | [`STEP 4.6`](../src/lvot.py:362) |
 | 4.7 Tube length, tilt | `lvot_tube_len` = deepest strict section. `lvot_centreline_vs_ao_normal` = line through the strict section centroids vs the ring normal. | [`STEP 4.7`](../src/lvot.py:380) |
@@ -67,7 +68,7 @@ Check: `n_regions == 3`, otherwise flag `surface_regions_k`.
 | 5.0 Run control | One row per mesh written as soon as it is done; meshes already in the CSV are skipped (resumable); errors go to `<out>_errors.csv`; progress goes to the log | [`scripts/01_measure.py`](../scripts/01_measure.py) → `outputs/tables/lvot_all.csv`, `outputs/logs/*.log` |
 | 5.2 QC renders | Per mesh: en-face view (ring nodes, strict and chord-closed sections, ellipses, mitral direction) and side view (LV endo, aortic and mitral rings, depth planes) | [`scripts/02_qc_render.py`](../scripts/02_qc_render.py) → `outputs/figures/qc/<id>.png` |
 | 5.3 Gap demo | Step-by-step picture of chord closure at 2/4/6/8 mm | [`scripts/04_gap_demo.py`](../scripts/04_gap_demo.py) → `outputs/figures/qc/gap_demo_<id>.png` |
-| 5.4 Outline demo | 3D view of the LVOT wall cut by the 2 mm and 4 mm planes, plus en-face views: closed chain → polygon (2 mm); open chain + chord → polygon (4 mm); area → area-derived diameter | [`scripts/05_outline_demo.py`](../scripts/05_outline_demo.py) → `outputs/figures/qc/outline_demo_<id>.png` |
+| 5.4 Outline demo | 3D view of the LVOT wall cut by the 2 mm and 4 mm planes, plus en-face views: closed chain → polygon (2 mm); open chain + chord → polygon (4 mm); area → area-derived diameter; echo PLAX calliper line and its circular area | [`scripts/05_outline_demo.py`](../scripts/05_outline_demo.py) → `outputs/figures/qc/outline_demo_<id>.png` |
 
 ## STEP 6 — Age × sex analysis
 Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
@@ -79,6 +80,7 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 | 6.3 Common support | F/M pairs with identical age and BMI (622 pairs); within each pair BMI is fixed | `# STEP 6.3` |
 | 6.4 Statistics | OLS `y ~ age_c + sex + age_c×sex + BMI` on all meshes (age centred at 65, BMI at 27). Reported: sex difference at 50/65/80 (mm and %), age slope by sex, age×sex p-value, `narrows_with_age`. Paired M − F mean ± 95% CI per age block (46–54 … 75–83). | `# STEP 6.4` → `model_coefs.csv`, `sexdiff_by_age_block.csv` |
 | 6.5 Figures | `fig_raw` (all meshes), `fig_common` (common support), `fig_adjusted` (model at BMI 27), `fig_sexdiff` (M − F vs age). Women `#D55E00`, men `#0072B2`. | `# STEP 6.5` → `outputs/figures/analysis/` |
+| 6.6 Area methods | For the annulus, LVOT 2 mm and LVOT 4 mm (chord-closed), the measured outline area is compared with: π/4·major·minor (moment ellipse); π/4·Feret max·min; π/4·D_PLAX·D_perp (two orthogonal views); π/4·D_PLAX² (standard echo, circular LVOT). Reported: % difference by sex; paired M − F difference in echo bias. | [`scripts/06_area_methods.py`](../scripts/06_area_methods.py) → `area_methods_summary.csv`, `area_methods_by_mesh.csv`, `fig_area_methods.png` |
 
 ## STEP 7 — Write-up
 `WRITEUP.md`: methods summary, key numbers, figures, caveats. The results are filled in after the full run. The caveats section already states that **all measurements are end-diastolic** (no systolic meshes exist in this dataset).
@@ -93,7 +95,7 @@ raw meshes (read-only) ─▶ 00_labels ─▶ data/labels.csv
                      │                                    │
        outputs/tables/lvot_all.csv                 outputs/figures/qc/
                      │
-                03_analysis (STEP 6) ─▶ tables (model_coefs, sexdiff_by_age_block, exclusions) + figures/analysis
+                03_analysis + 06_area_methods (STEP 6) ─▶ tables (model_coefs, sexdiff_by_age_block, exclusions) + figures/analysis
                      │
                 WRITEUP.md (STEP 7)
 every script ─▶ outputs/logs/runs.jsonl (provenance)

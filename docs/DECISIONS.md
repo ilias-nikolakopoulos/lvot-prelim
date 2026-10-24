@@ -30,3 +30,16 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - Re-running the subset after the refactor gave identical numbers (max abs diff 0.0).
 16. **Cardiac phase: end-diastole only.** The request was to compare LVOT ellipticity in systole vs diastole. The dataset has one mesh per sex × age × BMI, and the `.vtu` holds no displacement or motion arrays (only elemTag, fiber, sheet). Ugurlu et al. (PLoS One 2025) state that the surface meshes were built from the end-diastolic frames; end-systolic frames were used only to validate volumes, and no ES or motion meshes are released (Zenodo 10.5281/zenodo.15649643). **All measurements here are end-diastolic; systolic LVOT shape cannot be measured from this dataset.** The missing anterior mitral leaflet also matters most in systole, when it forms the posterior LVOT wall.
     *Decision (user, 2026-10-24):* keep the analysis end-diastolic only and state this clearly as a caveat in the write-up. No end-systolic data will be sought.
+17. **Area vs ellipse vs echo (STEP 6.6).**
+    - **How each area is computed:**
+      - outline area = shoelace formula on the outline;
+      - ellipse estimates = π/4 × two diameters (moment axes, Feret max/min, or PLAX × orthogonal);
+      - echo estimate = π/4·D_PLAX², assuming a circular LVOT.
+    - **How D_PLAX is defined:** the edge-to-edge line through the outline's area centroid towards the mitral centre. This mimics the parasternal long-axis calliper (septum → aorto-mitral side). New columns: `*_d_plax`, `*_d_perp`, `*_plax_vs_minor_deg`, `lvot{d}cc_area`/Feret. The pilot and subset were regenerated with these columns (60/60 and 8/8 meshes OK).
+    - **Pilot (30 common-support pairs, end-diastole):**
+      - The moment ellipse is within +1% of the outline area. Feret and two-view ellipses are within about −6% to +6%.
+      - The echo circle underestimates the area by about 9% at the annulus, ~30% at LVOT 2 mm (F −32.5%, M −27.7%) and ~32% at 4 mm (F −35.9%, M −28.9%).
+      - The PLAX line runs within ~13–19° (median) of the LVOT minor axis, so echo mostly measures the short axis.
+      - The echo underestimation is larger in women, by paired M − F +4.8 percentage points (95% CI +3.1 to +6.5) at 2 mm and +6.9 (+5.1 to +8.7) at 4 mm. There is no sex difference at the annulus.
+    - **Caveat:** end-diastole only. Clinical LVOT diameters are measured in mid-systole, when the anterior mitral leaflet forms the posterior wall and the shape may differ.
+

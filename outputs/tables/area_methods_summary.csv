@@ -1,0 +1,7 @@
+level,sex,n,true_area_mm2,d_area_mm,d_plax_mm,d_perp_mm,plax_vs_minor_deg_median,ellipse_moment_mm2,ellipse_moment_pct_mean,ellipse_moment_pct_sd,ellipse_moment_pct_min,ellipse_moment_pct_max,ellipse_feret_mm2,ellipse_feret_pct_mean,ellipse_feret_pct_sd,ellipse_feret_pct_min,ellipse_feret_pct_max,ellipse_2view_mm2,ellipse_2view_pct_mean,ellipse_2view_pct_sd,ellipse_2view_pct_min,ellipse_2view_pct_max,echo_circle_mm2,echo_circle_pct_mean,echo_circle_pct_sd,echo_circle_pct_min,echo_circle_pct_max
+Aortic annulus,F,30,247.29,17.74,16.89,19.17,4.09,248.94,0.67,0.14,0.51,1.25,261.9,5.9,1.12,1.49,7.08,254.51,2.91,1.97,-1.04,6.65,224.37,-9.28,2.48,-14.59,-3.09
+Aortic annulus,M,30,329.91,20.48,19.55,22.11,3.27,332.48,0.79,0.16,0.55,1.4,347.49,5.32,0.73,3.51,6.54,339.89,2.99,1.73,-3.34,5.23,301.11,-8.86,4.94,-30.38,-2.46
+LVOT 2 mm (closed),F,30,271.28,18.58,15.25,21.52,12.78,273.5,0.82,0.17,0.54,1.22,265.92,-1.95,0.66,-3.33,-0.06,257.95,-4.92,0.68,-6.34,-3.14,182.98,-32.54,3.44,-41.06,-24.73
+LVOT 2 mm (closed),M,30,358.33,21.35,18.14,23.99,15.7,361.47,0.88,0.18,0.59,1.37,352.91,-1.51,0.57,-2.77,0.37,341.7,-4.66,0.78,-6.05,-2.71,259.35,-27.74,5.85,-43.64,-17.21
+LVOT 4 mm (chord-closed),F,30,325.71,20.34,16.29,23.79,17.44,327.5,0.55,0.17,0.31,0.93,315.43,-3.14,1.13,-6.13,-1.21,304.61,-6.45,1.1,-8.19,-3.8,208.95,-35.86,3.84,-44.24,-29.49
+LVOT 4 mm (chord-closed),M,30,417.08,23.03,19.4,25.99,19.41,419.04,0.47,0.2,0.22,1.1,408.88,-1.99,1.12,-4.58,0.28,395.65,-5.14,1.32,-7.51,-2.73,296.87,-28.93,6.88,-45.48,-19.52

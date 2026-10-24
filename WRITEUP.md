@@ -13,6 +13,7 @@ Full detail is in `docs/PIPELINE.md`; reasons for each choice are in `docs/DECIS
   - Primary: the closed section at 2 mm.
   - Secondary: the 4 mm section, where the open mitral side is bridged by a straight chord.
 - **Other measures:** mitral ring diameter, aorto-mitral plane angle, and the angle between the aortic axis and the LV long axis.
+- **Area methods:** the outline area (shoelace formula) is compared with ellipse estimates (π/4 × two diameters) and with the standard echo estimate π/4·D_PLAX². D_PLAX is the diameter along the parasternal long-axis direction, from the septum to the aorto-mitral side.
 - **Statistics:** measure vs age by sex, holding BMI fixed in two ways:
   - common support: men and women with the same age and BMI (622 pairs);
   - regression: y ~ age + sex + age×sex + BMI.
@@ -24,7 +25,8 @@ _To be completed after the full run._
 - Per-mesh table: `outputs/tables/lvot_all.csv`
 - Sex differences by age block: `outputs/tables/sexdiff_by_age_block.csv`
 - Model coefficients: `outputs/tables/model_coefs.csv`
-- Figures: `outputs/figures/analysis/` (raw, common support, adjusted, sex difference)
+- Figures: `outputs/figures/analysis/` (raw, common support, adjusted, sex difference, area methods)
+- Area methods: `outputs/tables/area_methods_summary.csv`
 
 ## Caveats
 1. **End-diastole only.** Every measurement is end-diastolic. Systolic LVOT dimensions and shape, and their diastole-to-systole change, are not available in this dataset. Clinical LVOT measurements for valve sizing and flow calculations are usually taken in **mid-systole**, so the absolute values here are not directly comparable with them. The LVOT is also known to change shape through the cycle.

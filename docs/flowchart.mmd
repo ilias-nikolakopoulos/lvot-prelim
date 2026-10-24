@@ -19,6 +19,7 @@ flowchart TD
         S34["3.4 Moment-equivalent ellipse → major/minor, ellipticity<br/>Feret max/min cross-check"]
         S35["3.5 Aorto-mitral plane angle, centre distance"]
         S36["3.6 Apex, LV length, aortic axis vs LV long axis"]
+        S37["3.7 Echo-style diameters: D_PLAX towards mitral, D_perp orthogonal"]
         S41["4.1 Planes ⟂ aortic normal, 0–15 mm below ring band (1 mm steps)"]
         S42["4.2 Plane ∩ LV endo → chain segments into loops"]
         D43{"4.3 Closed loop around axis<br/>and d < 1.6 × annulus?"}
@@ -45,6 +46,7 @@ flowchart TD
         S64["6.4 OLS y ~ age + sex + age×sex + BMI<br/>paired M−F by age block"]
         S65["6.5 Figures: raw, common support, adjusted, sex difference"]
     end
+    S66["STEP 6.6 Area methods: outline area vs ellipse and echo circle π/4·D_PLAX²<br/>[scripts/06_area_methods.py]"]
     OUT[("model_coefs.csv · sexdiff_by_age_block.csv · exclusions.csv<br/>outputs/figures/analysis/")]
     S7["STEP 7 — WRITEUP.md"]
     PROV[("outputs/logs/runs.jsonl<br/>provenance of every run")]
@@ -54,8 +56,8 @@ flowchart TD
     LAB --> S11
     RAW --> S11
     S11 --> S12 --> S21 --> S22 --> S23
-    S23 --> S31 --> S32 --> S33 --> S34 --> S35 --> S36
-    S36 --> S41 --> S42 --> D43
+    S23 --> S31 --> S32 --> S33 --> S34 --> S35 --> S36 --> S37
+    S37 --> S41 --> S42 --> D43
     D43 -- yes --> S43 --> S45
     D43 -- no --> D44
     D44 -- yes --> S44 --> S46
@@ -64,5 +66,6 @@ flowchart TD
     LAB --> S52 & S53 & S54
     S52 & S53 & S54 --> QCF
     ROW --> S61 --> S62 --> S63 --> S64 --> S65 --> OUT --> S7
+    ROW --> S66 --> OUT
     QCF --> S7
-    S0 & M & S52 & S53 & S54 & A -.-> PROV
+    S0 & M & S52 & S53 & S54 & A & S66 -.-> PROV
