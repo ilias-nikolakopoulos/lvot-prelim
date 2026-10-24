@@ -1,0 +1,35 @@
+# All parameters for the LVOT pipeline. Change here, not in code; every run logs a hash of this file.
+data_dir: "data/meshes"   # raw meshes (read-only, external SSD)
+labels: "data/labels.csv"              # built by scripts/00_labels.py from folder names
+seed: 2026
+
+# 8-mesh development subset (same as ../ukb-mesh/config.yaml), spans sex / age / BMI extremes
+subset:
+  - female_age_46_bmi_29
+  - male_age_83_bmi_21
+  - female_age_58_bmi_50
+  - female_age_63_bmi_16
+  - male_age_72_bmi_44
+  - male_age_59_bmi_18
+  - female_age_65_bmi_26
+  - male_age_65_bmi_26
+
+measure:
+  depths_mm: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]  # section planes below the aortic ring band
+  report_depths_mm: [0, 2, 4, 6, 8, 10]   # depths written as table columns
+  ring_bins: 72                           # angular bins (5 deg) for ring polygons
+  ring_cover_min: 0.95                    # QC: min fraction of ring bins occupied
+  loop_too_large_factor: 1.6              # closed loop d_area > this x annulus d_area = opened into cavity
+  cc_radius_factor: 0.9                   # chord-closed: wall points within this x annulus d_area of the axis
+  cc_gap_bins: 72                         # chord-closed: angular bins used to find the gap
+  cc_max_gap_deg: 120                     # chord-closed: reject sections with a larger gap
+  ao_plausible_mm: [12, 32]               # QC range, aortic annulus area-derived diameter
+  mv_plausible_mm: [20, 55]               # QC range, mitral ring area-derived diameter
+
+analysis:
+  primary_lvot_depth_mm: 2      # strict (closed) section
+  secondary_lvot_depth_mm: 4    # chord-closed section
+  age_centre: 65
+  bmi_ref: 27
+  age_blocks: [[46, 54], [55, 59], [60, 64], [65, 69], [70, 74], [75, 83]]
+  colours: {F: "#D55E00", M: "#0072B2"}   # Okabe-Ito vermillion / blue, CVD-validated

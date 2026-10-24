@@ -1,0 +1,67 @@
+%% LVOT pipeline flowchart (Mermaid). Node text: step id, what it does, [code location].
+%% Render: paste into https://mermaid.live or any Mermaid viewer.
+flowchart TD
+    RAW[("Raw meshes, read-only<br/>data/meshes<br/>1,423 × .fiber.vtu")]
+    CFG[/"config.yaml<br/>all parameters"/]
+
+    S0["STEP 0 — Label table<br/>parse sex / age / BMI from folder names<br/>[scripts/00_labels.py]"]
+    LAB[("data/labels.csv")]
+
+    subgraph M["scripts/01_measure.py → src/lvot.py: measure_mesh() — one mesh at a time, resumable"]
+        S11["1.1 Read .vtu, tets only, µm → mm"]
+        S12["1.2 LV myocardial volume"]
+        S21["2.1 Boundary surface of all tets incl. valve plugs<br/>→ connected components"]
+        S22["2.2 LV cavity = component with LV + mitral/aortic plug faces<br/>→ LV cavity volume"]
+        S23["2.3 LV endocardium = cavity triangles from LV tets"]
+        S31["3.1 Ring nodes = LV nodes ∩ plug tets<br/>(tag 5 aortic, tag 4 mitral)"]
+        S32["3.2 SVD plane, normal into LV, project"]
+        S33["3.3 72-bin median-radius polygon<br/>→ area- and perimeter-derived diameter"]
+        S34["3.4 Moment-equivalent ellipse → major/minor, ellipticity<br/>Feret max/min cross-check"]
+        S35["3.5 Aorto-mitral plane angle, centre distance"]
+        S36["3.6 Apex, LV length, aortic axis vs LV long axis"]
+        S41["4.1 Planes ⟂ aortic normal, 0–15 mm below ring band (1 mm steps)"]
+        S42["4.2 Plane ∩ LV endo → chain segments into loops"]
+        D43{"4.3 Closed loop around axis<br/>and d < 1.6 × annulus?"}
+        S43["Strict section: area, diameters, ellipse"]
+        D44{"4.4 Gap (largest empty sector) ≤ 120°?"}
+        S44["Chord-closed section: bridge the gap with a chord,<br/>area, diameters, ellipse; record gap angle vs mitral"]
+        X44["Section rejected (reason logged)"]
+        S45["4.5 Keep strict sections contiguous from 0–1 mm"]
+        S46["4.6 Report depths 0,2,4,6,8,10 mm<br/>primary = strict 2 mm, secondary = chord-closed 4 mm"]
+        S47["4.7 Closed-tube length, centreline tilt"]
+        S51["5.1 QC flags + per-depth reasons"]
+    end
+
+    ROW[("outputs/tables/lvot_all.csv<br/>one row per mesh, written as it goes<br/>errors → lvot_all_errors.csv")]
+    S52["STEP 5.2 QC renders<br/>[scripts/02_qc_render.py]"]
+    S53["STEP 5.3 Gap-bridging demo<br/>[scripts/04_gap_demo.py]"]
+    QCF[("outputs/figures/qc/")]
+
+    subgraph A["scripts/03_analysis.py — STEP 6"]
+        S61["6.1 Exclusions with reasons"]
+        S62["6.2 Index: diam / LV cavity vol^⅓, % LV length"]
+        S63["6.3 Common support: F/M pairs, same age and BMI (622)"]
+        S64["6.4 OLS y ~ age + sex + age×sex + BMI<br/>paired M−F by age block"]
+        S65["6.5 Figures: raw, common support, adjusted, sex difference"]
+    end
+    OUT[("model_coefs.csv · sexdiff_by_age_block.csv · exclusions.csv<br/>outputs/figures/analysis/")]
+    S7["STEP 7 — WRITEUP.md"]
+    PROV[("outputs/logs/runs.jsonl<br/>provenance of every run")]
+
+    RAW --> S0 --> LAB
+    CFG -.-> S0 & M & A
+    LAB --> S11
+    RAW --> S11
+    S11 --> S12 --> S21 --> S22 --> S23
+    S23 --> S31 --> S32 --> S33 --> S34 --> S35 --> S36
+    S36 --> S41 --> S42 --> D43
+    D43 -- yes --> S43 --> S45
+    D43 -- no --> D44
+    D44 -- yes --> S44 --> S46
+    D44 -- no --> X44 --> S46
+    S45 --> S46 --> S47 --> S51 --> ROW
+    LAB --> S52 & S53
+    S52 & S53 --> QCF
+    ROW --> S61 --> S62 --> S63 --> S64 --> S65 --> OUT --> S7
+    QCF --> S7
+    S0 & M & S52 & S53 & A -.-> PROV

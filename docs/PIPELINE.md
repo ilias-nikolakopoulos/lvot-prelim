@@ -1,0 +1,97 @@
+# LVOT pipeline — step by step
+
+Each step below lists its purpose, inputs, method, the code that does it, its outputs and the check that it worked. In the code, every step is marked with a comment `# STEP x.y` (search for it). Line links point to the current version and may drift slightly as the code changes. The flowchart source is [`flowchart.mmd`](flowchart.mmd), and the reasons behind each choice are in [`DECISIONS.md`](DECISIONS.md).
+
+**Environment.** Python 3.11 with the exact package versions in [`requirements.txt`](../requirements.txt) (currently the `../ukb-mesh/.venv` interpreter). All parameters are in [`config.yaml`](../config.yaml). Every script run appends a line to `outputs/logs/runs.jsonl` with the time, arguments, code hash, config hash and package versions ([`src/provenance.py`](../src/provenance.py)).
+
+**Reproduce everything:** `bash run_all.sh`. The full measurement step takes ~70 min, so run that one yourself in Terminal with `caffeinate`.
+
+---
+
+## STEP 0 — Label table
+| | |
+|---|---|
+| Purpose | List every mesh with its sex, age and BMI |
+| Input | Raw mesh folders under `data_dir` (read-only) |
+| Method | Find every `<id>/<id>.fiber.vtu`, skipping hidden and `._` files. Parse `<sex>_age_<a>_bmi_<b>`. Check that ids are unique and that there is one mesh per sex × age × BMI. |
+| Code | [`scripts/00_labels.py`](../scripts/00_labels.py), `parse_name()` in [`src/lvot.py:206`](../src/lvot.py:206) |
+| Output | `data/labels.csv` (mesh_id, sex, age, bmi, folder) |
+| Check | 1,423 meshes (F 761, M 662), ages 46–83, 622 common-support pairs. Identical to `../ukb-mesh/outputs/tables/labels.csv`. |
+
+## STEP 1 — Load one mesh
+Code: `measure_mesh()` in [`src/lvot.py:216`](../src/lvot.py:216), called once per mesh by [`scripts/01_measure.py`](../scripts/01_measure.py).
+
+| Sub-step | Method | Code |
+|---|---|---|
+| 1.1 Read | `pv.read` the `.fiber.vtu` once; check all cells are tets; points µm × 1e-3 → mm. elemTag: 0 RV, 1 LV, 4 mitral plug, 5 aortic plug, 6 tricuspid, 7 pulmonary. | [`STEP 1.1`](../src/lvot.py:219) |
+| 1.2 LV myocardium volume | Sum of tag-1 tet volumes (`tet_volumes()`) | [`STEP 1.2`](../src/lvot.py:233) |
+
+## STEP 2 — LV cavity and endocardium (geometry, no UVCs)
+| Sub-step | Method | Code |
+|---|---|---|
+| 2.1 Boundary surface | Boundary surface of **all** tets (myocardium + all 4 plugs), keeping the original cell id so each triangle carries its tet's tag. Split into connected components. | [`STEP 2.1`](../src/lvot.py:238) |
+| 2.2 LV cavity | Expect 3 closed components: outer surface, RV cavity, LV cavity. The LV cavity is the component containing aortic and mitral plug faces and no RV faces. Its enclosed volume = LV cavity volume (`lv_cavity_ml`, LV EDV proxy). | [`STEP 2.2`](../src/lvot.py:245) |
+| 2.3 LV endocardium | Cavity triangles that come from LV tets (plug faces removed) | [`STEP 2.3`](../src/lvot.py:259) |
+
+Check: `n_regions == 3`, otherwise flag `surface_regions_k`.
+
+## STEP 3 — Valve rings and axes
+| Sub-step | Method | Code |
+|---|---|---|
+| 3.1 Ring nodes | LV nodes shared with the plug's tets: tag 5 = aortic, tag 4 = mitral. This is a ~2 mm band. | [`STEP 3.1-3.4`](../src/lvot.py:264) |
+| 3.2 Plane | SVD plane fit to the ring nodes; normal oriented into the LV; nodes projected onto the plane; `band_max_depth` = how far the band reaches towards the ventricle | `ring_measure()` [`src/lvot.py:171`](../src/lvot.py:171) |
+| 3.3 Outline | Centre from a direct ellipse fit, then the median radius in each of 72 angular bins (5° each) → polygon. Area → area-derived diameter; perimeter → perimeter-derived diameter. Angular coverage = fraction of bins filled. | `ring_measure()` |
+| 3.4 Diameters / shape | **Moment-equivalent ellipse** of the polygon (same area and second moments) → major/minor diameter, ellipticity = major/minor and 1 − minor/major. Feret (caliper) max/min as a cross-check. | `moment_ellipse()` [`src/lvot.py:73`](../src/lvot.py:73) |
+| 3.5 Aorto-mitral | Angle between the two ring-plane normals; distance between the ring centres | [`STEP 3.5`](../src/lvot.py:275) |
+| 3.6 LV axes | Apex = LV endo point farthest from the mitral ring centre. LV length = that distance. LV long axis = mitral centre → apex. `ao_axis_vs_lv_long_angle` = angle between the aortic-ring normal and the long axis (aorto-septal angle proxy). | [`STEP 3.6`](../src/lvot.py:280) |
+
+## STEP 4 — LVOT cross-sections
+| Sub-step | Method | Code |
+|---|---|---|
+| 4.1 Planes | Perpendicular to the aortic-ring normal, at depths 0–15 mm in 1 mm steps. Depth 0 = the ventricular edge of the aortic ring band, where the plug meets the LV endocardium. | [`STEP 4.1`](../src/lvot.py:287) |
+| 4.2 Intersection | Exact intersection of the plane with the LV endocardium (`endo.slice`). The 2-point segments are chained into polylines, merging duplicate points; each polyline is closed (every vertex has 2 neighbours) or open. | [`STEP 4.2`](../src/lvot.py:298), `chain_loops()` [`src/lvot.py:129`](../src/lvot.py:129) |
+| 4.3 Strict section | Keep a closed loop that encircles the LVOT axis (taking the outermost if there are several). Reject it if its area-derived diameter is > 1.6 × the annulus diameter, which means it has opened into the cavity. The axis point = centre of the previous closed section, starting at the ring centre. Measures: area, area/perimeter-derived diameter, moment-ellipse major/minor, Feret. | [`STEP 4.3`](../src/lvot.py:302) |
+| 4.4 Chord-closed section (secondary) | Used when the section is open. Take wall points within 0.9 × annulus diameter of the axis. Find the largest empty angular sector (72 bins) = the gap, and record its size and its angle from the mitral direction. If the gap is ≤ 120°, order the points by angle, close with a straight chord, and measure as in 4.3. | [`STEP 4.4`](../src/lvot.py:319) |
+| 4.5 Contiguity | Strict sections count only as a contiguous run starting at 0 or 1 mm | [`STEP 4.5`](../src/lvot.py:354) |
+| 4.6 Report depths | Write `lvot{0,2,4,6,8,10}_*` (strict) and `lvot{d}cc_*` (chord-closed, plus `gap_deg` and `gap_vs_mitral_deg`) | [`STEP 4.6`](../src/lvot.py:362) |
+| 4.7 Tube length, tilt | `lvot_tube_len` = deepest strict section. `lvot_centreline_vs_ao_normal` = line through the strict section centroids vs the ring normal. | [`STEP 4.7`](../src/lvot.py:380) |
+
+**Analysis choices:** primary LVOT = strict section at **2 mm**; secondary = chord-closed at **4 mm** (`config.yaml → analysis`).
+
+## STEP 5 — Quality control
+| Sub-step | Method | Code / output |
+|---|---|---|
+| 5.1 Flags | `ring_gap` (ring coverage < 0.95), `ao_size_implausible` (12–32 mm), `mv_size_implausible` (20–55 mm), `no_closed_lvot_section`, `lvot_closed_lt2mm`, `surface_regions_k`. A reason is recorded for every depth (`section_reasons`). | [`STEP 5.1`](../src/lvot.py:392) → columns `qc_flags` and `section_reasons` |
+| 5.0 Run control | One row per mesh written as soon as it is done; meshes already in the CSV are skipped (resumable); errors go to `<out>_errors.csv`; progress goes to the log | [`scripts/01_measure.py`](../scripts/01_measure.py) → `outputs/tables/lvot_all.csv`, `outputs/logs/*.log` |
+| 5.2 QC renders | Per mesh: en-face view (ring nodes, strict and chord-closed sections, ellipses, mitral direction) and side view (LV endo, aortic and mitral rings, depth planes) | [`scripts/02_qc_render.py`](../scripts/02_qc_render.py) → `outputs/figures/qc/<id>.png` |
+| 5.3 Gap demo | Step-by-step picture of chord closure at 2/4/6/8 mm | [`scripts/04_gap_demo.py`](../scripts/04_gap_demo.py) → `outputs/figures/qc/gap_demo_<id>.png` |
+
+## STEP 6 — Age × sex analysis
+Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
+
+| Sub-step | Method | Code / output |
+|---|---|---|
+| 6.1 Exclusions | Processing errors → whole mesh. Implausible aortic ring → aortic and LVOT measures set to NaN. Implausible mitral ring → mitral measures NaN. A failed strict 2 mm or chord-closed 4 mm section is logged with its reason. | `# STEP 6.1` → `outputs/tables/exclusions.csv` |
+| 6.2 Indexing | diameter / LV cavity volume^(1/3); diameter as % of LV length | `# STEP 6.2` |
+| 6.3 Common support | F/M pairs with identical age and BMI (622 pairs); within each pair BMI is fixed | `# STEP 6.3` |
+| 6.4 Statistics | OLS `y ~ age_c + sex + age_c×sex + BMI` on all meshes (age centred at 65, BMI at 27). Reported: sex difference at 50/65/80 (mm and %), age slope by sex, age×sex p-value, `narrows_with_age`. Paired M − F mean ± 95% CI per age block (46–54 … 75–83). | `# STEP 6.4` → `model_coefs.csv`, `sexdiff_by_age_block.csv` |
+| 6.5 Figures | `fig_raw` (all meshes), `fig_common` (common support), `fig_adjusted` (model at BMI 27), `fig_sexdiff` (M − F vs age). Women `#D55E00`, men `#0072B2`. | `# STEP 6.5` → `outputs/figures/analysis/` |
+
+## STEP 7 — Write-up
+`WRITEUP.md`: methods summary, key numbers, figures, caveats. It is written after the full run.
+
+---
+### Data flow
+```
+raw meshes (read-only) ─▶ 00_labels ─▶ data/labels.csv
+                                          │
+                     ┌────────────────────┴─────────────┐
+                01_measure (STEPS 1-5.1, resumable)     02_qc_render / 04_gap_demo (STEP 5.2-5.3)
+                     │                                    │
+       outputs/tables/lvot_all.csv                 outputs/figures/qc/
+                     │
+                03_analysis (STEP 6) ─▶ tables (model_coefs, sexdiff_by_age_block, exclusions) + figures/analysis
+                     │
+                WRITEUP.md (STEP 7)
+every script ─▶ outputs/logs/runs.jsonl (provenance)
+```
