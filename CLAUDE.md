@@ -3,4 +3,4 @@ See README.md for methods, docs/PIPELINE.md for the step-by-step pipeline (keep 
 Python: ../ukb-mesh/.venv/bin/python. One mesh in memory at a time (MacBook Air).
 Long runs (>10 min): give the user the `caffeinate -i ... > outputs/logs/<name>.log 2>&1` command; do not run it yourself. 01_measure.py is resumable (skips mesh_ids already in the output CSV).
 Phase: end-diastole only (no systolic meshes exist; user decision 2026-10-24) — keep the caveat at the top of WRITEUP.md.
-Status (2026-10-23): method built and checked on the 8-mesh subset plus a 60-mesh pilot (30 random common-support pairs, already in outputs/tables/lvot_all.csv). Full run pending, then run 03_analysis.py and write WRITEUP.md.
+Status (2026-10-24): full run done (1,423 meshes, 0 errors); analysis, area-method comparison and WRITEUP.md complete.

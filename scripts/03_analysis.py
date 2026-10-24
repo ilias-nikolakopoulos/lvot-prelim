@@ -89,6 +89,7 @@ MEAS = [  # key, label
     ("lvot4cc_ellip_ratio", "LVOT 4 mm ellipticity, chord-closed"),
     ("ao_d_area_per_edv13", "Annulus diam / LV cavity vol^(1/3)"),
     ("lvot2_d_area_per_edv13", "LVOT 2 mm diam / LV cavity vol^(1/3)"),
+    ("lvot4cc_d_area_per_edv13", "LVOT 4 mm diam / LV cavity vol^(1/3)"),
     ("ao_d_area_pct_lvlen", "Annulus diam, % of LV length"),
     ("lvot2_d_area_pct_lvlen", "LVOT 2 mm diam, % of LV length"),
     ("mv_d_area", "Mitral ring diameter (area-derived, mm)"),
@@ -182,7 +183,7 @@ def style(ax, lab):
 
 
 def roll(x, y, w=3):
-    s = pd.Series(y, index=x).groupby(level=0).mean().sort_index()
+    s = pd.Series(np.asarray(y, float), index=np.asarray(x)).groupby(level=0).mean().sort_index()
     return s.index, s.rolling(w, center=True, min_periods=1).mean().to_numpy()
 
 
@@ -198,7 +199,7 @@ for ax, (k, lab) in zip(axs, MEAS):
     style(ax, lab)
 axs[0].legend(fontsize=8, frameon=False)
 fig.suptitle("All meshes (BMI not held fixed): points = meshes, line = 3-year rolling mean of per-age means", fontsize=10)
-fig.tight_layout(); fig.savefig(FIG / "fig_raw.png", dpi=120); plt.close(fig)
+fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_raw.png", dpi=120); plt.close(fig)
 
 # 2 common support
 fig, axs = grid(len(MEAS))
@@ -212,7 +213,7 @@ for ax, (k, lab) in zip(axs, MEAS):
     style(ax, lab)
 axs[0].legend(fontsize=8, frameon=False)
 fig.suptitle("BMI held fixed: common support only (same age and BMI in both sexes); dots = per-age mean, line = 3-yr rolling", fontsize=10)
-fig.tight_layout(); fig.savefig(FIG / "fig_common.png", dpi=120); plt.close(fig)
+fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_common.png", dpi=120); plt.close(fig)
 
 # 3 adjusted model at BMI_REF
 ages = np.arange(46, 84)
@@ -230,7 +231,7 @@ for ax, (k, lab) in zip(axs, MEAS):
     style(ax, lab)
 axs[0].legend(fontsize=8, frameon=False)
 fig.suptitle(f"Adjusted: OLS y ~ age + sex + age×sex + BMI (all meshes), predicted at BMI {BMI_REF} ± 95% CI; points = BMI-adjusted meshes", fontsize=10)
-fig.tight_layout(); fig.savefig(FIG / "fig_adjusted.png", dpi=120); plt.close(fig)
+fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_adjusted.png", dpi=120); plt.close(fig)
 
 # 4 sex difference vs age
 fig, axs = grid(len(MEAS))
@@ -253,7 +254,7 @@ for ax, (k, lab) in zip(axs, MEAS):
     style(ax, "M − F: " + lab)
 axs[0].legend(fontsize=7, frameon=False)
 fig.suptitle("Sex difference (men − women) by age", fontsize=10)
-fig.tight_layout(); fig.savefig(FIG / "fig_sexdiff.png", dpi=120); plt.close(fig)
+fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_sexdiff.png", dpi=120); plt.close(fig)
 
 pd.set_option("display.width", 250)
 show = coefs[["measure", "n", "sexdiff_at50", "sexdiff_at65", "sexdiff_at80", "sexdiff_pct_at50", "sexdiff_pct_at80",

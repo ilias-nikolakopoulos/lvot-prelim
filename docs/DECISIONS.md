@@ -42,4 +42,11 @@ One entry per choice: what was tried, what was seen, what was decided, and where
       - The PLAX line runs within ~13–19° (median) of the LVOT minor axis, so echo mostly measures the short axis.
       - The echo underestimation is larger in women, by paired M − F +4.8 percentage points (95% CI +3.1 to +6.5) at 2 mm and +6.9 (+5.1 to +8.7) at 4 mm. There is no sex difference at the annulus.
     - **Caveat:** end-diastole only. Clinical LVOT diameters are measured in mid-systole, when the anterior mitral leaflet forms the posterior wall and the shape may differ.
+18. **Full run (2026-10-24).**
+    - 1,423/1,423 meshes, 0 errors, 67 min; all have 3 surface components.
+    - LVOT 2 mm is missing for 10 meshes (closed tube only to 1 mm).
+    - 62 aortic rings have outline coverage between 0.875 and 0.95 (polygon unaffected).
+    - The 4 mm gap is ≥ 100° in 8 meshes (6 women, 2 men); excluding them does not change ellipticity (F 1.544 → 1.543, M 1.450 → 1.449).
+    - Robust-z outliers (MAD-based, inflated by the small spread of averaged meshes): the top three were rendered (female_age_73_bmi_43, male_age_66_bmi_42, female_age_59_bmi_42). They are genuine shapes; none were excluded.
+19. **Bug fix in `03_analysis.py` `roll()`.** `pd.Series(series, index=age)` re-indexed by row label instead of re-labelling, so the rolling-mean *lines* in `fig_raw` and `fig_common` were wrong. Dots, tables and models were unaffected. Fixed by passing numpy arrays. Also added `lvot4cc_d_area_per_edv13` to the analysed measures.
 

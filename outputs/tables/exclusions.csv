@@ -1,1 +1,11 @@
 mesh_id,measure_group,reason
+female_age_47_bmi_29,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:ok | 1:ok | 2:open(gap 55) | 3:open(gap 90) | 4:open(gap 105) | 5:open(gap 115) | 6:open(gap 140) | 7:open(gap 155) | 
+female_age_51_bmi_42,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:ok | 1:ok | 2:open(gap 45) | 3:open(gap 70) | 4:open(gap 90) | 5:open(gap 115) | 6:open(gap 130) | 7:open(gap 180) | 8
+female_age_53_bmi_42,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:open(gap 5) | 1:ok | 2:open(gap 55) | 3:open(gap 90) | 4:open(gap 105) | 5:open(gap 110) | 6:open(gap 140) | 7:open(ga
+female_age_55_bmi_44,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:ok | 1:ok | 2:open(gap 25) | 3:open(gap 75) | 4:open(gap 90) | 5:open(gap 125) | 6:open(gap 150) | 7:open(gap 170) | 8
+female_age_59_bmi_42,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:ok | 1:ok | 2:open(gap 45) | 3:open(gap 80) | 4:open(gap 120) | 5:open(gap 140) | 6:open(gap 160) | 7:open(gap 170) | 
+female_age_60_bmi_18,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:open(gap 5) | 1:ok | 2:open(gap 75) | 3:open(gap 95) | 4:open(gap 105) | 5:open(gap 130) | 6:open(gap 150) | 7:open(ga
+male_age_48_bmi_27,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:open(gap 5) | 1:ok | 2:open(gap 25) | 3:open(gap 75) | 4:open(gap 110) | 5:open(gap 135) | 6:open(gap 150) | 7:open(ga
+male_age_56_bmi_38,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:open(gap 5) | 1:ok | 2:open(gap 25) | 3:open(gap 60) | 4:open(gap 80) | 5:open(gap 110) | 6:open(gap 125) | 7:open(gap
+male_age_68_bmi_18,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:open(gap 0) | 1:ok | 2:open(gap 15) | 3:open(gap 90) | 4:open(gap 110) | 5:open(gap 115) | 6:open(gap 125) | 7:open(ga
+male_age_71_bmi_38,LVOT 2 mm (strict),section at 2 mm not a closed tube: 0:open(gap 0) | 1:ok | 2:open(gap 30) | 3:open(gap 65) | 4:open(gap 85) | 5:open(gap 100) | 6:open(gap 125) | 7:open(gap
