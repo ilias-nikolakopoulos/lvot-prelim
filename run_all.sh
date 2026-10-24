@@ -15,4 +15,5 @@ $PY scripts/05_outline_demo.py female_age_65_bmi_26   # STEP 5.4 outline (plane 
 $PY scripts/01_measure.py --all               # STEP 1-5.1 all meshes (resumable, ~70 min)
 $PY scripts/03_analysis.py                    # STEP 6   tables + figures
 $PY scripts/06_area_methods.py                # STEP 6.6 outline area vs ellipse / echo circle
+$PY scripts/07_area_methods_demo.py           # STEP 6.7 illustration of the four area estimates
 echo "done; provenance in outputs/logs/runs.jsonl"

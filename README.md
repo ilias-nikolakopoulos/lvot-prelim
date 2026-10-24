@@ -23,6 +23,7 @@ $PY scripts/04_gap_demo.py <mesh_id>            # STEP 5.3 chord-closing illustr
 $PY scripts/05_outline_demo.py <mesh_id>        # STEP 5.4 how an outline is obtained (3D + en face)
 $PY scripts/03_analysis.py                      # STEP 6 figures + tables
 $PY scripts/06_area_methods.py                  # STEP 6.6 outline area vs ellipse / echo circular area
+$PY scripts/07_area_methods_demo.py             # STEP 6.7 illustration of the four area estimates
 ```
 Full run (~70 min). Run it yourself in Terminal from this folder:
 `caffeinate -i ../ukb-mesh/.venv/bin/python scripts/01_measure.py --all > outputs/logs/measure_all.log 2>&1`

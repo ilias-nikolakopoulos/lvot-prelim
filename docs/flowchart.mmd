@@ -47,6 +47,7 @@ flowchart TD
         S65["6.5 Figures: raw, common support, adjusted, sex difference"]
     end
     S66["STEP 6.6 Area methods: outline area vs ellipse and echo circle π/4·D_PLAX²<br/>[scripts/06_area_methods.py]"]
+    S67["STEP 6.7 Area methods illustration<br/>[scripts/07_area_methods_demo.py]"]
     OUT[("model_coefs.csv · sexdiff_by_age_block.csv · exclusions.csv<br/>outputs/figures/analysis/")]
     S7["STEP 7 — WRITEUP.md"]
     PROV[("outputs/logs/runs.jsonl<br/>provenance of every run")]
@@ -67,5 +68,6 @@ flowchart TD
     S52 & S53 & S54 --> QCF
     ROW --> S61 --> S62 --> S63 --> S64 --> S65 --> OUT --> S7
     ROW --> S66 --> OUT
+    S66 --> S67 --> OUT
     QCF --> S7
-    S0 & M & S52 & S53 & S54 & A & S66 -.-> PROV
+    S0 & M & S52 & S53 & S54 & A & S66 & S67 -.-> PROV
