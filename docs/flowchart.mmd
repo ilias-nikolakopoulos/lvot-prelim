@@ -35,6 +35,7 @@ flowchart TD
     ROW[("outputs/tables/lvot_all.csv<br/>one row per mesh, written as it goes<br/>errors → lvot_all_errors.csv")]
     S52["STEP 5.2 QC renders<br/>[scripts/02_qc_render.py]"]
     S53["STEP 5.3 Gap-bridging demo<br/>[scripts/04_gap_demo.py]"]
+    S54["STEP 5.4 Outline demo: plane cut → chain → chord → polygon<br/>[scripts/05_outline_demo.py]"]
     QCF[("outputs/figures/qc/")]
 
     subgraph A["scripts/03_analysis.py — STEP 6"]
@@ -60,8 +61,8 @@ flowchart TD
     D44 -- yes --> S44 --> S46
     D44 -- no --> X44 --> S46
     S45 --> S46 --> S47 --> S51 --> ROW
-    LAB --> S52 & S53
-    S52 & S53 --> QCF
+    LAB --> S52 & S53 & S54
+    S52 & S53 & S54 --> QCF
     ROW --> S61 --> S62 --> S63 --> S64 --> S65 --> OUT --> S7
     QCF --> S7
-    S0 & M & S52 & S53 & A -.-> PROV
+    S0 & M & S52 & S53 & S54 & A -.-> PROV

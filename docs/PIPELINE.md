@@ -67,6 +67,7 @@ Check: `n_regions == 3`, otherwise flag `surface_regions_k`.
 | 5.0 Run control | One row per mesh written as soon as it is done; meshes already in the CSV are skipped (resumable); errors go to `<out>_errors.csv`; progress goes to the log | [`scripts/01_measure.py`](../scripts/01_measure.py) → `outputs/tables/lvot_all.csv`, `outputs/logs/*.log` |
 | 5.2 QC renders | Per mesh: en-face view (ring nodes, strict and chord-closed sections, ellipses, mitral direction) and side view (LV endo, aortic and mitral rings, depth planes) | [`scripts/02_qc_render.py`](../scripts/02_qc_render.py) → `outputs/figures/qc/<id>.png` |
 | 5.3 Gap demo | Step-by-step picture of chord closure at 2/4/6/8 mm | [`scripts/04_gap_demo.py`](../scripts/04_gap_demo.py) → `outputs/figures/qc/gap_demo_<id>.png` |
+| 5.4 Outline demo | 3D view of the LVOT wall cut by the 2 mm and 4 mm planes, plus en-face views: closed chain → polygon (2 mm); open chain + chord → polygon (4 mm); area → area-derived diameter | [`scripts/05_outline_demo.py`](../scripts/05_outline_demo.py) → `outputs/figures/qc/outline_demo_<id>.png` |
 
 ## STEP 6 — Age × sex analysis
 Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
@@ -88,7 +89,7 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 raw meshes (read-only) ─▶ 00_labels ─▶ data/labels.csv
                                           │
                      ┌────────────────────┴─────────────┐
-                01_measure (STEPS 1-5.1, resumable)     02_qc_render / 04_gap_demo (STEP 5.2-5.3)
+                01_measure (STEPS 1-5.1, resumable)     02_qc_render / 04_gap_demo / 05_outline_demo (STEP 5.2-5.4)
                      │                                    │
        outputs/tables/lvot_all.csv                 outputs/figures/qc/
                      │

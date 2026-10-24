@@ -20,6 +20,7 @@ $PY scripts/01_measure.py --subset              # STEP 1-5.1 on the 8-mesh subse
 $PY scripts/01_measure.py --all                 # all meshes -> outputs/tables/lvot_all.csv (resumable, ~3 s/mesh)
 $PY scripts/02_qc_render.py --subset            # STEP 5.2 QC renders -> outputs/figures/qc/<id>.png
 $PY scripts/04_gap_demo.py <mesh_id>            # STEP 5.3 chord-closing illustration
+$PY scripts/05_outline_demo.py <mesh_id>        # STEP 5.4 how an outline is obtained (3D + en face)
 $PY scripts/03_analysis.py                      # STEP 6 figures + tables
 ```
 Full run (~70 min). Run it yourself in Terminal from this folder:
