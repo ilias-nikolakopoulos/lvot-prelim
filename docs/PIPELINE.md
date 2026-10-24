@@ -1,5 +1,7 @@
 # LVOT pipeline — step by step
 
+> Phase: **end-diastole only**. The dataset contains no systolic meshes (`DECISIONS.md` #16).
+
 Each step below lists its purpose, inputs, method, the code that does it, its outputs and the check that it worked. In the code, every step is marked with a comment `# STEP x.y` (search for it). Line links point to the current version and may drift slightly as the code changes. The flowchart source is [`flowchart.mmd`](flowchart.mmd), and the reasons behind each choice are in [`DECISIONS.md`](DECISIONS.md).
 
 **Environment.** Python 3.11 with the exact package versions in [`requirements.txt`](../requirements.txt) (currently the `../ukb-mesh/.venv` interpreter). All parameters are in [`config.yaml`](../config.yaml). Every script run appends a line to `outputs/logs/runs.jsonl` with the time, arguments, code hash, config hash and package versions ([`src/provenance.py`](../src/provenance.py)).
@@ -78,7 +80,7 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 | 6.5 Figures | `fig_raw` (all meshes), `fig_common` (common support), `fig_adjusted` (model at BMI 27), `fig_sexdiff` (M − F vs age). Women `#D55E00`, men `#0072B2`. | `# STEP 6.5` → `outputs/figures/analysis/` |
 
 ## STEP 7 — Write-up
-`WRITEUP.md`: methods summary, key numbers, figures, caveats. It is written after the full run.
+`WRITEUP.md`: methods summary, key numbers, figures, caveats. The results are filled in after the full run. The caveats section already states that **all measurements are end-diastolic** (no systolic meshes exist in this dataset).
 
 ---
 ### Data flow

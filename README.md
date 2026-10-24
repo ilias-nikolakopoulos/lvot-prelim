@@ -1,6 +1,8 @@
 # LVOT size and ellipticity in UK Biobank representative meshes
 
 This is a personal side project, kept separate from `../ukb-mesh/`. It reuses only that project's `.venv` (labels are rebuilt locally) and never modifies it or the raw data.
+> **All measurements are end-diastolic.** The released meshes were built from end-diastolic frames only (Ugurlu et al. 2025), so systolic LVOT size and shape cannot be measured here. See `docs/DECISIONS.md` #16.
+
 Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0) at `data/meshes`. Each mesh is the average of the participants with the same sex, age (46–83) and integer BMI. The results therefore describe typical hearts, not individuals, and CIs and p-values are descriptive only (participant counts per mesh are unknown).
 
 ## Reproduce
@@ -25,7 +27,7 @@ Full run (~70 min). Run it yourself in Terminal from this folder:
 
 ## Methods (`src/lvot.py`)
 These are geometry only: the `.fiber.vtu` file is read once and µm are converted to mm. UVCs are not used, so the LV/RV junction UVC artefact does not arise.
-- **LV cavity.** The surface of all tets (myocardium plus the valve plugs) has 3 closed components: the outer surface, the RV cavity, and the LV cavity bounded by LV tets plus the mitral (tag 4) and aortic (tag 5) plugs. LV cavity volume is the enclosed volume of the LV component, including the LVOT up to the aortic plug. It is used as an LV EDV proxy (the meshes are presumably end-diastolic). **LV endocardium** = the cavity triangles that come from LV tets.
+- **LV cavity.** The surface of all tets (myocardium plus the valve plugs) has 3 closed components: the outer surface, the RV cavity, and the LV cavity bounded by LV tets plus the mitral (tag 4) and aortic (tag 5) plugs. LV cavity volume is the enclosed volume of the LV component, including the LVOT up to the aortic plug. It equals LV end-diastolic volume, because the meshes are end-diastolic. **LV endocardium** = the cavity triangles that come from LV tets.
 - **Rings.** For the aortic (tag 5) and mitral (tag 4) plugs, the ring is the set of LV nodes shared with the plug's tets: a band about 2 mm tall. A plane is fitted to it by SVD, with the normal pointing into the LV. The nodes are projected onto the plane, and the median radius is taken in each of 72 angular bins to give a polygon. From that polygon:
   - area → area-derived diameter; perimeter → perimeter-derived diameter;
   - **moment-equivalent ellipse** (same area and second moments as the polygon) → major/minor diameter, ellipticity (major/minor, and 1 − minor/major);
@@ -62,4 +64,4 @@ These are geometry only: the `.fiber.vtu` file is read once and µm are converte
 - Indexed size: diameter / LV cavity volume^(1/3) (mm/mL^⅓) and diameter as % of LV length.
 
 ## Results
-_See `WRITEUP.md` after the full run._
+_See [`WRITEUP.md`](WRITEUP.md) (caveats final; results after the full run)._
