@@ -14,7 +14,8 @@ $PY scripts/04_gap_demo.py female_age_65_bmi_26   # STEP 5.3 gap-bridging demo
 $PY scripts/05_outline_demo.py female_age_65_bmi_26   # STEP 5.4 outline (plane cut -> polygon) demo
 $PY scripts/08_outline_steps.py female_age_65_bmi_26  # STEP 5.5 every step from mesh to outline
 $PY scripts/01_measure.py --all               # STEP 1-5.1 all meshes (resumable, ~70 min)
+$PY scripts/09_save_outlines.py --all         # STEP 5.6 save 2D outlines (resumable, ~65 min)
 $PY scripts/03_analysis.py                    # STEP 6   tables + figures
 $PY scripts/06_area_methods.py                # STEP 6.6 outline area vs ellipse / echo circle
-$PY scripts/07_area_methods_demo.py           # STEP 6.7 illustration of the four area estimates
+$PY scripts/07_area_methods_demo.py           # STEP 6.7 illustration of the five area estimates
 echo "done; provenance in outputs/logs/runs.jsonl"

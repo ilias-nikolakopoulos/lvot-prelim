@@ -49,4 +49,9 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - The 4 mm gap is ≥ 100° in 8 meshes (6 women, 2 men); excluding them does not change ellipticity (F 1.544 → 1.543, M 1.450 → 1.449).
     - Robust-z outliers (MAD-based, inflated by the small spread of averaged meshes): the top three were rendered (female_age_73_bmi_43, male_age_66_bmi_42, female_age_59_bmi_42). They are genuine shapes; none were excluded.
 19. **Bug fix in `03_analysis.py` `roll()`.** `pd.Series(series, index=age)` re-indexed by row label instead of re-labelling, so the rolling-mean *lines* in `fig_raw` and `fig_common` were wrong. Dots, tables and models were unaffected. Fixed by passing numpy arrays. Also added `lvot4cc_d_area_per_edv13` to the analysed measures.
+20. **CT-style ellipse added (STEP 5.6, 6.6, 6.7).**
+    - **Definition:** the longest edge-to-edge line through the outline's area centroid, and the line through the centroid at 90° to it (`ct_diams()`, 0.5° search); area = π/4 × longest × perpendicular. Unlike the Feret widths, both lines go through the centre and are forced to 90°, as in a typical CT reading.
+    - **Saved outlines:** the outlines had not been saved, so `09_save_outlines.py` now writes per-mesh 2D outlines to `data/outlines/` (resumable). Saved outlines reproduce the table's area and PLAX diameter exactly.
+    - **Pilot (68 meshes):** the CT ellipse is close to the Feret ellipse (annulus +5.3% F / +4.0% M; LVOT 2 mm −3.3 / −2.8%; 4 mm −3.6 / −2.5%). Its longest diameter is within 0.3 mm of the widest calliper width and its perpendicular within 0.2 mm of the narrowest. Forcing 90° changes little because the outlines are close to elliptical.
+    - The full-cohort CT numbers follow after `09_save_outlines.py --all`.
 

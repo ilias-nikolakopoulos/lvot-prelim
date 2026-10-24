@@ -106,6 +106,19 @@ def chord_through(xy: np.ndarray, c: np.ndarray, u: np.ndarray) -> float:
     return float(t.max() - t.min()) if len(t) >= 2 else np.nan
 
 
+def ct_diams(xy: np.ndarray, step_deg: float = 0.5) -> dict:
+    """CT-style diameters: the longest line through the outline's area centroid (edge to edge) and the
+    line through the centroid perpendicular to it. Both pass through the centre and are at 90 degrees."""
+    el = moment_ellipse(xy)
+    c = np.array([el["cx"], el["cy"]])
+    th = np.radians(np.arange(0, 180, step_deg))
+    L = np.array([chord_through(xy, c, np.array([np.cos(t), np.sin(t)])) for t in th])
+    i = int(np.nanargmax(L))
+    t90 = th[i] + np.pi / 2
+    return {"ct_long": float(L[i]), "ct_short": chord_through(xy, c, np.array([np.cos(t90), np.sin(t90)])),
+            "ct_theta": float(th[i])}
+
+
 def echo_diams(xy: np.ndarray, u: np.ndarray) -> dict:
     """Diameters an echo would measure on this outline. u = unit in-plane direction of the parasternal
     long-axis (PLAX) cut, i.e. towards the mitral valve (septum -> aorto-mitral side).

@@ -1,10 +1,11 @@
-"""STEP 6.7 — Illustrate the four area estimates on one LVOT outline, plus population averages.
+"""STEP 6.7 — Illustrate the five area estimates on one LVOT outline, plus population averages.
 
 Top row (one mesh, strict LVOT section at 2 mm, looking down the aortic axis):
   1 moment ellipse        same area spread as the outline (best-possible ellipse)
   2 Feret ellipse         widest x narrowest calliper width (CT / 3D max-min approach)
-  3 two-view ellipse      PLAX diameter x perpendicular diameter (echo biplane approach)
-  4 echo circle           PLAX diameter only, circular LVOT assumed (standard echo)
+  3 CT ellipse            longest diameter through the centre x the one at 90 deg to it (CT reading)
+  4 two-view ellipse      PLAX diameter x perpendicular diameter (echo biplane approach)
+  5 echo circle           PLAX diameter only, circular LVOT assumed (standard echo)
 Bottom: mean % difference from the outline area by method, level and sex (all meshes).
 Usage: python scripts/07_area_methods_demo.py [mesh_id] -> outputs/figures/analysis/fig_area_methods_demo.png
 """
@@ -22,7 +23,7 @@ from matplotlib.path import Path as MPath
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.config import load_config  # noqa: E402
-from src.lvot import measure_mesh, moment_ellipse, polygon_area_perim  # noqa: E402
+from src.lvot import ct_diams, measure_mesh, moment_ellipse, polygon_area_perim  # noqa: E402
 from src.provenance import log_run  # noqa: E402
 
 mid = sys.argv[1] if len(sys.argv) > 1 else "female_age_65_bmi_26"
@@ -61,8 +62,8 @@ widths = np.array([feret(t)[0] for t in angs])
 tmax, tmin = angs[widths.argmax()], angs[widths.argmin()]
 
 GREY, EST, CAL = "#0072B2", "#D55E00", "0.15"
-fig = plt.figure(figsize=(18, 10))
-gs = fig.add_gridspec(2, 4, height_ratios=[1.25, 1])
+fig = plt.figure(figsize=(22, 10))
+gs = fig.add_gridspec(2, 5, height_ratios=[1.25, 1])
 
 
 def base(ax, title):
@@ -97,7 +98,7 @@ finish(ax, np.pi / 4 * el["dmax"] * el["dmin"], "π/4 × major × minor")
 
 # 2 Feret ellipse
 ax = fig.add_subplot(gs[0, 1])
-base(ax, "2  Feret ellipse — CT / 3D style\n(widest and narrowest calliper widths)")
+base(ax, "2  Feret ellipse\n(widest and narrowest calliper widths)")
 for t_, lab, ls in ((tmax, "widest width", "-"), (tmin, "narrowest width", "--")):
     w, lo, hi, d = feret(t_)
     perp = np.array([-d[1], d[0]])
@@ -113,9 +114,21 @@ ang_between = abs(np.degrees(np.angle(np.exp(2j * (tmax - tmin))))) / 2
 ax.set_title(ax.get_title(loc="left") + f"\nthe two widths are {ang_between:.0f}° apart, not 90°", fontsize=10.5, loc="left")
 finish(ax, np.pi / 4 * Fmax * Fmin, "π/4 × widest × narrowest")
 
-# 3 two-view (PLAX x perpendicular)
+# 3 CT ellipse (longest through the centre x perpendicular)
 ax = fig.add_subplot(gs[0, 2])
-base(ax, "3  Two-view ellipse — echo biplane style\n(PLAX diameter + the one at 90° to it)")
+base(ax, "3  CT ellipse — CT reading\n(longest diameter through the centre +\nthe diameter at 90° to it)")
+cd = ct_diams(xy)
+dl = np.array([np.cos(cd["ct_theta"]), np.sin(cd["ct_theta"])]); ds = np.array([-dl[1], dl[0]])
+pl, ql = line_through(c, dl); ps, qs = line_through(c, ds)
+cal(ax, pl, ql, f"longest {cd['ct_long']:.1f} mm")
+cal(ax, ps, qs, f"perpendicular {cd['ct_short']:.1f} mm", "--")
+ax.add_patch(Ellipse(c, cd["ct_long"], cd["ct_short"], angle=np.degrees(cd["ct_theta"]), fill=False, ec=EST, lw=2.2,
+                     ls="--", label="assumed ellipse"))
+finish(ax, np.pi / 4 * cd["ct_long"] * cd["ct_short"], "π/4 × longest × perpendicular")
+
+# 3 two-view (PLAX x perpendicular)
+ax = fig.add_subplot(gs[0, 3])
+base(ax, "4  Two-view ellipse — echo biplane style\n(PLAX diameter + the one at 90° to it)")
 p1, q1 = line_through(c, u); p2, q2 = line_through(c, v)
 Dp, Dq = np.linalg.norm(q1 - p1), np.linalg.norm(q2 - p2)
 cal(ax, p1, q1, f"PLAX diameter {Dp:.1f} mm")
@@ -127,8 +140,8 @@ ax.set_title(ax.get_title(loc="left") + f"\nthe PLAX line is {off_deg:.0f}° off
 finish(ax, np.pi / 4 * Dp * Dq, "π/4 × D_PLAX × D_perp")
 
 # 4 echo circle
-ax = fig.add_subplot(gs[0, 3])
-base(ax, "4  Echo circle — standard echo\n(PLAX diameter only, LVOT assumed round)\nthe long side-to-side axis is ignored")
+ax = fig.add_subplot(gs[0, 4])
+base(ax, "5  Echo circle — standard echo\n(PLAX diameter only, LVOT assumed round)\nthe long side-to-side axis is ignored")
 cal(ax, p1, q1, f"PLAX diameter {Dp:.1f} mm")
 ax.add_patch(Ellipse((p1 + q1) / 2, Dp, Dp, fill=True, fc=EST, alpha=.12, ec=EST, lw=2.2, ls="--",
                      label="assumed circle"))
@@ -136,11 +149,12 @@ finish(ax, np.pi / 4 * Dp ** 2, "π/4 × D_PLAX²")
 
 # bottom: population means
 S = pd.read_csv(ROOT / "outputs/tables/area_methods_summary.csv")
-M = [("ellipse_moment", "1 Moment\nellipse"), ("ellipse_feret", "2 Feret\nellipse"),
-     ("ellipse_2view", "3 Two-view\nellipse"), ("echo_circle", "4 Echo\ncircle")]
+M = [("ellipse_moment", "1 Moment\nellipse"), ("ellipse_feret", "2 Feret\nellipse"), ("ellipse_ct", "3 CT\nellipse"),
+     ("ellipse_2view", "4 Two-view\nellipse"), ("echo_circle", "5 Echo\ncircle")]
+sub = gs[1, :].subgridspec(1, 3)
 LEV = ["Aortic annulus", "LVOT 2 mm (closed)", "LVOT 4 mm (chord-closed)"]
 for j, lev in enumerate(LEV):
-    ax = fig.add_subplot(gs[1, j]) if j < 2 else fig.add_subplot(gs[1, 2:])
+    ax = fig.add_subplot(sub[0, j])
     x = np.arange(len(M))
     for k, sx in enumerate("FM"):
         row = S[(S.level == lev) & (S.sex == sx)].iloc[0]
@@ -160,10 +174,13 @@ for j, lev in enumerate(LEV):
         ax.spines[s_].set_visible(False)
     if j == 0:
         ax.legend(fontsize=8, frameon=False, loc="lower left")
+    nct = S[(S.level == lev)].n_ct.sum(); nall = S[(S.level == lev)].n.sum()
+    if nct < nall:
+        ax.text(0.99, 0.03, f"CT ellipse: {nct} of {nall} meshes so far", transform=ax.transAxes, ha="right", fontsize=8, color="0.3")
     if j == 2:
         ax.text(0.01, 0.97, "grey band = ±7%: all ellipse methods fall inside it; the circle does not",
                 transform=ax.transAxes, fontsize=8.5, va="top")
-fig.suptitle(f"Four ways to estimate LVOT area from diameters — top: {mid}, LVOT 2 mm below the annulus "
+fig.suptitle(f"Five ways to estimate LVOT area from diameters — top: {mid}, LVOT 2 mm below the annulus "
              "(end-diastole), looking down the aortic axis", fontsize=11.5, y=0.995)
 fig.tight_layout(rect=(0, 0, 1, 0.97))
 out = ROOT / "outputs/figures/analysis/fig_area_methods_demo.png"

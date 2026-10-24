@@ -4,6 +4,8 @@ For the aortic annulus, the strict LVOT section at 2 mm and the chord-closed sec
   true             polygon (shoelace) area of the outline                      [reference]
   ellipse_moment   pi/4 * major * minor   (moment-equivalent ellipse)
   ellipse_feret    pi/4 * Feret max * Feret min   (caliper max/min)
+  ellipse_ct       pi/4 * D_long * D_perp_long  (CT style: longest diameter through the centre and the
+                   diameter through the centre at 90 degrees to it; from data/outlines/, STEP 5.6)
   ellipse_2view    pi/4 * D_plax * D_perp  (two orthogonal echo-style diameters, e.g. biplane)
   echo_circle      pi/4 * D_plax^2         (standard echo: PLAX diameter, circular LVOT assumed)
 D_plax = edge-to-edge line through the outline centroid towards the mitral centre (septum -> aorto-mitral
@@ -26,6 +28,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.config import load_config  # noqa: E402
+from src.lvot import ct_diams  # noqa: E402
 from src.provenance import log_run  # noqa: E402
 
 ap = argparse.ArgumentParser()
@@ -49,9 +52,28 @@ LEVELS = [  # name, prefix for area/diameters
 METHODS = [
     ("ellipse_moment", "Ellipse (moment major × minor)"),
     ("ellipse_feret", "Ellipse (Feret max × min)"),
+    ("ellipse_ct", "Ellipse (CT longest × perpendicular)"),
     ("ellipse_2view", "Ellipse (PLAX × orthogonal)"),
     ("echo_circle", "Circle from PLAX diameter (echo)"),
 ]
+# CT-style diameters from the saved outlines (STEP 5.6); missing outlines -> NaN
+OUTL = {"ao_": "ao_poly", "lvot2_": "lvot2_xy", "lvot4cc_": "lvot4cc_xy"}
+ct = {p: np.full((len(d), 2), np.nan) for p in OUTL}
+odir = ROOT / "data/outlines"
+for i, mid in enumerate(d.mesh_id):
+    f = odir / f"{mid}.npz"
+    if not f.exists():
+        continue
+    z = np.load(f)
+    for p, key in OUTL.items():
+        if key in z:
+            c_ = ct_diams(z[key])
+            ct[p][i] = c_["ct_long"], c_["ct_short"]
+n_ct = int(np.isfinite(ct["ao_"][:, 0]).sum())
+if n_ct < len(d):
+    print(f"NOTE: CT ellipse from saved outlines for {n_ct}/{len(d)} meshes only "
+          "(run scripts/09_save_outlines.py --all for the rest)")
+
 q = np.pi / 4
 rows = []
 for lev, p in LEVELS:
@@ -60,6 +82,7 @@ for lev, p in LEVELS:
         "true": d[p + "area"],
         "ellipse_moment": q * d[p + "dmax"] * d[p + "dmin"],
         "ellipse_feret": q * d[p + "feret_max"] * d[p + "feret_min"],
+        "ellipse_ct": q * ct[p][:, 0] * ct[p][:, 1], "ct_long": ct[p][:, 0], "ct_short": ct[p][:, 1],
         "ellipse_2view": q * d[p + "d_plax"] * d[p + "d_perp"],
         "echo_circle": q * d[p + "d_plax"] ** 2,
         "d_plax": d[p + "d_plax"], "d_perp": d[p + "d_perp"], "d_area": d[p + "d_area"],
@@ -76,6 +99,8 @@ for (lev, sx), g in L.groupby(["level", "sex"], sort=False):
     r = {"level": lev, "sex": sx, "n": len(g), "true_area_mm2": g["true"].mean(),
          "d_area_mm": g["d_area"].mean(), "d_plax_mm": g["d_plax"].mean(), "d_perp_mm": g["d_perp"].mean(),
          "plax_vs_minor_deg_median": g["plax_vs_minor_deg"].median()}
+    r["n_ct"] = int(g["ellipse_ct"].notna().sum())
+    r["ct_long_mm"], r["ct_short_mm"] = g["ct_long"].mean(), g["ct_short"].mean()
     for m, _ in METHODS:
         r[f"{m}_mm2"] = g[m].mean()
         r[f"{m}_pct_mean"] = g[m + "_pct"].mean()
@@ -99,7 +124,7 @@ for j, (lev, _) in enumerate(LEVELS):
             ax.plot([x - .1, x + .1], [v.mean()] * 2, color="k", lw=2)
     ax.axhline(0, color="0.4", lw=1)
     ax.set_xticks(range(len(METHODS)))
-    ax.set_xticklabels(["Ellipse\nmoment axes", "Ellipse\nFeret max×min", "Ellipse\nPLAX × orthogonal", "Echo circle\nfrom PLAX D"], fontsize=8)
+    ax.set_xticklabels(["Ellipse\nmoment axes", "Ellipse\nFeret max×min", "Ellipse CT\nlongest × perp.", "Ellipse\nPLAX × orth.", "Echo circle\nfrom PLAX D"], fontsize=7.5)
     ax.set_ylabel("% difference from measured outline area")
     ax.set_title(lev, fontsize=10)
     ax.grid(axis="y", alpha=.25)
@@ -124,7 +149,7 @@ fig.savefig(FIG / "fig_area_methods.png", dpi=120)
 plt.close(fig)
 
 pd.set_option("display.width", 250)
-show = ["level", "sex", "n", "true_area_mm2", "d_area_mm", "d_plax_mm", "d_perp_mm", "plax_vs_minor_deg_median"] + \
+show = ["level", "sex", "n", "n_ct", "true_area_mm2", "d_area_mm", "d_plax_mm", "d_perp_mm", "plax_vs_minor_deg_median"] + \
        [f"{m}_pct_mean" for m, _ in METHODS]
 print(S[show].round(1).to_string(index=False))
 log_run(__file__, input=a.inp, n_meshes=int(d.shape[0]),
