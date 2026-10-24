@@ -69,6 +69,7 @@ Check: `n_regions == 3`, otherwise flag `surface_regions_k`.
 | 5.2 QC renders | Per mesh: en-face view (ring nodes, strict and chord-closed sections, ellipses, mitral direction) and side view (LV endo, aortic and mitral rings, depth planes) | [`scripts/02_qc_render.py`](../scripts/02_qc_render.py) → `outputs/figures/qc/<id>.png` |
 | 5.3 Gap demo | Step-by-step picture of chord closure at 2/4/6/8 mm | [`scripts/04_gap_demo.py`](../scripts/04_gap_demo.py) → `outputs/figures/qc/gap_demo_<id>.png` |
 | 5.4 Outline demo | 3D view of the LVOT wall cut by the 2 mm and 4 mm planes, plus en-face views: closed chain → polygon (2 mm); open chain + chord → polygon (4 mm); area → area-derived diameter; echo PLAX calliper line and its circular area | [`scripts/05_outline_demo.py`](../scripts/05_outline_demo.py) → `outputs/figures/qc/outline_demo_<id>.png` |
+| 5.5 Outline, step by step | 9 panels for one mesh: (1) tagged mesh; (2) outer skin = 3 closed surfaces; (3) LV cavity from inside, plug faces dropped, aortic rim plane; (4) cutting planes; (5) plane × triangles → segments; (6) segments → closed chain at 2 mm + checks; (7) open chain at 4 mm; (8) chord closure; (9) polygon → shoelace area and diameters | [`scripts/08_outline_steps.py`](../scripts/08_outline_steps.py) → `outputs/figures/qc/outline_steps_<id>.png` |
 
 ## STEP 6 — Age × sex analysis
 Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
@@ -92,7 +93,7 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 raw meshes (read-only) ─▶ 00_labels ─▶ data/labels.csv
                                           │
                      ┌────────────────────┴─────────────┐
-                01_measure (STEPS 1-5.1, resumable)     02_qc_render / 04_gap_demo / 05_outline_demo (STEP 5.2-5.4)
+                01_measure (STEPS 1-5.1, resumable)     02_qc_render / 04_gap_demo / 05_outline_demo / 08_outline_steps (STEP 5.2-5.5)
                      │                                    │
        outputs/tables/lvot_all.csv                 outputs/figures/qc/
                      │

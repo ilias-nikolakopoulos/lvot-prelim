@@ -12,6 +12,7 @@ $PY scripts/01_measure.py --subset            # STEP 1-5.1 on the 8-mesh dev sub
 $PY scripts/02_qc_render.py --subset          # STEP 5.2 QC renders
 $PY scripts/04_gap_demo.py female_age_65_bmi_26   # STEP 5.3 gap-bridging demo
 $PY scripts/05_outline_demo.py female_age_65_bmi_26   # STEP 5.4 outline (plane cut -> polygon) demo
+$PY scripts/08_outline_steps.py female_age_65_bmi_26  # STEP 5.5 every step from mesh to outline
 $PY scripts/01_measure.py --all               # STEP 1-5.1 all meshes (resumable, ~70 min)
 $PY scripts/03_analysis.py                    # STEP 6   tables + figures
 $PY scripts/06_area_methods.py                # STEP 6.6 outline area vs ellipse / echo circle

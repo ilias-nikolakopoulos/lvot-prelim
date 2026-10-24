@@ -21,6 +21,7 @@ $PY scripts/01_measure.py --all                 # all meshes -> outputs/tables/l
 $PY scripts/02_qc_render.py --subset            # STEP 5.2 QC renders -> outputs/figures/qc/<id>.png
 $PY scripts/04_gap_demo.py <mesh_id>            # STEP 5.3 chord-closing illustration
 $PY scripts/05_outline_demo.py <mesh_id>        # STEP 5.4 how an outline is obtained (3D + en face)
+$PY scripts/08_outline_steps.py <mesh_id>       # STEP 5.5 every step from mesh to outline (9 panels)
 $PY scripts/03_analysis.py                      # STEP 6 figures + tables
 $PY scripts/06_area_methods.py                  # STEP 6.6 outline area vs ellipse / echo circular area
 $PY scripts/07_area_methods_demo.py             # STEP 6.7 illustration of the four area estimates

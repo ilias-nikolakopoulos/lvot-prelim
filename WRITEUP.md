@@ -102,7 +102,7 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 - `fig_sexdiff.png`: men − women vs age.
 - `fig_area_methods.png`: area estimates.
 - `fig_area_methods_demo.png`: what each area estimate measures, drawn on one outline.
-- QC renders are in `outputs/figures/qc/`. These include `outline_demo_*` (how an outline is obtained) and `gap_demo_*` (chord closure).
+- QC renders are in `outputs/figures/qc/`. These include `outline_steps_*` (every step from mesh to outline), `outline_demo_*` (how an outline is obtained) and `gap_demo_*` (chord closure).
 
 The edge ages (46, 82–83) have few pairs and are noisy in the per-age plots.
 

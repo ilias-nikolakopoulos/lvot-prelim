@@ -281,6 +281,7 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
     if best is None:
         raise ValueError("no closed LV cavity component found")
     cav = reg.extract_cells(rid == best).extract_surface()
+    lv_region = int(best)
     out["lv_cavity_ml"] = abs(cav.volume) / 1000
     out["n_regions"] = int(len(np.unique(rid)))
     # STEP 2.3 — LV endocardium = cavity triangles from LV tets (plug faces removed)
@@ -443,5 +444,6 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
     out["qc_flags"] = ";".join(flags)
     out["section_reasons"] = " | ".join(f"{s['depth']:g}:{s.get('reason','ok')}" + (f"(gap {s['gap_deg']:.0f})" if 'gap_deg' in s and not s['closed'] else '') for s in sections)
     if keep_geometry:
-        out["_geom"] = {"rings": rings, "sections": sections, "endo": endo, "apex": apex, "origin": origin}
+        out["_geom"] = {"rings": rings, "sections": sections, "endo": endo, "apex": apex, "origin": origin,
+                        "regions": reg, "lv_region": lv_region, "cavity": cav, "ao_ring_nodes": P[np.intersect1d(np.unique(conn[tags == 5]), lv_nodes)]}
     return out
