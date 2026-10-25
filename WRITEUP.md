@@ -97,6 +97,23 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 - **By age:** the underestimation shrinks slightly with age (+1.6 to +1.9 percentage points per decade), in line with the slightly rounder LVOT in older hearts.
 - **Caveat:** this is at end-diastole; echo LVOT diameters are measured in mid-systole.
 
+### Ellipticity by method (`outputs/tables/ellipticity_methods.csv`)
+Ellipticity = major / minor; median (IQR), all meshes:
+
+| Level | Method | Women | Men |
+|---|---|---|---|
+| Aortic annulus | Moment ellipse | 1.14 (1.13–1.16) | 1.14 (1.13–1.16) |
+| | Feret ellipse | 1.17 (1.15–1.19) | 1.16 (1.15–1.18) |
+| | Minor–major axis ellipse | 1.14 (1.13–1.17) | 1.14 (1.13–1.16) |
+| 2 mm from annulus | Moment ellipse | 1.46 (1.43–1.49) | 1.39 (1.36–1.43) |
+| | Feret ellipse | 1.46 (1.43–1.49) | 1.39 (1.36–1.43) |
+| | Minor–major axis ellipse | 1.47 (1.44–1.50) | 1.40 (1.36–1.44) |
+| 4 mm from annulus | Moment ellipse | 1.55 (1.50–1.59) | 1.44 (1.40–1.50) |
+| | Feret ellipse | 1.53 (1.49–1.58) | 1.43 (1.39–1.48) |
+| | Minor–major axis ellipse | 1.54 (1.49–1.58) | 1.43 (1.39–1.49) |
+
+The three methods agree within 0.03 at every level. The annulus is nearly round with no sex difference, while the LVOT is clearly oval and more so in women (by about 0.07 at 2 mm and 0.10 at 4 mm).
+
 ### Figures (`outputs/figures/analysis/`)
 - `fig_raw.png`: all meshes.
 - `fig_common.png`: common support, BMI held fixed.
@@ -104,6 +121,7 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 - `fig_sexdiff.png`: men − women vs age.
 - `fig_area_methods.png`: area estimates.
 - `fig_area_methods_demo.png`: what each area estimate measures, drawn on one outline.
+- `fig_ellipticity_methods.png`: ellipticity by method, level and sex (box plots).
 - QC renders are in `outputs/figures/qc/`. These include `outline_steps_*` (every step from mesh to outline), `outline_demo_*` (how an outline is obtained) and `gap_demo_*` (chord closure).
 
 The edge ages (46, 82–83) have few pairs and are noisy in the per-age plots.

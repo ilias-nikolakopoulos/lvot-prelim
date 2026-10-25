@@ -26,6 +26,7 @@ $PY scripts/03_analysis.py                      # STEP 6 figures + tables
 $PY scripts/09_save_outlines.py --all           # STEP 5.6 save 2D outlines per mesh (resumable, ~65 min)
 $PY scripts/06_area_methods.py                  # STEP 6.6 outline area vs ellipse / echo circular area
 $PY scripts/07_area_methods_demo.py             # STEP 6.7 illustration of the five area estimates
+$PY scripts/10_ellipticity_methods.py           # STEP 6.8 ellipticity by method: median and IQR
 ```
 Full run (~70 min). Run it yourself in Terminal from this folder:
 `caffeinate -i ../ukb-mesh/.venv/bin/python scripts/01_measure.py --all > outputs/logs/measure_all.log 2>&1`
