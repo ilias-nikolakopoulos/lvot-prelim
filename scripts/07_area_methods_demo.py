@@ -197,9 +197,7 @@ for j, lev in enumerate(LEV):
         ax.text(0.01, 0.97, "grey band = ±7%: all ellipse methods fall inside it; the circle does not",
                 transform=ax.transAxes, fontsize=8.5, va="top")
 fig.suptitle("Estimating the elliptical LVOT area", fontsize=16, fontweight="bold", y=0.998)
-fig.text(0.5, 0.962, f"top: {mid}, LVOT 2 mm below the annulus (end-diastole), looking down the aortic axis;  "
-         "bottom: all 1,423 meshes", ha="center", fontsize=10, color="0.3")
-fig.tight_layout(rect=(0, 0, 1, 0.95))
+fig.tight_layout(rect=(0, 0, 1, 0.965))
 out = ROOT / "outputs/figures/analysis/fig_area_methods_demo.png"
 fig.savefig(out, dpi=125)
 print("wrote", out)
