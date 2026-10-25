@@ -180,7 +180,7 @@ for j, lev in enumerate(LEV):
         sds = [row[f"{m}_pct_sd"] for m, _ in M]
         ax.bar(x + (k - .5) * .36, vals, width=.34, color=col, alpha={"F": .35, "M": .75}[sx], edgecolor=col,
                linewidth=1.2, yerr=sds, capsize=2, error_kw=dict(lw=.8, ecolor="0.4"),
-               zorder=3, label={"F": "Women (lighter)", "M": "Men (darker)"}[sx])
+               zorder=3, label={"F": "Women", "M": "Men"}[sx])
         for xi, val in zip(x + (k - .5) * .36, vals):
             ax.text(xi, val + (1.2 if val >= 0 else -1.2), f"{val:+.0f}", ha="center",
                     va="bottom" if val >= 0 else "top", fontsize=8, color="0.2")
