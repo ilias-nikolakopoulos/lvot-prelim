@@ -155,7 +155,7 @@ if SHOW_TWO_VIEW:  # two-view (PLAX x perpendicular)
 
 # echo circle
 ax = fig.add_subplot(gs[0, next(panels)])
-base(ax, f"{next(num)}  Echo circle", "approximation of the echo PLAX view:\nPLAX diameter only, LVOT assumed round;\nthe long side-to-side axis is ignored")
+base(ax, f"{next(num)}  Echocardiographic area", "approximation of the echo PLAX view")
 cal(ax, p1, q1, f"PLAX diameter {Dp:.1f} mm")
 ax.add_patch(Ellipse((p1 + q1) / 2, Dp, Dp, fill=True, fc=EST, alpha=.12, ec=EST, lw=2.2, ls="--",
                      label=shape_label(np.pi / 4 * Dp ** 2, "circle")))
@@ -166,8 +166,8 @@ S = pd.read_csv(ROOT / "outputs/tables/area_methods_summary.csv")
 M = [("ellipse_moment", "Moment\nellipse"), ("ellipse_feret", "Feret\nellipse"), ("ellipse_ct", "Minor–major\naxis ellipse")]
 if SHOW_TWO_VIEW:
     M.append(("ellipse_2view", "Two-view\nellipse"))
-M.append(("echo_circle", "Echo\ncircle"))
-M = [(m, f"{i}  {l}") for i, (m, l) in enumerate(M, 1)]
+M.append(("echo_circle", "Echocardiographic\narea"))
+M = [(m, f"{i}\n{l}") for i, (m, l) in enumerate(M, 1)]
 sub = gs[1, :].subgridspec(1, 3)
 LEV = ["Aortic annulus", "LVOT 2 mm (closed)", "LVOT 4 mm (chord-closed)"]
 for j, lev in enumerate(LEV):
@@ -198,7 +198,7 @@ for j, lev in enumerate(LEV):
     if nct < nall:
         ax.text(0.99, 0.03, f"CT ellipse: {nct} of {nall} meshes so far", transform=ax.transAxes, ha="right", fontsize=8, color="0.3")
     if j == 2:
-        ax.text(0.01, 0.97, "grey band = ±7%: all ellipse methods fall inside it; the circle does not",
+        ax.text(0.01, 0.97, "grey band = ±7%: all ellipse methods fall inside it;\nthe echocardiographic area does not",
                 transform=ax.transAxes, fontsize=8.5, va="top")
 fig.suptitle("Estimating the elliptical LVOT area", fontsize=16, fontweight="bold", y=0.998)
 fig.tight_layout(rect=(0, 0, 1, 0.965))
