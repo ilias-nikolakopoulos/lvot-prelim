@@ -80,7 +80,7 @@ def base(ax, name, desc):
     ax.text(*(c + u * 16.8), "mitral", color="tab:red", ha="center", va="center", fontsize=8)
     ax.set_aspect("equal"); ax.set_xlim(c[0] - 17, c[0] + 17); ax.set_ylim(c[1] - 17, c[1] + 17)
     ax.set_xticks([]); ax.set_yticks([])
-    nl = 3  # fixed slot so all method names sit at the same height
+    nl = 2  # fixed slot so all method names sit at the same height
     ax.annotate(desc, xy=(0, 1), xycoords="axes fraction", xytext=(0, 4), textcoords="offset points",
                 fontsize=10, va="bottom", ha="left", color="0.15")
     ax.annotate(name, xy=(0, 1), xycoords="axes fraction", xytext=(0, 8 + 12.5 * nl), textcoords="offset points",
@@ -103,7 +103,7 @@ num = iter(range(1, ncol + 1))
 
 # moment ellipse
 ax = fig.add_subplot(gs[0, next(panels)])
-base(ax, f"{next(num)}  Moment ellipse", "best-possible ellipse; uses the whole outline\n(no scanner reports it); axes at 90°,\nfitted to the whole shape")
+base(ax, f"{next(num)}  Moment ellipse", "best-possible ellipse fitted to the whole outline")
 th = el["theta"]; dM = np.array([np.cos(th), np.sin(th)]); dm = np.array([-dM[1], dM[0]])
 cal(ax, c - dM * el["dmax"] / 2, c + dM * el["dmax"] / 2, f"major axis {el['dmax']:.1f} mm")
 cal(ax, c - dm * el["dmin"] / 2, c + dm * el["dmin"] / 2, f"minor axis {el['dmin']:.1f} mm", "--")
