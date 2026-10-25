@@ -57,4 +57,14 @@ One entry per choice: what was tried, what was seen, what was decided, and where
 21. **Figure scope (user, 2026-10-25).** The area-methods figure shows four methods (moment, Feret, CT, echo circle). The two-view (PLAX × perpendicular) ellipse and the PLAX-plane sensitivity analysis (±10–20° rotation, 2 mm off-centre) are kept for later analyses, not presented now. The two-view code stays in `07_area_methods_demo.py` (`SHOW_TWO_VIEW`) and in `06_area_methods.py` / `area_methods_summary.csv`. Bars are coloured by level (yellow annulus, green 2 mm, purple 4 mm), semi-transparent, women lighter and men darker (hatching removed at the user's request); main title "Estimating the elliptical LVOT area"; the formula boxes were removed and each estimate's area and % error moved into the legend.
 22. **Naming in the figure (user, 2026-10-25).** The "CT ellipse" is now called the **minor–major axis ellipse** (longest diameter through the centre × the one at 90°; code and table columns keep the `ct_` / `ellipse_ct` names). Panel 4 is named **Echocardiographic area** (was "echo circle") and described only as "approximation of the echo PLAX view". Method names are in bold `#102D40` in the panel titles and on the bar labels; the assumed ellipses/circle are drawn in `#B94F00`.
 23. **Font (user, 2026-10-25).** The area-methods figure uses **Roboto**. Static TTFs (Regular, Medium, Bold, Italic) and the Apache 2.0 licence from Google's official release (`github.com/googlefonts/roboto`, v2.138, `roboto-unhinted.zip`) are stored in `assets/fonts/` and registered by `07_area_methods_demo.py`, so nothing is installed system-wide and the figure renders identically elsewhere. The "mitral" label was moved inside each panel.
+24. **PLAX plane definition (2026-10-25, deferred analysis).**
+    - **Mitral centre:** the centre of the ellipse fitted to the mitral rim nodes (LV nodes touching the mitral plug), projected onto their best-fit plane.
+    - **Uniqueness:** with that definition, the PLAX plane (aortic axis + mitral centre) is unique per mesh. Other reasonable definitions give different planes.
+    - **Comparison on 68 meshes (subset + pilot), LVOT 2 mm:**
+      - B (aortic axis + LV apex) is a median 5° from A (max 19°).
+      - C (aortic centre + mitral centre + apex) is a median 3° from A (max 11°).
+      - All three planes lie within 11–14° (median) of the LVOT minor axis.
+      - Echo-circle error, median, women / men: A −31.9 / −27.6%, B −33.4 / −28.1%, C −32.8 / −27.7%.
+    - **Conclusion:** the ~30% underestimation and its sex difference do not depend on the definition.
+    - **Status:** kept for further analyses, not presented now (with #21). `11_plax_definitions.py`, `fig_plax_definitions.png`.
 

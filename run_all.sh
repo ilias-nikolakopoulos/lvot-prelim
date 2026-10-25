@@ -19,4 +19,5 @@ $PY scripts/03_analysis.py                    # STEP 6   tables + figures
 $PY scripts/06_area_methods.py                # STEP 6.6 outline area vs ellipse / echo circle
 $PY scripts/07_area_methods_demo.py           # STEP 6.7 illustration of the five area estimates
 $PY scripts/10_ellipticity_methods.py         # STEP 6.8 ellipticity by method: median and IQR
+# $PY scripts/11_plax_definitions.py          # STEP 6.9 (deferred) PLAX plane definitions, 68 meshes, ~4 min
 echo "done; provenance in outputs/logs/runs.jsonl"
