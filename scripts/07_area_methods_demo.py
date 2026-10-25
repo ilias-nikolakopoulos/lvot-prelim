@@ -190,7 +190,7 @@ for j, lev in enumerate(LEV):
     ax.set_ylim(-45, 15)
     if j == 0:
         ax.set_ylabel("% vs true area (mean ± SD)")
-    ax.set_title(LEVEL_TITLE[lev], fontsize=13, fontweight="bold", loc="center")
+    ax.set_title(LEVEL_TITLE[lev], fontsize=13, fontweight="bold", loc="center", pad=12)
     for s_ in ("top", "right"):
         ax.spines[s_].set_visible(False)
     ax.legend(fontsize=8, frameon=False, loc="lower left")
@@ -201,7 +201,7 @@ for j, lev in enumerate(LEV):
         ax.text(0.01, 0.97, "grey band = ±7%: all ellipse methods fall inside it;\nthe echocardiographic area does not",
                 transform=ax.transAxes, fontsize=8.5, va="top")
 fig.suptitle("Estimating the elliptical LVOT area", fontsize=16, fontweight="bold", y=0.998)
-fig.tight_layout(rect=(0, 0, 1, 0.965))
+fig.tight_layout(rect=(0, 0, 1, 0.965), h_pad=4)
 out = ROOT / "outputs/figures/analysis/fig_area_methods_demo.png"
 fig.savefig(out, dpi=125)
 print("wrote", out)
