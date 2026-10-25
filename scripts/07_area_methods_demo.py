@@ -25,6 +25,12 @@ sys.path.insert(0, str(ROOT))
 from src.config import load_config  # noqa: E402
 from src.lvot import ct_diams, measure_mesh, moment_ellipse, polygon_area_perim  # noqa: E402
 from src.provenance import log_run  # noqa: E402
+from matplotlib import font_manager  # noqa: E402
+
+# Roboto (Apache 2.0, googlefonts/roboto v2.138) shipped in assets/fonts so the figure renders the same anywhere
+for f_ in sorted((ROOT / "assets/fonts").glob("Roboto-*.ttf")):
+    font_manager.fontManager.addfont(str(f_))
+plt.rcParams["font.family"] = "Roboto"
 
 mid = sys.argv[1] if len(sys.argv) > 1 else "female_age_65_bmi_26"
 cfg = load_config()
@@ -76,8 +82,8 @@ panels = iter(range(ncol))
 def base(ax, name, desc):
     """Bold dark-blue method name with a plain description underneath, above the panel."""
     ax.add_patch(Polygon(xy, closed=True, fc=GREY, alpha=.18, ec=GREY, lw=2, label=f"true outline area {A:.0f} mm²"))
-    ax.annotate("", xy=c + u * 15, xytext=c + u * 11.5, arrowprops=dict(arrowstyle="->", color="tab:red"))
-    ax.text(*(c + u * 16.8), "mitral", color="tab:red", ha="center", va="center", fontsize=8)
+    ax.annotate("", xy=c + u * 13.5, xytext=c + u * 10.5, arrowprops=dict(arrowstyle="->", color="tab:red"))
+    ax.text(*(c + u * 13.5 + np.array([0, 1.4])), "mitral", color="tab:red", ha="center", va="bottom", fontsize=9)
     ax.set_aspect("equal"); ax.set_xlim(c[0] - 17, c[0] + 17); ax.set_ylim(c[1] - 17, c[1] + 17)
     ax.set_xticks([]); ax.set_yticks([])
     nl = 2  # fixed slot so all method names sit at the same height
