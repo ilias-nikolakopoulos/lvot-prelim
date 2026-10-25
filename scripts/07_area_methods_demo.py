@@ -61,8 +61,8 @@ angs = np.linspace(0, np.pi, 720, endpoint=False)
 widths = np.array([feret(t)[0] for t in angs])
 tmax, tmin = angs[widths.argmax()], angs[widths.argmin()]
 
-GREY, EST, CAL = "#0072B2", "#D55E00", "0.15"
-NAME_COL = "#1A2F8A"  # royal dark blue for method names
+GREY, EST, CAL = "#0072B2", "#B94F00", "0.15"
+NAME_COL = "#102D40"  # dark blue-grey for method names
 SHOW_TWO_VIEW = False  # PLAX x perpendicular ellipse: kept in the code and tables, hidden from this figure
 LEVEL_COL = {"Aortic annulus": "#E6C229", "LVOT 2 mm (closed)": "#009E73", "LVOT 4 mm (chord-closed)": "#7B4FA6"}
 LEVEL_TITLE = {"Aortic annulus": "Aortic annulus", "LVOT 2 mm (closed)": "2 mm from annulus",
