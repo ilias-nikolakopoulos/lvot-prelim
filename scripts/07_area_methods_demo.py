@@ -3,7 +3,7 @@
 Top row (one mesh, strict LVOT section at 2 mm, looking down the aortic axis):
   1 moment ellipse        same area spread as the outline (best-possible ellipse)
   2 Feret ellipse         widest x narrowest calliper width (CT / 3D max-min approach)
-  3 CT ellipse            longest diameter through the centre x the one at 90 deg to it (CT reading)
+  3 minor-major axis ellipse  longest diameter through the centre x the one at 90 deg to it (as in a CT reading)
   4 two-view ellipse      PLAX diameter x perpendicular diameter (echo biplane approach)
   5 echo circle           PLAX diameter only, circular LVOT assumed (standard echo)
 Bottom: mean % difference from the outline area by method, level and sex (all meshes).
@@ -62,6 +62,7 @@ widths = np.array([feret(t)[0] for t in angs])
 tmax, tmin = angs[widths.argmax()], angs[widths.argmin()]
 
 GREY, EST, CAL = "#0072B2", "#D55E00", "0.15"
+NAME_COL = "#1A2F8A"  # royal dark blue for method names
 SHOW_TWO_VIEW = False  # PLAX x perpendicular ellipse: kept in the code and tables, hidden from this figure
 LEVEL_COL = {"Aortic annulus": "#E6C229", "LVOT 2 mm (closed)": "#009E73", "LVOT 4 mm (chord-closed)": "#7B4FA6"}
 LEVEL_TITLE = {"Aortic annulus": "Aortic annulus", "LVOT 2 mm (closed)": "2 mm from annulus",
@@ -72,13 +73,18 @@ gs = fig.add_gridspec(2, ncol, height_ratios=[1.25, 1])
 panels = iter(range(ncol))
 
 
-def base(ax, title):
+def base(ax, name, desc):
+    """Bold dark-blue method name with a plain description underneath, above the panel."""
     ax.add_patch(Polygon(xy, closed=True, fc=GREY, alpha=.18, ec=GREY, lw=2, label=f"true outline area {A:.0f} mm²"))
     ax.annotate("", xy=c + u * 15, xytext=c + u * 11.5, arrowprops=dict(arrowstyle="->", color="tab:red"))
     ax.text(*(c + u * 16.8), "mitral", color="tab:red", ha="center", va="center", fontsize=8)
     ax.set_aspect("equal"); ax.set_xlim(c[0] - 17, c[0] + 17); ax.set_ylim(c[1] - 17, c[1] + 17)
     ax.set_xticks([]); ax.set_yticks([])
-    ax.set_title(title, fontsize=10.5, loc="left")
+    nl = 3  # fixed slot so all method names sit at the same height
+    ax.annotate(desc, xy=(0, 1), xycoords="axes fraction", xytext=(0, 4), textcoords="offset points",
+                fontsize=10, va="bottom", ha="left", color="0.15")
+    ax.annotate(name, xy=(0, 1), xycoords="axes fraction", xytext=(0, 8 + 12.5 * nl), textcoords="offset points",
+                fontsize=12.5, fontweight="bold", color=NAME_COL, va="bottom", ha="left")
 
 
 def shape_label(est, kind="ellipse"):
@@ -97,7 +103,7 @@ num = iter(range(1, ncol + 1))
 
 # moment ellipse
 ax = fig.add_subplot(gs[0, next(panels)])
-base(ax, f"{next(num)}  Moment ellipse — best-possible ellipse\n(uses the whole outline; no scanner reports it)\naxes at 90°, fitted to the whole shape")
+base(ax, f"{next(num)}  Moment ellipse", "best-possible ellipse; uses the whole outline\n(no scanner reports it); axes at 90°,\nfitted to the whole shape")
 th = el["theta"]; dM = np.array([np.cos(th), np.sin(th)]); dm = np.array([-dM[1], dM[0]])
 cal(ax, c - dM * el["dmax"] / 2, c + dM * el["dmax"] / 2, f"major axis {el['dmax']:.1f} mm")
 cal(ax, c - dm * el["dmin"] / 2, c + dm * el["dmin"] / 2, f"minor axis {el['dmin']:.1f} mm", "--")
@@ -107,7 +113,8 @@ finish(ax)
 
 # Feret ellipse
 ax = fig.add_subplot(gs[0, next(panels)])
-base(ax, f"{next(num)}  Feret ellipse\n(widest and narrowest calliper widths)")
+ang_between = abs(np.degrees(np.angle(np.exp(2j * (tmax - tmin))))) / 2
+base(ax, f"{next(num)}  Feret ellipse", f"widest and narrowest calliper widths;\nthe two widths are {ang_between:.0f}° apart, not 90°")
 for t_, lab, ls in ((tmax, "widest width", "-"), (tmin, "narrowest width", "--")):
     w, lo, hi, d = feret(t_)
     perp = np.array([-d[1], d[0]])
@@ -120,13 +127,11 @@ for t_, lab, ls in ((tmax, "widest width", "-"), (tmin, "narrowest width", "--")
 Fmax, Fmin = widths.max(), widths.min()
 ax.add_patch(Ellipse(c, Fmax, Fmin, angle=np.degrees(tmax), fill=False, ec=EST, lw=2.2, ls="--",
                      label=shape_label(np.pi / 4 * Fmax * Fmin)))
-ang_between = abs(np.degrees(np.angle(np.exp(2j * (tmax - tmin))))) / 2
-ax.set_title(ax.get_title(loc="left") + f"\nthe two widths are {ang_between:.0f}° apart, not 90°", fontsize=10.5, loc="left")
 finish(ax)
 
-# CT ellipse (longest through the centre x perpendicular)
+# minor-major axis ellipse (longest through the centre x perpendicular)
 ax = fig.add_subplot(gs[0, next(panels)])
-base(ax, f"{next(num)}  CT ellipse — CT reading\n(longest diameter through the centre +\nthe diameter at 90° to it)")
+base(ax, f"{next(num)}  Minor–major axis ellipse", "longest diameter through the centre +\nthe diameter at 90° to it")
 cd = ct_diams(xy)
 dl = np.array([np.cos(cd["ct_theta"]), np.sin(cd["ct_theta"])]); ds = np.array([-dl[1], dl[0]])
 pl, ql = line_through(c, dl); ps, qs = line_through(c, ds)
@@ -140,18 +145,17 @@ p1, q1 = line_through(c, u); p2, q2 = line_through(c, v)
 Dp, Dq = np.linalg.norm(q1 - p1), np.linalg.norm(q2 - p2)
 if SHOW_TWO_VIEW:  # two-view (PLAX x perpendicular)
     ax = fig.add_subplot(gs[0, next(panels)])
-    base(ax, f"{next(num)}  Two-view ellipse — echo biplane style\n(PLAX diameter + the one at 90° to it)")
+    off_deg = abs(np.degrees(np.angle(np.exp(2j * (np.arctan2(u[1], u[0]) - (th + np.pi / 2)))))) / 2
+    base(ax, f"{next(num)}  Two-view ellipse", f"echo biplane style: PLAX diameter + the one\nat 90° to it; the PLAX line is {off_deg:.0f}° off the minor axis")
     cal(ax, p1, q1, f"PLAX diameter {Dp:.1f} mm")
     cal(ax, p2, q2, f"perpendicular {Dq:.1f} mm", "--")
     ax.add_patch(Ellipse(c, Dp, Dq, angle=np.degrees(np.arctan2(u[1], u[0])), fill=False, ec=EST, lw=2.2, ls="--",
                          label=shape_label(np.pi / 4 * Dp * Dq)))
-    off_deg = abs(np.degrees(np.angle(np.exp(2j * (np.arctan2(u[1], u[0]) - (th + np.pi / 2)))))) / 2
-    ax.set_title(ax.get_title(loc="left") + f"\nthe PLAX line is {off_deg:.0f}° off the true minor axis", fontsize=10.5, loc="left")
     finish(ax)
 
 # echo circle
 ax = fig.add_subplot(gs[0, next(panels)])
-base(ax, f"{next(num)}  Echo circle — standard echo\n(PLAX diameter only, LVOT assumed round)\nthe long side-to-side axis is ignored")
+base(ax, f"{next(num)}  Echo circle", "approximation of the echo PLAX view:\nPLAX diameter only, LVOT assumed round;\nthe long side-to-side axis is ignored")
 cal(ax, p1, q1, f"PLAX diameter {Dp:.1f} mm")
 ax.add_patch(Ellipse((p1 + q1) / 2, Dp, Dp, fill=True, fc=EST, alpha=.12, ec=EST, lw=2.2, ls="--",
                      label=shape_label(np.pi / 4 * Dp ** 2, "circle")))
@@ -159,7 +163,7 @@ finish(ax)
 
 # bottom: population means, one panel per level
 S = pd.read_csv(ROOT / "outputs/tables/area_methods_summary.csv")
-M = [("ellipse_moment", "Moment\nellipse"), ("ellipse_feret", "Feret\nellipse"), ("ellipse_ct", "CT\nellipse")]
+M = [("ellipse_moment", "Moment\nellipse"), ("ellipse_feret", "Feret\nellipse"), ("ellipse_ct", "Minor–major\naxis ellipse")]
 if SHOW_TWO_VIEW:
     M.append(("ellipse_2view", "Two-view\nellipse"))
 M.append(("echo_circle", "Echo\ncircle"))
@@ -182,7 +186,7 @@ for j, lev in enumerate(LEV):
                     va="bottom" if val >= 0 else "top", fontsize=8, color="0.2")
     ax.axhline(0, color="0.3", lw=1)
     ax.axhspan(-7, 7, color="0.92", lw=0, zorder=0)
-    ax.set_xticks(x); ax.set_xticklabels([l for _, l in M], fontsize=8.5)
+    ax.set_xticks(x); ax.set_xticklabels([l for _, l in M], fontsize=9, fontweight="bold", color=NAME_COL)
     ax.set_ylim(-45, 15)
     if j == 0:
         ax.set_ylabel("% vs true area (mean ± SD)")
