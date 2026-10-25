@@ -191,7 +191,6 @@ for j, lev in enumerate(LEV):
             ax.text(xi, val + (1.2 if val >= 0 else -1.2), f"{val:+.0f}", ha="center",
                     va="bottom" if val >= 0 else "top", fontsize=8, color="0.2")
     ax.axhline(0, color="0.3", lw=1)
-    ax.axhspan(-7, 7, color="0.92", lw=0, zorder=0)
     ax.set_xticks(x); ax.set_xticklabels([l for _, l in M], fontsize=9, fontweight="bold", color=NAME_COL)
     ax.set_ylim(-45, 15)
     if j == 0:
@@ -203,9 +202,6 @@ for j, lev in enumerate(LEV):
     nct = S[(S.level == lev)].n_ct.sum(); nall = S[(S.level == lev)].n.sum()
     if nct < nall:
         ax.text(0.99, 0.03, f"CT ellipse: {nct} of {nall} meshes so far", transform=ax.transAxes, ha="right", fontsize=8, color="0.3")
-    if j == 2:
-        ax.text(0.01, 0.97, "grey band = ±7%: all ellipse methods fall inside it;\nthe echocardiographic area does not",
-                transform=ax.transAxes, fontsize=8.5, va="top")
 fig.suptitle("Estimating the elliptical LVOT area", fontsize=16, fontweight="bold", y=0.998)
 fig.tight_layout(rect=(0, 0, 1, 0.965), h_pad=4)
 out = ROOT / "outputs/figures/analysis/fig_area_methods_demo.png"
