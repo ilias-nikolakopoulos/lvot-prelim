@@ -90,9 +90,7 @@ for ax, lev in zip(axs, PREFIX):
     ax.set_ylim(0.98, 1.75)
 axs[0].set_ylabel("Ellipticity (major / minor diameter)")
 fig.suptitle("LVOT ellipticity by method", fontsize=16, fontweight="bold", y=0.99)
-fig.text(0.5, 0.005, "box = interquartile range, line and number = median, whiskers = 5th–95th percentile; all 1,423 meshes (end-diastole)",
-         ha="center", fontsize=9, color="0.35")
-fig.tight_layout(rect=(0, 0.03, 1, 0.95))
+fig.tight_layout(rect=(0, 0, 1, 0.95))
 out = ROOT / "outputs/figures/analysis/fig_ellipticity_methods.png"
 fig.savefig(out, dpi=125)
 print("wrote", out)
