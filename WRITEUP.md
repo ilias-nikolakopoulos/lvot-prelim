@@ -13,7 +13,7 @@ Full detail is in `docs/PIPELINE.md`; reasons for each choice are in `docs/DECIS
   - Primary: the closed section at 2 mm.
   - Secondary: the 4 mm section, where the open mitral side is bridged by a straight chord.
 - **Other measures:** mitral ring diameter, aorto-mitral plane angle, and the angle between the aortic axis and the LV long axis.
-- **Area methods:** the outline area (shoelace formula) is compared with ellipse estimates (π/4 × two diameters) and with the standard echo estimate π/4·D_PLAX². D_PLAX is the diameter along the parasternal long-axis direction, from the septum to the aorto-mitral side.
+- **Area methods:** the outline area (shoelace formula) is compared with ellipse estimates (π/4 × two diameters: moment axes, widest/narrowest calliper widths, CT-style longest + perpendicular through the centre, PLAX + perpendicular) and with the standard echo estimate π/4·D_PLAX². D_PLAX is the diameter along the parasternal long-axis direction, from the septum to the aorto-mitral side.
 - **Statistics:** measure vs age by sex, holding BMI fixed in two ways:
   - common support: men and women with the same age and BMI (622 pairs);
   - regression: y ~ age + sex + age×sex + BMI.
@@ -86,10 +86,12 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 |---|---|---|---|
 | Ellipse, moment axes π/4·a·b | +0.7 / +0.8% | +0.9 / +0.9% | +0.6 / +0.5% |
 | Ellipse, Feret max × min | +5.8 / +5.3% | −2.0 / −1.6% | −3.3 / −2.1% |
+| Ellipse, CT longest × perpendicular (through the centre) | +5.2 / +4.2% | −3.5 / −2.8% | −3.8 / −2.4% |
 | Ellipse, PLAX × orthogonal | +3.1 / +2.7% | −5.1 / −4.7% | −6.6 / −5.2% |
 | **Echo circle π/4·D_PLAX²** | **−9.4 / −9.3%** | **−32.7 / −28.6%** | **−36.0 / −29.8%** |
 
 - **Ellipse estimates** are within about 7% of the true area: the LVOT is close to elliptical.
+- **CT-style reading** (longest diameter through the centre and the one at 90° to it) gives almost the same result as the unconstrained widest/narrowest calliper widths (within about 1.5 percentage points). Forcing 90° matters little because the outlines are nearly elliptical.
 - **Echo circle:** the PLAX diameter lies within about 12–19° (median) of the LVOT minor axis, so a circular assumption based on it **underestimates LVOT area by about 30%**. This flows directly into stroke volume and continuity-equation valve area.
 - **By sex:** the underestimation is larger in women. In paired comparisons it is +3.8 percentage points (95% CI 3.5–4.1) at 2 mm and +5.8 (5.5–6.2) at 4 mm. There is no sex difference at the annulus (−0.2, −0.5 to +0.1).
 - **By age:** the underestimation shrinks slightly with age (+1.6 to +1.9 percentage points per decade), in line with the slightly rounder LVOT in older hearts.
