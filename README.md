@@ -5,6 +5,16 @@ This is a personal side project, kept separate from `../ukb-mesh/`. It reuses on
 
 Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0) at `data/meshes`. Each mesh is the average of the participants with the same sex, age (46–83) and integer BMI. The results therefore describe typical hearts, not individuals, and CIs and p-values are descriptive only (participant counts per mesh are unknown).
 
+## Start here
+- **Figures and the code for each:** [`FIGURES.md`](FIGURES.md).
+- **Results and caveats:** [`WRITEUP.md`](WRITEUP.md).
+- **Setup on a new machine:**
+  ```bash
+  python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
+  ```
+  Then set `data_dir` in `config.yaml` to the unzipped meshes from Zenodo, and use `PY=.venv/bin/python`.
+- **Without the meshes:** the tables in `outputs/tables/` are included, so the analysis figures can be redrawn without the raw meshes.
+
 ## Reproduce
 - **Docs:** step-by-step pipeline with the code for each step in [`docs/PIPELINE.md`](docs/PIPELINE.md); flowchart in [`docs/flowchart.mmd`](docs/flowchart.mmd) (Mermaid); reasons for each choice in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 - **Parameters:** everything in [`config.yaml`](config.yaml).
