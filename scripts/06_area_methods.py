@@ -10,7 +10,8 @@ For the aortic annulus, the strict LVOT section at 2 mm and the chord-closed sec
   echo_circle      pi/4 * D_plax^2         (standard echo: PLAX diameter, circular LVOT assumed)
 D_plax = edge-to-edge line through the outline centroid towards the mitral centre (septum -> aorto-mitral
 side), i.e. the direction of the parasternal long-axis cut; D_perp = the orthogonal line.
-Outputs: outputs/tables/area_methods_summary.csv, area_methods_by_mesh.csv,
+Summaries and figure: matched pairs only (same age and BMI in both sexes, both measured at that level).
+Outputs: outputs/tables/area_methods_summary.csv, area_methods_by_mesh.csv (all meshes, `paired` flag),
          outputs/figures/analysis/fig_area_methods.png
 Caveat: meshes are end-diastolic; clinical LVOT diameters are measured in mid-systole.
 Usage: python scripts/06_area_methods.py [--in lvot_all]
@@ -90,12 +91,15 @@ for lev, p in LEVELS:
     })
     rows.append(g)
 L = pd.concat(rows).dropna(subset=["true"])
+# matched pairs: a woman's and a man's mesh with the same age and BMI, both measured at this level
+L["paired"] = L.groupby(["level", "age", "bmi"])["sex"].transform("nunique") == 2
 for m, _ in METHODS:
     L[m + "_pct"] = 100 * (L[m] - L["true"]) / L["true"]
-L.round(3).to_csv(T / "area_methods_by_mesh.csv", index=False)
+L.round(3).to_csv(T / "area_methods_by_mesh.csv", index=False)  # all meshes, with a `paired` flag
+LP = L[L.paired]  # summaries and figure use the matched pairs only, like every other sex comparison
 
 summ = []
-for (lev, sx), g in L.groupby(["level", "sex"], sort=False):
+for (lev, sx), g in LP.groupby(["level", "sex"], sort=False):
     r = {"level": lev, "sex": sx, "n": len(g), "true_area_mm2": g["true"].mean(),
          "d_area_mm": g["d_area"].mean(), "d_plax_mm": g["d_plax"].mean(), "d_perp_mm": g["d_perp"].mean(),
          "plax_vs_minor_deg_median": g["plax_vs_minor_deg"].median()}
@@ -114,7 +118,7 @@ S.round(2).to_csv(T / "area_methods_summary.csv", index=False)
 fig, axs = plt.subplots(2, 3, figsize=(16, 9))
 for j, (lev, _) in enumerate(LEVELS):
     ax = axs[0, j]
-    g = L[L.level == lev]
+    g = LP[LP.level == lev]
     for i, (m, ml) in enumerate(METHODS):
         for k, sx in enumerate("FM"):
             v = g.loc[g.sex == sx, m + "_pct"].dropna()
@@ -143,7 +147,7 @@ for j, (lev, _) in enumerate(LEVELS):
     ax.grid(alpha=.25)
     if j == 0:
         ax.legend(fontsize=8, frameon=False)
-fig.suptitle("Area estimates vs the measured outline area (end-diastolic meshes). Black bar = mean.", fontsize=11)
+fig.suptitle("Area estimates vs the measured outline area (matched same-age, same-BMI pairs; end-diastole). Black bar = mean.", fontsize=11)
 fig.tight_layout(rect=(0, 0, 1, 0.96))
 fig.savefig(FIG / "fig_area_methods.png", dpi=120)
 plt.close(fig)

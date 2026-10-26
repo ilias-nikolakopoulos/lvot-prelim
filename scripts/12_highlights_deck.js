@@ -215,7 +215,7 @@ s.addImage({ path: FIG("analysis/fig_ellipticity_methods.png"), x: 0.87, y: 1.25
 const ELL = [
   ["1.14", "annulus, women and men", C.accent3],
   ["1.46 vs 1.39", "LVOT 2 mm, women vs men", C.accent2],
-  ["1.55 vs 1.44", "LVOT 4 mm, women vs men", C.accent4],
+  ["1.54 vs 1.44", "LVOT 4 mm, women vs men", C.accent4],
   ["±0.03", "agreement between the three ellipse methods", C.text2],
 ];
 ELL.forEach(([b, l, col], i) => {

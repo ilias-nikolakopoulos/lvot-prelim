@@ -6,7 +6,7 @@ Top row (one mesh, strict LVOT section at 2 mm, looking down the aortic axis):
   3 minor-major axis ellipse  longest diameter through the centre x the one at 90 deg to it (as in a CT reading)
   4 two-view ellipse      PLAX diameter x perpendicular diameter (echo biplane approach)
   5 echo circle           PLAX diameter only, circular LVOT assumed (standard echo)
-Bottom: mean % difference from the outline area by method, level and sex (all meshes).
+Bottom: mean % difference from the outline area by method, level and sex (matched same-age, same-BMI pairs).
 Usage: python scripts/07_area_methods_demo.py [mesh_id] -> outputs/figures/analysis/fig_area_methods_demo.png
 """
 import sys

@@ -80,15 +80,15 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 - Both angles are 3–4° larger in men.
 
 ### Outline area vs ellipse and echo estimates (`outputs/tables/area_methods_summary.csv`)
-% difference from the measured outline area:
+% difference from the measured outline area, mean, women / men, matched same-age, same-BMI pairs (622; 617 at 2 mm):
 
 | Area estimate | Annulus F / M | LVOT 2 mm F / M | LVOT 4 mm F / M |
 |---|---|---|---|
-| Ellipse, moment axes π/4·a·b | +0.7 / +0.8% | +0.9 / +0.9% | +0.6 / +0.5% |
-| Ellipse, Feret max × min | +5.8 / +5.3% | −2.0 / −1.6% | −3.3 / −2.1% |
-| Minor–major axis ellipse (longest diameter through the centre × the one at 90°) | +5.2 / +4.2% | −3.5 / −2.8% | −3.8 / −2.4% |
-| Ellipse, PLAX × orthogonal | +3.1 / +2.7% | −5.1 / −4.7% | −6.6 / −5.2% |
-| **Echo circle π/4·D_PLAX²** | **−9.4 / −9.3%** | **−32.7 / −28.6%** | **−36.0 / −29.8%** |
+| Ellipse, moment axes π/4·a·b | +0.7 / +0.8% | +0.8 / +0.9% | +0.6 / +0.5% |
+| Ellipse, Feret max × min | +5.9 / +5.4% | −2.0 / −1.6% | −3.2 / −2.1% |
+| Minor–major axis ellipse (longest diameter through the centre × the one at 90°) | +5.3 / +4.2% | −3.5 / −2.9% | −3.7 / −2.4% |
+| Ellipse, PLAX × orthogonal | +3.2 / +2.8% | −5.1 / −4.8% | −6.6 / −5.2% |
+| **Echo circle π/4·D_PLAX²** | **−9.1 / −9.3%** | **−32.5 / −28.8%** | **−35.8 / −29.9%** |
 
 - **Ellipse estimates** are within about 7% of the true area: the LVOT is close to elliptical.
 - **Minor–major axis ellipse** (longest diameter through the centre and the one at 90° to it, as in a CT reading) gives almost the same result as the unconstrained widest/narrowest calliper widths (within about 1.5 percentage points). Forcing 90° matters little because the outlines are nearly elliptical.
@@ -98,21 +98,21 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 - **Caveat:** this is at end-diastole; echo LVOT diameters are measured in mid-systole.
 
 ### Ellipticity by method (`outputs/tables/ellipticity_methods.csv`)
-Ellipticity = major / minor; median (IQR), all meshes:
+Ellipticity = major / minor; median (IQR), matched same-age, same-BMI pairs (622; 617 at 2 mm):
 
 | Level | Method | Women | Men |
 |---|---|---|---|
 | Aortic annulus | Moment ellipse | 1.14 (1.13–1.16) | 1.14 (1.13–1.16) |
-| | Feret ellipse | 1.17 (1.15–1.19) | 1.16 (1.15–1.18) |
-| | Minor–major axis ellipse | 1.14 (1.13–1.17) | 1.14 (1.13–1.16) |
+|  | Feret ellipse | 1.17 (1.15–1.18) | 1.16 (1.15–1.18) |
+|  | Minor–major axis ellipse | 1.14 (1.13–1.16) | 1.14 (1.13–1.16) |
 | 2 mm from annulus | Moment ellipse | 1.46 (1.43–1.49) | 1.39 (1.36–1.43) |
-| | Feret ellipse | 1.46 (1.43–1.49) | 1.39 (1.36–1.43) |
-| | Minor–major axis ellipse | 1.47 (1.44–1.50) | 1.40 (1.36–1.44) |
-| 4 mm from annulus | Moment ellipse | 1.55 (1.50–1.59) | 1.44 (1.40–1.50) |
-| | Feret ellipse | 1.53 (1.49–1.58) | 1.43 (1.39–1.48) |
-| | Minor–major axis ellipse | 1.54 (1.49–1.58) | 1.43 (1.39–1.49) |
+|  | Feret ellipse | 1.46 (1.43–1.48) | 1.39 (1.36–1.43) |
+|  | Minor–major axis ellipse | 1.47 (1.44–1.50) | 1.40 (1.37–1.44) |
+| 4 mm from annulus | Moment ellipse | 1.54 (1.50–1.58) | 1.44 (1.40–1.50) |
+|  | Feret ellipse | 1.53 (1.49–1.57) | 1.43 (1.39–1.49) |
+|  | Minor–major axis ellipse | 1.53 (1.49–1.57) | 1.43 (1.40–1.49) |
 
-The three methods agree within 0.03 at every level. The annulus is nearly round with no sex difference, while the LVOT is clearly oval and more so in women (by about 0.07 at 2 mm and 0.10 at 4 mm).
+The three methods agree within 0.03 at every level. The annulus is nearly round with no sex difference, while the LVOT is clearly oval and more so in women (by about 0.07 at 2 mm and 0.10 at 4 mm). Using all 1,423 meshes instead of the pairs changes these values by at most 0.01.
 
 ### Figures (`outputs/figures/analysis/`)
 - `fig_raw.png`: all meshes.

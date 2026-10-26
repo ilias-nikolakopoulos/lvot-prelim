@@ -79,4 +79,9 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **LVOT gap:** the open side of the LVOT sections faces tag 4 in every mesh (gap 0–15° from its direction), consistent with aorto-mitral continuity.
     - **Conclusion:** tag 5 = aortic, 4 = mitral, 6 = tricuspid, 7 = pulmonary. This is an inference, not a documented label; the authors' code may confirm it.
 26. **"What is a mesh?" slide (2026-10-25).** `16_mesh_explainer.py` → `outputs/figures/mesh_explainer.png` (4 panels: whole heart by region; surface triangles; slice showing tetrahedra filling the wall; one tetrahedron), and `17_mesh_slide.js` → `outputs/slide_what_is_a_mesh.pptx` (full-slide figure with speaker notes).
+27. **One comparison set for all sex comparisons (user, 2026-10-25).**
+    - **Change:** the ellipticity (STEP 6.8) and area-method (STEP 6.6, 6.7) summaries and figures now use the matched same-age, same-BMI pairs (622; 617 at 2 mm, where both meshes must have a closed section), like the size figures. Previously they used all meshes.
+    - **Effect:** values changed by at most 0.01 in ellipticity and 0.2 percentage points in the echo error (e.g. 4 mm ellipticity in women 1.55 → 1.54; echo error at 2 mm −32.7 → −32.5% women, −28.6 → −28.8% men).
+    - **Unchanged:** `area_methods_by_mesh.csv` keeps all meshes, with a `paired` flag. The adjusted regression still uses all 1,423 meshes, and `fig_raw` still shows all meshes.
+    - **Rebuilt:** the write-up tables and the highlights deck.
 

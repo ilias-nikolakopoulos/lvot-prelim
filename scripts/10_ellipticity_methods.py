@@ -4,7 +4,8 @@ Methods (same diameters as the area estimates):
   moment              moment-ellipse major / minor axis
   feret               widest / narrowest calliper width
   minor-major axis    longest diameter through the centre / the diameter at 90 deg to it
-Levels: aortic annulus, LVOT 2 mm (strict, closed), LVOT 4 mm (chord-closed). All meshes (end-diastole).
+Levels: aortic annulus, LVOT 2 mm (strict, closed), LVOT 4 mm (chord-closed). Matched same-age, same-BMI pairs
+(622 at the annulus and 4 mm, 617 at 2 mm); end-diastole.
 Outputs: outputs/tables/ellipticity_methods.csv, outputs/figures/analysis/fig_ellipticity_methods.png
 Needs lvot_all.csv (STEP 1-5.1) and area_methods_by_mesh.csv (STEP 6.6, for the minor-major axis diameters).
 Usage: python scripts/10_ellipticity_methods.py
@@ -48,6 +49,8 @@ for lev, p in PREFIX.items():
     g["minor_major"] = ct["ct_long"] / ct["ct_short"]
     rows.append(g.reset_index())
 E = pd.concat(rows).dropna(subset=["moment"])
+# matched pairs only: same age and BMI in both sexes, both measured at this level
+E = E[E.groupby(["level", "age", "bmi"])["sex"].transform("nunique") == 2]
 
 summ = []
 for lev in PREFIX:
