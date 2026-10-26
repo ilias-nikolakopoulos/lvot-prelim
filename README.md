@@ -27,8 +27,8 @@ $PY scripts/09_save_outlines.py --all           # STEP 5.6 save 2D outlines per 
 $PY scripts/06_area_methods.py                  # STEP 6.6 outline area vs ellipse / echo circular area
 $PY scripts/07_area_methods_demo.py             # STEP 6.7 illustration of the five area estimates
 $PY scripts/10_ellipticity_methods.py           # STEP 6.8 ellipticity by method: median and IQR
-$PY scripts/13_size_by_age_figure.py            # STEP 6.10 size by age (house style, median and IQR)
-$PY scripts/14_project_flowchart.py             # STEP 7c presentation flowchart
+$PY scripts/13_size_by_age_figure.py [--area]   # STEP 6.10 diameter (or area) by age, median and IQR
+$PY scripts/14_project_flowchart.py             # STEP 7c study flowchart (PRISMA style)
 NODE_PATH=<dir with pptxgenjs> node scripts/12_highlights_deck.js   # STEP 7b highlights deck -> outputs/LVOT_highlights.pptx
 ```
 Full run (~70 min). Run it yourself in Terminal from this folder:
