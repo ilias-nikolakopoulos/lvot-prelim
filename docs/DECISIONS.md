@@ -96,4 +96,13 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Size-independent approach:** the mesh LVOTs are end-diastolic and smaller than clinical systolic LVOTs, so a fixed-VTI sweep on absolute mesh AVAs was rejected. The simulation applies the unitless k to a range of circular AVAs instead.
     - **Public data:** no public per-patient dataset with LVOT diameter, LVOT VTI and AV VTI was found (searched 2026-10-25). Open AS echo datasets (e.g. TMED-2, EchoNext) give images or severity grades only. MIMIC echo data need credentialed access.
     - **Caveat:** AVA cut-offs were validated with the circular method, so a correction like this needs its own outcome-based thresholds.
+29. **Slide figure for two messages (user, 2026-10-26).**
+    - **Script:** `19_ellipticity_depth_slide.py`, output in `outputs/figures/slides/`.
+    - **Layout:** one panel, depth on the x-axis (annulus, 2 mm, 4 mm), women vs men in the CVD-safe sex colours.
+    - **Method:** the minor–major axis ellipse only (the methods agree within 0.03), matched pairs. Medians: women / men 1.14 / 1.14, 1.47 / 1.40, 1.53 / 1.43.
+    - **Builds:** build 1 has grey boxes and the "more elliptical with depth" arrow; build 2 adds the sex colours, direct labels and the women − men gap brackets (no gap, +0.07, +0.10).
+    - **Themes:** dark (transparent background, light text) and light.
+30. **Python environment moved out of iCloud (2026-10-26).**
+    - **Problem:** files in `../ukb-mesh/.venv` had become iCloud "dataless" (Optimise Mac Storage), so imports hung.
+    - **Fix:** this project now uses its own environment, `~/.venvs/lvot-ukb`, built from `requirements.txt` with the same package versions. `ukb-mesh` was not modified.
 

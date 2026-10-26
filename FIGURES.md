@@ -82,6 +82,18 @@ PY=python   # Python 3.11 with requirements.txt installed
 | Input | `outputs/tables/lvot_all.csv`, `data/outlines/` (from `scripts/09_save_outlines.py`), raw meshes for the example outline |
 | What it shows | top: one LVOT outline (woman, 65, BMI 26, 2 mm below the annulus) with the diameters each method uses and the shape it assumes; bottom: mean ± SD % difference from the measured outline area by method, level and sex (matched pairs). Table: `outputs/tables/area_methods_summary.csv` |
 
+## 7. Slide version: ellipticity by depth and sex (two builds)
+
+![Ellipticity slide, build 2](outputs/figures/slides/ellipticity_depth_light_build2.png)
+
+| | |
+|---|---|
+| Files | `outputs/figures/slides/ellipticity_depth_{dark,light}_build{1,2}.png` (dark = transparent, for dark slides) |
+| Code | [`scripts/19_ellipticity_depth_slide.py`](scripts/19_ellipticity_depth_slide.py) |
+| Run | `$PY scripts/19_ellipticity_depth_slide.py` |
+| Input | `outputs/tables/area_methods_by_mesh.csv` |
+| What it shows | build 1: the LVOT gets more elliptical below the annulus; build 2: women's LVOT is more elliptical than men's, more so deeper (minor–major axis ellipse, matched pairs) |
+
 ---
 
 ### Rebuilding everything

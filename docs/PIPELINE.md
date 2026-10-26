@@ -100,6 +100,9 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 ## STEP 7d — "What is a mesh?" slide
 [`scripts/16_mesh_explainer.py`](../scripts/16_mesh_explainer.py) → `outputs/figures/mesh_explainer.png`; [`scripts/17_mesh_slide.js`](../scripts/17_mesh_slide.js) → `outputs/slide_what_is_a_mesh.pptx` (one slide, full-slide figure, speaker notes).
 
+## STEP 7e — Ellipticity slide figure (two messages, two builds)
+[`scripts/19_ellipticity_depth_slide.py`](../scripts/19_ellipticity_depth_slide.py) → `outputs/figures/slides/ellipticity_depth_{dark,light}_build{1,2}.png`. One panel: depth on the x-axis, women vs men; build 1 = depth message (grey + arrow), build 2 = sex message (colours + gap brackets). Minor–major axis ellipse, matched pairs.
+
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---
