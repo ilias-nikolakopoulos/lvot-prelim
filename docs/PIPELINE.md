@@ -40,6 +40,7 @@ Check: `n_regions == 3`, otherwise flag `surface_regions_k`.
 ## STEP 3 — Valve rings and axes
 | Sub-step | Method | Code |
 |---|---|---|
+| 3.0 Plug identity (check) | Tags 4–7 are unlabelled in the files. Tests: which ventricle each plug touches, size, angle to the LV long axis, and distances between plug centres, on 40 meshes. Result: 5 aortic, 4 mitral, 6 tricuspid, 7 pulmonary (DECISIONS #25). | [`scripts/15_plug_identity.py`](../scripts/15_plug_identity.py) → `plug_identity.csv` |
 | 3.1 Ring nodes | LV nodes shared with the plug's tets: tag 5 = aortic, tag 4 = mitral. This is a ~2 mm band. | [`STEP 3.1-3.4`](../src/lvot.py:264) |
 | 3.2 Plane | SVD plane fit to the ring nodes; normal oriented into the LV; nodes projected onto the plane; `band_max_depth` = how far the band reaches towards the ventricle | `ring_measure()` [`src/lvot.py:171`](../src/lvot.py:171) |
 | 3.3 Outline | Centre from a direct ellipse fit, then the median radius in each of 72 angular bins (5° each) → polygon. Area → area-derived diameter; perimeter → perimeter-derived diameter. Angular coverage = fraction of bins filled. | `ring_measure()` |
@@ -94,6 +95,9 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 
 ## STEP 7c — Project flowchart
 `outputs/figures/project_flowchart.png` (portrait, PRISMA style): phases down the left (identification, processing, eligibility, measurement, analysis, results), counts in the main column, exclusions to the right (processing errors, meshes without a closed 2 mm section, meshes without a same-age, same-BMI partner), key results at the bottom. Counts are recomputed from `lvot_all.csv`. [`scripts/14_project_flowchart.py`](../scripts/14_project_flowchart.py).
+
+## STEP 7d — "What is a mesh?" slide
+[`scripts/16_mesh_explainer.py`](../scripts/16_mesh_explainer.py) → `outputs/figures/mesh_explainer.png`; [`scripts/17_mesh_slide.js`](../scripts/17_mesh_slide.js) → `outputs/slide_what_is_a_mesh.pptx` (one slide, full-slide figure, speaker notes).
 
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.

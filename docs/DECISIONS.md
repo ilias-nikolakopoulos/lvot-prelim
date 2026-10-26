@@ -67,4 +67,16 @@ One entry per choice: what was tried, what was seen, what was decided, and where
       - Echo-circle error, median, women / men: A −31.9 / −27.6%, B −33.4 / −28.1%, C −32.8 / −27.7%.
     - **Conclusion:** the ~30% underestimation and its sex difference do not depend on the definition.
     - **Status:** kept for further analyses, not presented now (with #21). `11_plax_definitions.py`, `fig_plax_definitions.png`.
+25. **Which plug is the aortic valve? (2026-10-25)**
+    - **Source:** the files label regions only by number (elemTag 0, 1, 4–7). Ugurlu et al. 2025 list six regions (LV, RV, aortic, tricuspid, pulmonary and mitral valves) but give no number-to-region map.
+    - **Method:** the identities were inferred from anatomy and checked on 40 meshes (`15_plug_identity.py`, `plug_identity.csv`).
+    - **Which ventricle each plug touches:** tags 4 and 5 touch only the LV, and tags 6 and 7 only the RV, in 40/40 meshes.
+    - **Tag 5 vs tag 4 (the two LV plugs):**
+      - Tag 5 is the smaller one: median 19.4 mm vs 35.3 mm (40/40).
+      - Tag 5 is oblique to the LV long axis (59°), while tag 4 is nearly perpendicular to it (6°). This is the expected outflow vs inflow valve orientation.
+      - Tag 5 is nearer the RV outflow plug, tag 7 (32 vs 51 mm; 40/40).
+    - **RV plugs:** tag 7 (22 mm, oblique 27°) matches the pulmonary valve, and tag 6 (34 mm, perpendicular 4°) matches the tricuspid.
+    - **LVOT gap:** the open side of the LVOT sections faces tag 4 in every mesh (gap 0–15° from its direction), consistent with aorto-mitral continuity.
+    - **Conclusion:** tag 5 = aortic, 4 = mitral, 6 = tricuspid, 7 = pulmonary. This is an inference, not a documented label; the authors' code may confirm it.
+26. **"What is a mesh?" slide (2026-10-25).** `16_mesh_explainer.py` → `outputs/figures/mesh_explainer.png` (4 panels: whole heart by region; surface triangles; slice showing tetrahedra filling the wall; one tetrahedron), and `17_mesh_slide.js` → `outputs/slide_what_is_a_mesh.pptx` (full-slide figure with speaker notes).
 
