@@ -94,6 +94,8 @@ PY=python   # Python 3.11 with requirements.txt installed
 | Input | `outputs/tables/area_methods_by_mesh.csv` |
 | What it shows | build 1: the LVOT gets more elliptical below the annulus; build 2: women's LVOT is more elliptical than men's, more so deeper (minor–major axis ellipse, matched pairs) |
 
+Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (one slide, on-click build) and `outputs/slide_ellipticity_static.pptx` (two slides). Code: [`scripts/20_ellipticity_slide.js`](scripts/20_ellipticity_slide.js) + [`scripts/20_add_click_build.py`](scripts/20_add_click_build.py).
+
 ---
 
 ### Rebuilding everything

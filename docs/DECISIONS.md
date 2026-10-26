@@ -105,4 +105,8 @@ One entry per choice: what was tried, what was seen, what was decided, and where
 30. **Python environment moved out of iCloud (2026-10-26).**
     - **Problem:** files in `../ukb-mesh/.venv` had become iCloud "dataless" (Optimise Mac Storage), so imports hung.
     - **Fix:** this project now uses its own environment, `~/.venvs/lvot-ukb`, built from `requirements.txt` with the same package versions. `ukb-mesh` was not modified.
+31. **Ready-made ellipticity slide (user, 2026-10-26).**
+    - **Text:** two headline lines of equal weight, one per message: "The LVOT becomes more oval below the annulus" and "…and women's LVOT is more oval than men's". Only "women's" is in the women colour; the footnote gives the method and sample.
+    - **Builds:** a click build, added by XML post-processing because pptxgenjs cannot write animations, plus a two-slide static fallback.
+    - **Font:** Roboto must be installed for PowerPoint or Keynote (`assets/fonts/`); Google Slides has it built in.
 
