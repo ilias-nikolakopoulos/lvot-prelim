@@ -28,6 +28,7 @@ $PY scripts/06_area_methods.py                  # STEP 6.6 outline area vs ellip
 $PY scripts/07_area_methods_demo.py             # STEP 6.7 illustration of the five area estimates
 $PY scripts/10_ellipticity_methods.py           # STEP 6.8 ellipticity by method: median and IQR
 $PY scripts/13_size_by_age_figure.py [--area]   # STEP 6.10 diameter (or area) by age, median and IQR
+$PY scripts/18_ava_simulation.py                # STEP 6.11 AVA circular vs elliptical LVOT, same VTIs
 $PY scripts/14_project_flowchart.py             # STEP 7c study flowchart (PRISMA style)
 NODE_PATH=<dir with pptxgenjs> node scripts/12_highlights_deck.js   # STEP 7b highlights deck -> outputs/LVOT_highlights.pptx
 ```

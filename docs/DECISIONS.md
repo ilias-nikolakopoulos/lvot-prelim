@@ -84,4 +84,16 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Effect:** values changed by at most 0.01 in ellipticity and 0.2 percentage points in the echo error (e.g. 4 mm ellipticity in women 1.55 → 1.54; echo error at 2 mm −32.7 → −32.5% women, −28.6 → −28.8% men).
     - **Unchanged:** `area_methods_by_mesh.csv` keeps all meshes, with a `paired` flag. The adjusted regression still uses all 1,423 meshes, and `fig_raw` still shows all meshes.
     - **Rebuilt:** the write-up tables and the highlights deck.
+28. **AVA with a circular vs elliptical LVOT (2026-10-25).**
+    - **Principle:** with the same LVOT and AV VTIs, AVA scales with the LVOT area used, so the correction factor is k = elliptical (measured outline) area / circular area π/4·D_PLAX².
+    - **k, median (IQR), matched pairs:**
+      - annulus 1.10 (1.08–1.12) in both sexes;
+      - LVOT 2 mm: women 1.48 (1.44–1.54), men 1.40 (1.35–1.46);
+      - LVOT 4 mm: women 1.56 (1.50–1.63), men 1.42 (1.35–1.51).
+      - The minor–major axis ellipse gives k 1.43 (women) and 1.36 (men) at 2 mm.
+    - **Equivalent cut-off:** a corrected AVA of 1.0 cm² corresponds to a circular AVA of about 0.67 cm² (women) and 0.71 cm² (men) at 2 mm, and 0.91 cm² at the annulus.
+    - **Reclassification at 2 mm:** a circular AVA of 0.8 cm² becomes about 1.19 cm² (women) and 1.12 cm² (men), so about 97–100% of hearts would no longer be "severe". At the annulus almost none would be (1%).
+    - **Size-independent approach:** the mesh LVOTs are end-diastolic and smaller than clinical systolic LVOTs, so a fixed-VTI sweep on absolute mesh AVAs was rejected. The simulation applies the unitless k to a range of circular AVAs instead.
+    - **Public data:** no public per-patient dataset with LVOT diameter, LVOT VTI and AV VTI was found (searched 2026-10-25). Open AS echo datasets (e.g. TMED-2, EchoNext) give images or severity grades only. MIMIC echo data need credentialed access.
+    - **Caveat:** AVA cut-offs were validated with the circular method, so a correction like this needs its own outcome-based thresholds.
 
