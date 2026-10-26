@@ -27,6 +27,7 @@ $PY scripts/09_save_outlines.py --all           # STEP 5.6 save 2D outlines per 
 $PY scripts/06_area_methods.py                  # STEP 6.6 outline area vs ellipse / echo circular area
 $PY scripts/07_area_methods_demo.py             # STEP 6.7 illustration of the five area estimates
 $PY scripts/10_ellipticity_methods.py           # STEP 6.8 ellipticity by method: median and IQR
+NODE_PATH=<dir with pptxgenjs> node scripts/12_highlights_deck.js   # STEP 7b highlights deck -> outputs/LVOT_highlights.pptx
 ```
 Full run (~70 min). Run it yourself in Terminal from this folder:
 `caffeinate -i ../ukb-mesh/.venv/bin/python scripts/01_measure.py --all > outputs/logs/measure_all.log 2>&1`

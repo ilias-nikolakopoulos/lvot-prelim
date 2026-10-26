@@ -90,6 +90,9 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 ## STEP 7 — Write-up
 `WRITEUP.md`: methods summary, key numbers, figures, caveats. The results are filled in after the full run. The caveats section already states that **all measurements are end-diastolic** (no systolic meshes exist in this dataset).
 
+
+## STEP 7b — Highlights deck
+`outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---
 ### Data flow
 ```
