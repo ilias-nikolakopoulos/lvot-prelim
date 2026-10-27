@@ -109,4 +109,6 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Text:** two headline lines of equal weight, one per message: "The LVOT becomes more oval below the annulus" and "…and women's LVOT is more oval than men's". Only "women's" is in the women colour; the footnote gives the method and sample.
     - **Builds:** a click build, added by XML post-processing because pptxgenjs cannot write animations, plus a two-slide static fallback.
     - **Font:** Roboto must be installed for PowerPoint or Keynote (`assets/fonts/`); Google Slides has it built in.
-
+32. **Exploratory shape analysis is table-only and descriptive (2026-10-27).**
+    - **Why:** the user asked whether other geometry explains the oval LVOT. The measures already in `lvot_all.csv` allow it without the raw meshes; septal thickness and the aorto-septal angle need the meshes and are not done yet.
+    - **Limit:** the meshes are cohort-average shapes per sex-age-BMI cell, not individuals, so they cannot show disease (e.g. HCM) or individual-level mechanisms. Smaller annulus, smaller myocardial volume and a more acute aorto-LV angle go with a more oval LVOT within each sex; annulus size accounts for the whole sex gap statistically, but the sexes barely overlap in annulus size (1% of women above men's 5th percentile), so this cannot separate size from sex.
