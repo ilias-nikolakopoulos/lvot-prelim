@@ -97,6 +97,6 @@ def wall_geometry(G: dict) -> dict:
         out["aosa_deg"] = 180 - float(np.degrees(np.arccos(np.clip(n @ s, -1, 1))))
     else:
         out["aosa_deg"] = np.nan
-    out["_wall"] = {"X": X, "thick": thick, "septal": septal, "keep": keep, "h": h, "sector": sector,
+    out["_wall"] = {"epi": epi, "rvc": rvc, "X": X, "thick": thick, "septal": septal, "keep": keep, "h": h, "sector": sector,
                     "aosa_pts": X[m], "la": la, "e_s": e_s, "e_t": e_t, "mvc": mvc}
     return out

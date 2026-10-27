@@ -116,6 +116,7 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
   - The 12 segments are basal, mid and apical (thirds of the mitral-to-apex length), each split into septal, anterior (aortic side), lateral and inferior sectors (90° each, centred on the septum). The value is the median thickness of the segment's points.
   - Further measures: subaortic septum (septal points 3–15 mm below the aortic ring), septal bulge ratio (subaortic / mid septum), septal-to-lateral ratios, and the 95th-percentile maximum thickness.
   - Aorto-septal angle = 180° − the angle between the aortic axis and a line fitted to septal points in the PLAX plane, upper half of the LV.
+- **9.9 (check)** [`scripts/24_thickness_method_check.py`](../scripts/24_thickness_method_check.py) → `outputs/tables/thickness_method_check.csv`. Nearest-surface vs perpendicular-ray thickness on the 8-mesh subset (ray along the outward cavity normal, first hit on epicardium or RV cavity, `vtkCellLocator`). Ray / nearest = 1.00–1.09 by segment (mid 1.00–1.05); mid septal/lateral ratio 1.38 vs 1.39. The method does not explain the high septal/lateral ratio.
 - **9.6–9.8** [`scripts/23_wall_phenotypes.py`](../scripts/23_wall_phenotypes.py) (table-only) → `outputs/tables/<inp>_feature_map.csv`, `<inp>_phenotypes.csv`, `outputs/figures/analysis/fig_<inp>_feature_map.png`.
   - Every feature and the ellipticity at 2 and 4 mm become within-sex z-scores: the residual after an age/BMI fit, divided by its SD.
   - Feature map: Spearman ρ between each feature's z and the ellipticity z.
