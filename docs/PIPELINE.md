@@ -109,6 +109,21 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 ## STEP 8.1 — Exploratory: LV and valve geometry vs LVOT ellipticity
 [`scripts/21_shape_vs_ellipticity.py`](../scripts/21_shape_vs_ellipticity.py) (table-only, matched pairs) → `outputs/tables/shape_by_sex.csv`, `shape_vs_ellipticity.csv`, `shape_sexgap_attenuation.csv`. Shape measures already in `lvot_all.csv` (aortic-axis vs LV-long-axis angle, aorto-mitral plane angle and centre distance, LVOT centreline tilt, mitral ring size and ellipticity, LV length, EDV, myocardial volume) plus sphericity = EDV / (π/6·L³). Women vs men, Spearman rho within sex, and how much of the sex coefficient for ellipticity (OLS with age, BMI, age×sex) each standardised measure takes up. Caveat: representative meshes (one per sex-age-BMI cell), and annulus size barely overlaps between the sexes, so "explained" is collinearity, not mediation.
 
+## STEP 9 — Regional wall thickness, aorto-septal angle and phenotypes (exploratory)
+- **9.1–9.5** [`src/wall.py`](../src/wall.py) + [`scripts/22_wall_geometry.py`](../scripts/22_wall_geometry.py) (needs raw meshes; resumable) → `outputs/tables/wall_{subset,all}.csv`, QC pictures in `outputs/figures/qc/wall/`.
+  - The epicardium is the boundary component with the largest enclosed volume; the RV cavity is the other non-LV one.
+  - Thickness at each LV endocardial point is the distance to the RV cavity surface for septal points (nearer the RV than the epicardium), and to the epicardium otherwise. Points within 6 mm of the valve rings are dropped.
+  - The 12 segments are basal, mid and apical (thirds of the mitral-to-apex length), each split into septal, anterior (aortic side), lateral and inferior sectors (90° each, centred on the septum). The value is the median thickness of the segment's points.
+  - Further measures: subaortic septum (septal points 3–15 mm below the aortic ring), septal bulge ratio (subaortic / mid septum), septal-to-lateral ratios, and the 95th-percentile maximum thickness.
+  - Aorto-septal angle = 180° − the angle between the aortic axis and a line fitted to septal points in the PLAX plane, upper half of the LV.
+- **9.6–9.8** [`scripts/23_wall_phenotypes.py`](../scripts/23_wall_phenotypes.py) (table-only) → `outputs/tables/<inp>_feature_map.csv`, `<inp>_phenotypes.csv`, `outputs/figures/analysis/fig_<inp>_feature_map.png`.
+  - Every feature and the ellipticity at 2 and 4 mm become within-sex z-scores: the residual after an age/BMI fit, divided by its SD.
+  - Feature map: Spearman ρ between each feature's z and the ellipticity z.
+  - Phenotypes compare the ellipticity z against a reference group:
+    - **A:** normal septum, thicker elsewhere.
+    - **B:** normal walls, low or high angle (aorto-mitral, aorto-septal, aortic vs LV axis).
+    - **C:** thicker septum.
+
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---

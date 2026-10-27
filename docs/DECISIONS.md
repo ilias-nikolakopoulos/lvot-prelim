@@ -112,3 +112,10 @@ One entry per choice: what was tried, what was seen, what was decided, and where
 32. **Exploratory shape analysis is table-only and descriptive (2026-10-27).**
     - **Why:** the user asked whether other geometry explains the oval LVOT. The measures already in `lvot_all.csv` allow it without the raw meshes; septal thickness and the aorto-septal angle need the meshes and are not done yet.
     - **Limit:** the meshes are cohort-average shapes per sex-age-BMI cell, not individuals, so they cannot show disease (e.g. HCM) or individual-level mechanisms. Smaller annulus, smaller myocardial volume and a more acute aorto-LV angle go with a more oval LVOT within each sex; annulus size accounts for the whole sex gap statistically, but the sexes barely overlap in annulus size (1% of women above men's 5th percentile), so this cannot separate size from sex.
+33. **Wall thickness and phenotypes (user, 2026-10-27).**
+    - **Question:** the user asked for features that go with an elliptical LVOT, including meshes with a normal septum but thicker walls elsewhere, and meshes with normal walls but a different aorto-mitral angle.
+    - **Thickness:** nearest-surface distance, which is simple and robust on tets. It slightly underestimates thickness where the wall is oblique to the surface. Septal points are those nearer the RV.
+    - **Sectors:** 4 sectors per level rather than the 6 AHA basal and mid segments. The meshes have no RV insertion landmarks, so the sectors are centred on the mean RV-facing direction.
+    - **"Normal" and "different":** both are relative to the cohort's own meshes at the same sex, age and BMI (|z| < 1 vs |z| >= 1.5), not to clinical cut-offs.
+    - **Composites:** the phenotypes use the mean septal z and the mean and maximum z of the other walls, because requiring all 13 measures to be normal left almost no reference meshes.
+    - **Test:** the scripts were checked on a synthetic toy heart and a synthetic wall table only. The raw drive was not mounted.

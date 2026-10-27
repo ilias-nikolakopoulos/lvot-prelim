@@ -33,3 +33,12 @@ analysis:
   bmi_ref: 27
   age_blocks: [[46, 54], [55, 59], [60, 64], [65, 69], [70, 74], [75, 83]]
   colours: {F: "#D55E00", M: "#0072B2"}   # Okabe-Ito vermillion / blue, CVD-validated
+
+wall:   # STEP 9 — regional wall thickness and aorto-septal angle (scripts/22, 23)
+  ring_exclude_mm: 6                 # drop LV endo points this close to the aortic / mitral ring (plug faces nearby)
+  levels: {basal: [0.05, 0.3333], mid: [0.3333, 0.6667], apical: [0.6667, 0.95]}  # fraction of LV length from mitral centre
+  subaortic_depth_mm: [3, 15]        # septum below the aortic ring (along the aortic axis): basal septal bulge region
+  plax_strip_mm: 3                   # half-width of the PLAX-plane strip used for the aorto-septal angle
+  aosa_height: [0.05, 0.5]           # part of the septum (fraction of LV length) fitted with a line
+  normal_z: 1.0                      # phenotypes: |z| below this = normal (z = residual after sex-specific age/BMI fit)
+  abnormal_z: 1.5                    # phenotypes: |z| at or above this = different
