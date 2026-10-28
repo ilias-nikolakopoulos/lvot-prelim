@@ -96,6 +96,18 @@ PY=python   # Python 3.11 with requirements.txt installed
 
 Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (one slide, on-click build) and `outputs/slide_ellipticity_static.pptx` (two slides). Code: [`scripts/20_ellipticity_slide.js`](scripts/20_ellipticity_slide.js) + [`scripts/20_add_click_build.py`](scripts/20_add_click_build.py).
 
+## 8. Which cardiac features go with a more elliptical LVOT (exploratory)
+
+![Feature map](outputs/figures/analysis/fig_wall_all_feature_map.png)
+
+| | |
+|---|---|
+| File | [`outputs/figures/analysis/fig_wall_all_feature_map.png`](outputs/figures/analysis/fig_wall_all_feature_map.png) |
+| Code | [`scripts/22_wall_geometry.py`](scripts/22_wall_geometry.py) + [`src/wall.py`](src/wall.py) (per-mesh wall thickness and aorto-septal angle), [`scripts/23_wall_phenotypes.py`](scripts/23_wall_phenotypes.py) (figure and phenotype table) |
+| Run | `$PY scripts/22_wall_geometry.py --all` (~1.5 h, needs the raw meshes) then `$PY scripts/23_wall_phenotypes.py` |
+| Input | `outputs/tables/wall_all.csv`, `lvot_all.csv`, `area_methods_by_mesh.csv` |
+| What it shows | Spearman ρ between each feature and LVOT ellipticity, all 1,423 meshes. Every value is first expressed as a z-score for the mesh's sex, age and BMI. Phenotype comparisons: `outputs/tables/wall_all_phenotypes.csv` |
+
 ---
 
 ### Rebuilding everything

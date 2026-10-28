@@ -120,3 +120,12 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Composites:** the phenotypes use the mean septal z and the mean and maximum z of the other walls, because requiring all 13 measures to be normal left almost no reference meshes.
     - **Test:** the scripts were checked on a synthetic toy heart and a synthetic wall table only. The raw drive was not mounted.
 34. **Thickness method checked (user question, 2026-10-27).** The question was whether nearest-surface distance understates the free wall. A perpendicular ray gives the same values (ratio 1.00–1.09 by segment, mid septal/lateral 1.39 vs 1.38), so we keep nearest-surface distance. The septal/lateral ratio of about 1.4 is in the mesh geometry itself, and our 90-degree sectors differ from CMR segments. The phenotypes use within-cohort z-scores, so a shared offset doesn't matter there; absolute ratios should not be quoted as clinical values. vtkOBBTree returned no hits on these surfaces, so vtkCellLocator is used for rays.
+35. **Wall and angle results (2026-10-27, all 1,423 meshes, 0 errors).**
+    - **What this is:** an exploratory, hypothesis-generating analysis of cohort-average meshes. Every value is a z-score for the mesh's sex, age and BMI.
+    - **Strongest links with LVOT ellipticity:** the aorto-mitral plane angle (ρ about −0.30), aortic annulus diameter (about −0.29), and the angle between the aortic axis and the LV long axis (about −0.18). LV sphericity (+0.18) and the mid septal/lateral ratio (+0.16) are weaker.
+    - **Wall thickness itself:** |ρ| ≤ 0.14 in every segment.
+    - **Phenotype A** (normal septum, thicker elsewhere; n=179) and **C** (thicker septum; n=51): no difference in ellipticity from the reference group (n=740).
+    - **Phenotype B, normal walls with a low aorto-mitral angle** (n=17): more elliptical, by +0.46 SD at 4 mm (95% CI 0.09 to 1.39, p=0.002). The 4 mm median is 1.58 vs 1.50.
+    - **Phenotype B, normal walls with a high aorto-mitral angle** (n=25): rounder, by −1.1 SD at 4 mm (−1.53 to −0.61, p<0.001). The 4 mm median is 1.46.
+    - **Other angles:** the aorto-septal and aortic–LV-axis angle groups do not differ.
+    - **Reading:** in these meshes, LVOT ellipticity tracks valve-plane geometry (how the aortic and mitral annuli are angled to each other), not wall thickness.
