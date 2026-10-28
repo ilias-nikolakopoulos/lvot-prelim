@@ -117,13 +117,15 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
   - Further measures: subaortic septum (septal points 3–15 mm below the aortic ring), septal bulge ratio (subaortic / mid septum), septal-to-lateral ratios, and the 95th-percentile maximum thickness.
   - Aorto-septal angle = 180° − the angle between the aortic axis and a line fitted to septal points in the PLAX plane, upper half of the LV.
 - **9.9 (check)** [`scripts/24_thickness_method_check.py`](../scripts/24_thickness_method_check.py) → `outputs/tables/thickness_method_check.csv`. Nearest-surface vs perpendicular-ray thickness on the 8-mesh subset (ray along the outward cavity normal, first hit on epicardium or RV cavity, `vtkCellLocator`). Ray / nearest = 1.00–1.09 by segment (mid 1.00–1.05); mid septal/lateral ratio 1.38 vs 1.39. The method does not explain the high septal/lateral ratio.
-- **9.6–9.8** [`scripts/23_wall_phenotypes.py`](../scripts/23_wall_phenotypes.py) (table-only) → `outputs/tables/<inp>_feature_map.csv`, `<inp>_phenotypes.csv`, `outputs/figures/analysis/fig_<inp>_feature_map.png`.
+- **9.6–9.8** [`scripts/23_wall_phenotypes.py`](../scripts/23_wall_phenotypes.py) (table-only) → `outputs/tables/<inp>_feature_map.csv`, `<inp>_phenotypes.csv`, `<inp>_angle_continuous.csv`, `outputs/figures/analysis/fig_<inp>_feature_map.png`.
   - Every feature and the ellipticity at 2 and 4 mm become within-sex z-scores: the residual after an age/BMI fit, divided by its SD.
   - Feature map: Spearman ρ between each feature's z and the ellipticity z.
   - Phenotypes compare the ellipticity z against a reference group:
     - **A:** normal septum, thicker elsewhere.
     - **B:** normal walls, low or high angle (aorto-mitral, aorto-septal, aortic vs LV axis).
     - **C:** thicker septum.
+    - **B sensitivity:** the same angle groups with a looser cut-off (|z| ≥ `wall.angle_cut_sensitivity_z`, 1.0), because only 42 of the 151 meshes with an extreme aorto-mitral angle have normal walls.
+  - **9.7b** angles as continuous measures in all normal-wall meshes (n=998), no cut-off: Spearman ρ by sex, and OLS ellipticity z ~ angle z + female, then also adjusted for aortic annulus diameter z, septum z and other-wall mean z.
 
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.

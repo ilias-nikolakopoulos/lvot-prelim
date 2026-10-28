@@ -129,3 +129,9 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Phenotype B, normal walls with a high aorto-mitral angle** (n=25): rounder, by −1.1 SD at 4 mm (−1.53 to −0.61, p<0.001). The 4 mm median is 1.46.
     - **Other angles:** the aorto-septal and aortic–LV-axis angle groups do not differ.
     - **Reading:** in these meshes, LVOT ellipticity tracks valve-plane geometry (how the aortic and mitral annuli are angled to each other), not wall thickness.
+36. **Angle effect re-tested without the small groups (user, 2026-10-27).**
+    - **Why:** the B groups were small (17 and 25) because most meshes with an extreme aorto-mitral angle (|z| ≥ 1.5; 151 of 1,423) also have abnormal walls, so only 42 pass the normal-walls filter.
+    - **Continuous, all 998 normal-wall meshes:** a 1 SD wider aorto-mitral angle goes with −0.39 SD ellipticity at 4 mm (95% CI −0.45 to −0.32; ρ −0.31 women, −0.36 men). Adjusted for annulus size, septum and other walls: −0.34 SD (−0.40 to −0.28). At 2 mm: −0.32, adjusted −0.28. All p < 0.001.
+    - **Looser cut-off (|z| ≥ 1.0):** low angle n=60, +0.42 SD at 4 mm (0.14 to 0.62, p<0.001), median 1.54 vs 1.50; high angle n=61, −0.59 SD (−0.73 to −0.35, p<0.001), median 1.47.
+    - **Other angles:** aorto-septal and aortic–LV-axis angles have small continuous slopes (|slope| ≤ 0.16 SD per SD) and no group differences at either cut-off.
+    - **Reading:** the aorto-mitral angle result does not depend on the small groups or the cut-off. The effect is somewhat smaller than in the 1.5 SD groups.

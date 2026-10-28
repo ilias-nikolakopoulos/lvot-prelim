@@ -11,10 +11,13 @@ So z = how unusual a mesh is for its sex, age and BMI.
       A thick elsewhere    |septum z| < normal_z, some non-septal segment z >= abnormal_z
       B angle low / high   normal walls, one angle z <= -abnormal_z / >= abnormal_z
       C thick septum       septum z >= abnormal_z (for comparison)
+      B (z 1.0)            sensitivity: as B with the cut-off at wall.angle_cut_sensitivity_z instead of abnormal_z
       ellipticity z in each group vs reference: median difference, bootstrap 95% CI, Mann-Whitney p
+  9.7b angles as continuous measures, normal-wall meshes only (no cut-off): Spearman rho (women, men, both) and OLS
+      ellipticity z ~ angle z + female, then + aortic annulus diameter z, septum z, other-wall mean z
   9.8 figure: feature map
 Caveat: representative (cohort-average) meshes; z describes residual shape variation, not individual patients.
-Outputs: outputs/tables/<inp>_feature_map.csv, <inp>_phenotypes.csv, outputs/figures/analysis/fig_<inp>_feature_map.png
+Outputs: outputs/tables/<inp>_feature_map.csv, <inp>_phenotypes.csv, <inp>_angle_continuous.csv, outputs/figures/analysis/fig_<inp>_feature_map.png
 Usage: python scripts/23_wall_phenotypes.py [--inp wall_all|wall_subset]
 """
 import argparse
@@ -104,6 +107,10 @@ G = {"reference (all normal)": walls_ok & ang_ok,
 for c, lab in ANGLES.items():
     G[f"B: normal walls, {lab} low"] = walls_ok & (Z[c] <= -az)
     G[f"B: normal walls, {lab} high"] = walls_ok & (Z[c] >= az)
+sz = W_["angle_cut_sensitivity_z"]
+for c, lab in ANGLES.items():
+    G[f"B (z {sz}): normal walls, {lab} low"] = walls_ok & (Z[c] <= -sz)
+    G[f"B (z {sz}): normal walls, {lab} high"] = walls_ok & (Z[c] >= sz)
 rng = np.random.default_rng(cfg["seed"])
 ref = G["reference (all normal)"]
 rows = []
@@ -123,9 +130,39 @@ for g, m in G.items():
     rows.append(r)
 PH = pd.DataFrame(rows)
 
+
+# 9.7b angles as continuous measures within normal-wall meshes
+def ols(y, X):
+    X = np.column_stack([np.ones(len(y))] + X)
+    b, *_ = np.linalg.lstsq(X, y, rcond=None)
+    res = y - X @ b
+    df_ = len(y) - X.shape[1]
+    se = np.sqrt(np.diag(res @ res / df_ * np.linalg.inv(X.T @ X)))
+    return b[1], se[1], 2 * stats.t.sf(abs(b[1] / se[1]), df_)
+
+
+Zw = Z[walls_ok].assign(female=lambda x: (x.sex == "F").astype(float), septum=sep_z[walls_ok], other=oth_mean[walls_ok])
+rows = []
+for c, lab in ANGLES.items():
+    for o in OUT:
+        r = {"angle": lab, "outcome": o}
+        for s, sub in (("F", Zw[Zw.sex == "F"]), ("M", Zw[Zw.sex == "M"]), ("all", Zw)):
+            x = sub[[c, o]].dropna()
+            r[f"n_{s}"] = len(x)
+            r[f"rho_{s}"], r[f"rho_p_{s}"] = stats.spearmanr(x[c], x[o])
+        for tag, adj in (("", []), ("_adj", ["ao_d_area", "septum", "other"])):
+            x = Zw[[o, c, "female"] + adj].dropna()
+            b, se, p = ols(x[o].values, [x[c].values, x.female.values] + [x[k].values for k in adj])
+            r[f"slope{tag}"], r[f"lo{tag}"], r[f"hi{tag}"], r[f"p{tag}"], r[f"n{tag}"] = b, b - 1.96 * se, b + 1.96 * se, p, len(x)
+        rows.append(r)
+CT = pd.DataFrame(rows)
+
 pd.set_option("display.width", 250, "display.max_columns", 30)
 print(MAP[["label", "rho_ellip_2mm_F", "rho_ellip_2mm_M", "rho_ellip_4mm_F", "rho_ellip_4mm_M", "rho_ellip_4mm_all"]].round(2).to_string(index=False))
 print(PH.round(3).to_string(index=False))
+print(f"normal-wall meshes: {int(walls_ok.sum())}")
+print(CT.round(3).to_string(index=False))
+CT.to_csv(T / f"{a.inp}_angle_continuous.csv", index=False)
 MAP.to_csv(T / f"{a.inp}_feature_map.csv", index=False)
 PH.to_csv(T / f"{a.inp}_phenotypes.csv", index=False)
 
@@ -156,4 +193,5 @@ fig.tight_layout()
 fp = ROOT / f"outputs/figures/analysis/fig_{a.inp}_feature_map.png"
 fig.savefig(fp, dpi=200)
 log_run(__file__, inp=a.inp, outputs=[f"outputs/tables/{a.inp}_feature_map.csv", f"outputs/tables/{a.inp}_phenotypes.csv",
+                                      f"outputs/tables/{a.inp}_angle_continuous.csv",
                                       str(fp.relative_to(ROOT))], n=len(D))

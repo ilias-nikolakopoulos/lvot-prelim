@@ -42,3 +42,4 @@ wall:   # STEP 9 — regional wall thickness and aorto-septal angle (scripts/22,
   aosa_height: [0.05, 0.5]           # part of the septum (fraction of LV length) fitted with a line
   normal_z: 1.0                      # phenotypes: |z| below this = normal (z = residual after sex-specific age/BMI fit)
   abnormal_z: 1.5                    # phenotypes: |z| at or above this = different
+  angle_cut_sensitivity_z: 1.0       # STEP 9.7 sensitivity: angle groups with this looser cut-off (more meshes per group)
