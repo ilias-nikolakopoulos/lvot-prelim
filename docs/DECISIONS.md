@@ -135,3 +135,8 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Looser cut-off (|z| ≥ 1.0):** low angle n=60, +0.42 SD at 4 mm (0.14 to 0.62, p<0.001), median 1.54 vs 1.50; high angle n=61, −0.59 SD (−0.73 to −0.35, p<0.001), median 1.47.
     - **Other angles:** aorto-septal and aortic–LV-axis angles have small continuous slopes (|slope| ≤ 0.16 SD per SD) and no group differences at either cut-off.
     - **Reading:** the aorto-mitral angle result does not depend on the small groups or the cut-off. The effect is somewhat smaller than in the 1.5 SD groups.
+37. **Aorto-mitral angle direction and literature (2026-10-27).**
+    - **Convention:** `ao_mv_angle` is the angle between the two ring normals, so clinical AMA ≈ 180° − `ao_mv_angle`. "Low angle" in #35–36 and `wall_all_phenotypes.csv` therefore means a *wide* (obtuse) clinical AMA.
+    - **Finding in clinical terms:** a wider clinical AMA goes with a more elliptical LVOT.
+    - **Spread:** in the meshes, clinical AMA is a median of 120.5° in women and 116.7° in men, SD 2.6° within sex (patients: about 10°).
+    - **Literature review:** see [LIT_aorto_mitral_angle.md](LIT_aorto_mitral_angle.md). A wider AMA goes with LV and mitral-annulus enlargement. A narrower one goes with age, a small hyperdynamic LV, aortic elongation, HCM and SAM. The meshes agree: within sex, a wider AMA goes with larger EDV, a larger mitral annulus, a longer LV and younger age.
