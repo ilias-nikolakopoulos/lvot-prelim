@@ -108,6 +108,18 @@ Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (
 | Input | `outputs/tables/wall_all.csv`, `lvot_all.csv`, `area_methods_by_mesh.csv` |
 | What it shows | Spearman ρ between each feature and LVOT ellipticity, all 1,423 meshes. Every value is first expressed as a z-score for the mesh's sex, age and BMI. Phenotype comparisons: `outputs/tables/wall_all_phenotypes.csv` |
 
+## 9. Strain needed for a given EF, by LVOT ellipticity (model estimate)
+
+![Strain for EF](outputs/figures/analysis/fig_strain_for_ef.png)
+
+| | |
+|---|---|
+| File | [`outputs/figures/analysis/fig_strain_for_ef.png`](outputs/figures/analysis/fig_strain_for_ef.png) |
+| Code | [`scripts/25_strain_for_ef.py`](scripts/25_strain_for_ef.py) |
+| Run | `$PY scripts/25_strain_for_ef.py` (seconds) |
+| Input | `outputs/tables/lvot_all.csv`, `area_methods_by_mesh.csv`; scenarios in `config.yaml` (`strain_model`) |
+| What it shows | Left: the GLS each mesh would need for EF 60% (GCS = GLS), from its end-diastolic shape, against LVOT ellipticity at 2 mm. Right: the slope (z for sex, age and BMI) in every EF and GCS/GLS scenario, before and after adjusting for EDV and myocardial volume. Not measured strain. Tables: `strain_for_ef_by_mesh.csv`, `strain_for_ef_vs_ellipticity.csv` |
+
 ---
 
 ### Rebuilding everything

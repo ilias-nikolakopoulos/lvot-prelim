@@ -43,3 +43,9 @@ wall:   # STEP 9 — regional wall thickness and aorto-septal angle (scripts/22,
   normal_z: 1.0                      # phenotypes: |z| below this = normal (z = residual after sex-specific age/BMI fit)
   abnormal_z: 1.5                    # phenotypes: |z| at or above this = different
   angle_cut_sensitivity_z: 1.0       # STEP 9.7 sensitivity: angle groups with this looser cut-off (more meshes per group)
+
+strain_model:   # STEP 10 — strain each end-diastolic geometry needs for a given EF (scripts/25); model estimate, not measured
+  ef: [0.55, 0.60, 0.65]             # ejection fractions solved for
+  primary_ef: 0.60
+  gcs_gls_ratio: [0.8, 1.0, 1.2]     # midwall circumferential / longitudinal strain, held fixed while solving
+  primary_ratio: 1.0

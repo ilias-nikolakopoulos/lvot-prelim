@@ -127,6 +127,14 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
     - **B sensitivity:** the same angle groups with a looser cut-off (|z| ≥ `wall.angle_cut_sensitivity_z`, 1.0), because only 42 of the 151 meshes with an extreme aorto-mitral angle have normal walls.
   - **9.7b** angles as continuous measures in all normal-wall meshes (n=998), no cut-off: Spearman ρ by sex, and OLS ellipticity z ~ angle z + female, then also adjusted for aortic annulus diameter z, septum z and other-wall mean z.
 
+## STEP 10 — Strain needed for a given EF (model estimate, exploratory)
+[`scripts/25_strain_for_ef.py`](../scripts/25_strain_for_ef.py) (table-only, seconds) → `outputs/tables/strain_for_ef_by_mesh.csv`, `strain_for_ef_vs_ellipticity.csv`, `outputs/figures/analysis/fig_strain_for_ef.png`. Not measured strain: the meshes are end-diastolic only.
+- **10.1** LV as a half prolate ellipsoid: long semi-axis = `lv_length`, short semi-axis from EDV, uniform wall thickness from myocardial volume.
+- **10.2** Systole: midwall short and long axes shorten by GCS and GLS; the wall thickens at constant myocardial volume; EF = 1 − ESV/EDV. Same idea and assumptions as Stokke et al. (JACC 2017), our own derivation. Check on the median mesh: GCS moves EF 2.0 times as much as GLS, as Stokke reported.
+- **10.3** For each mesh, solve the GLS (with GCS = ratio × GLS) that reaches the target EF. Scenarios: EF and ratio from `strain_model` in `config.yaml` (EF 55/60/65%, ratio 0.8/1.0/1.2; primary EF 60%, ratio 1.0).
+- **10.4** Needed |GLS| and ellipticity (2 and 4 mm) as within-sex z (as 9.6): Spearman ρ by sex, OLS slope + female, then also adjusted for EDV z and myocardial volume z.
+- **10.5** Figure: needed |GLS| vs ellipticity at 2 mm, and the slope in every scenario.
+
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---
