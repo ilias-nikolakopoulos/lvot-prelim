@@ -139,6 +139,14 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
   - **b. Like-for-like:** Equation 1 with our assumptions (midwall strain f = 0.5, incompressible c = 1) vs our model on the same mesh geometry (d = 2r, w = T).
   - **c. Published settings:** Equation 1 with Stokke's defaults (`strain_model.stokke_f` 0.33, `stokke_c` 0.95); STEP 10.4 ellipticity analysis repeated.
 
+## STEP 11 — Strain models in aortic stenosis hearts (external data, exploratory)
+[`scripts/27_chan2024_as_strain.py`](../scripts/27_chan2024_as_strain.py) (seconds; downloads ~6 MB on first run) → `outputs/tables/chan2024_by_mesh.csv`, `chan2024_summary.csv`, `outputs/figures/analysis/fig_chan2024_strain_check.png`.
+- **Data:** Chan et al., Circ Cardiovasc Imaging 2024 ([doi:10.1161/CIRCIMAGING.123.016489](https://doi.org/10.1161/CIRCIMAGING.123.016489)), FigShare [10.6084/m9.figshare.25428604](https://doi.org/10.6084/m9.figshare.25428604), CC BY 4.0. 108 end-diastolic LV meshes with a group (36 severe AS, 18 post-AVR, 19 hypertension, 35 controls) and a per-case sheet. Saved to `data/external/chan2024_as/` (git-ignored). LV only: no LVOT or valves.
+- **11.1** Download the sheet and VTK meshes if missing (`external.chan2024_as` in `config.yaml`).
+- **11.2** Per mesh: EDV (endocardium capped with a fan at its basal rim), myocardial volume (closed endo + epi + basal ring surface), LV length (rim centre to farthest endocardial point), median wall thickness; then r and T as STEP 10.1.
+- **11.3** Forward test: EF from measured CMR feature-tracking GLS and GCS + geometry (our model; Stokke Equation 1 with f = 0, 0.33, 0.5) vs measured EF: per case after AVR (echo EF), group means for AS and hypertension (paper Table 1 CMR EF); controls use the paper's group-mean strain (Table 2), as the sheet has no control strain.
+- **11.4** Backward use: |GLS| needed for EF 60% (and at each group's measured EF) vs measured strain, by group and per case (Spearman); paired pre/post-AVR changes.
+
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---

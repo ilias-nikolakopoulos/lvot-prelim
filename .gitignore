@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 outputs/logs/*.log
 data/outlines/
+data/external/

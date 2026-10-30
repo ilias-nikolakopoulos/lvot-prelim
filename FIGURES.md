@@ -131,6 +131,18 @@ Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (
 | Run | `$PY scripts/26_strain_model_check.py` (seconds, after script 25) |
 | What it shows | The |GLS| each mesh needs for EF 60% (GCS = GLS) from our model vs Stokke's published Equation 1. Left: same assumptions (midwall strain, incompressible wall). Right: Stokke's published settings (strain layer one third into the wall, myocardium 5% compressible). Table: `strain_model_check.csv` |
 
+## 10. Strain models in aortic stenosis hearts (external data)
+
+![Chan 2024 strain check](outputs/figures/analysis/fig_chan2024_strain_check.png)
+
+| | |
+|---|---|
+| File | [`outputs/figures/analysis/fig_chan2024_strain_check.png`](outputs/figures/analysis/fig_chan2024_strain_check.png) |
+| Code | [`scripts/27_chan2024_as_strain.py`](scripts/27_chan2024_as_strain.py) |
+| Run | `$PY scripts/27_chan2024_as_strain.py` (seconds; downloads the public data on first run) |
+| Input | Chan et al. 2024 public data (FigShare 10.6084/m9.figshare.25428604, CC BY 4.0; please cite doi:10.1161/CIRCIMAGING.123.016489) |
+| What it shows | Left: EF predicted by Stokke's Equation 1 from measured CMR feature-tracking strain and each mesh's geometry, against measured EF (per case after AVR; group means for AS, hypertension and controls). Right: |GLS| needed for EF 60% from geometry against measured |GLS|. Tables: `chan2024_by_mesh.csv`, `chan2024_summary.csv` |
+
 ---
 
 ### Rebuilding everything

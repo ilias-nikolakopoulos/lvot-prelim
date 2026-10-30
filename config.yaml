@@ -51,3 +51,11 @@ strain_model:   # STEP 10 — strain each end-diastolic geometry needs for a giv
   primary_ratio: 1.0
   stokke_f: 0.33                     # STEP 10.6 check: strain layer, fraction of wall from endocardium (Stokke default)
   stokke_c: 0.95                     # STEP 10.6 check: systolic / diastolic myocardial volume (Stokke default)
+
+external:   # third-party data (downloaded by the script that uses it; not committed)
+  chan2024_as:   # Chan et al., Circ Cardiovasc Imaging 2024 (doi:10.1161/CIRCIMAGING.123.016489); FigShare 10.6084/m9.figshare.25428604, CC BY 4.0
+    dir: data/external/chan2024_as
+    files:
+      infocases.xls: https://ndownloader.figshare.com/files/46382110
+      VTKmeshesAlignedDofs.zip: https://ndownloader.figshare.com/files/46374016
+    strain_layer_f: [0.0, 0.33, 0.5]   # STEP 11 sensitivity: feature-tracking strain layer is not stated (0 = endocardium)
