@@ -134,6 +134,10 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 - **10.3** For each mesh, solve the GLS (with GCS = ratio × GLS) that reaches the target EF. Scenarios: EF and ratio from `strain_model` in `config.yaml` (EF 55/60/65%, ratio 0.8/1.0/1.2; primary EF 60%, ratio 1.0).
 - **10.4** Needed |GLS| and ellipticity (2 and 4 mm) as within-sex z (as 9.6): Spearman ρ by sex, OLS slope + female, then also adjusted for EDV z and myocardial volume z.
 - **10.5** Figure: needed |GLS| vs ellipticity at 2 mm, and the slope in every scenario.
+- **10.6 (check)** [`scripts/26_strain_model_check.py`](../scripts/26_strain_model_check.py) → `outputs/tables/strain_model_check.csv`, `outputs/figures/analysis/fig_strain_model_check.png`. Model functions, including Stokke's Equation 1 (transcribed from the article), are in [`src/strain.py`](../src/strain.py).
+  - **a. Transcription:** our code of Equation 1 reproduces the paper's numbers (Figure 4A and 5A values given in its text).
+  - **b. Like-for-like:** Equation 1 with our assumptions (midwall strain f = 0.5, incompressible c = 1) vs our model on the same mesh geometry (d = 2r, w = T).
+  - **c. Published settings:** Equation 1 with Stokke's defaults (`strain_model.stokke_f` 0.33, `stokke_c` 0.95); STEP 10.4 ellipticity analysis repeated.
 
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.

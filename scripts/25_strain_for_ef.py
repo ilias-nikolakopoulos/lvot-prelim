@@ -2,7 +2,8 @@
 
 Model estimate, NOT measured strain: the meshes are end-diastolic only. Same idea as Stokke et al. (JACC 2017,
 doi:10.1016/j.jacc.2017.06.046): EF depends on GLS, GCS, wall thickness and short-axis diameter, so at a fixed EF the
-strain needed depends on geometry. Our own derivation, with the same assumptions:
+strain needed depends on geometry. Our own derivation (midwall strain, incompressible wall; checked against Stokke in STEP 10.6):
+  Model functions in src/strain.py.
   10.1 LV = half prolate ellipsoid (cut at the base). Cavity: long semi-axis L = lv_length, short semi-axis r from
        EDV = 2/3 pi r^2 L. Wall thickness T (uniform) from myocardial volume, outer semi-axes r+T, L+T.
   10.2 Systole: midwall semi-axes shorten by GCS (r + T/2) and GLS (L + T/2); the wall thickens so myocardial volume is
@@ -21,42 +22,17 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy import optimize, stats
+from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.config import load_config  # noqa: E402
 from src.provenance import log_run  # noqa: E402
+from src.strain import ef, geometry, gls_needed  # noqa: E402
 
 cfg = load_config()
 S_, SEXC = cfg["strain_model"], cfg["analysis"]["colours"]
 T_ = ROOT / "outputs/tables"
-K = 2 / 3 * np.pi  # half-ellipsoid volume = K * a^2 * c
-
-
-# STEP 10.1 — geometry from EDV, myocardial volume and LV length (mm, mm^3)
-def geometry(edv, myo, L):
-    r = np.sqrt(edv / (K * L))
-    T = optimize.brentq(lambda t: K * ((r + t) ** 2 * (L + t) - r * r * L) - myo, 0, 50)
-    return r, T
-
-
-# STEP 10.2 — EF for given strains (fractions, negative = shortening)
-def ef(r, L, T, gls, gcs):
-    myo = K * ((r + T) ** 2 * (L + T) - r * r * L)
-    rm, lm = (r + T / 2) * (1 + gcs), (L + T / 2) * (1 + gls)
-    f = lambda t: K * ((rm + t / 2) ** 2 * (lm + t / 2) - (rm - t / 2) ** 2 * (lm - t / 2)) - myo  # noqa: E731
-    if f(2 * min(rm, lm)) < 0:  # wall cannot hold the myocardium: cavity obliterated
-        return 1.0
-    t = optimize.brentq(f, 0, 2 * min(rm, lm))
-    return 1 - (rm - t / 2) ** 2 * (lm - t / 2) / (r * r * L)
-
-
-# STEP 10.3 — GLS needed for a target EF, with GCS = ratio x GLS
-def gls_needed(r, L, T, target, ratio):
-    return optimize.brentq(lambda s: ef(r, L, T, s, ratio * s) - target, -0.6, 0)
-
-
 d = pd.read_csv(T_ / "lvot_all.csv")
 A = pd.read_csv(T_ / "area_methods_by_mesh.csv")
 A = A[A.level.str.startswith("LVOT")].assign(e=lambda x: x.ct_long / x.ct_short)

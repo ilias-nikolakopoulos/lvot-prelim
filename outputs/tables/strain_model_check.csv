@@ -1,0 +1,21 @@
+check,item,paper,value,mean_diff,sd_diff,min_diff,max_diff,pearson_r,spearman_rho,lo,hi,p,n
+a transcription,"Fig 4A: EF at GLS = GCS = -20 % (d 51, w 9)",59.0,59.5969879584775,,,,,,,,,,
+a transcription,"Fig 4A: EF at GLS 0, GCS -20 % (d 51, w 9)",43.0,43.64170380622835,,,,,,,,,,
+a transcription,"Fig 4A: EF at GCS 0, GLS -20 % (d 51, w 9)",23.0,23.69759861591695,,,,,,,,,,
+a transcription,"Fig 5A: strain for EF 50 %, w 10 (d 54)",-16.0,-16.001035066081077,,,,,,,,,,
+a transcription,"Fig 5A: strain for EF 50 %, w 20 (d 54)",-13.0,-12.959510121329497,,,,,,,,,,
+b like-for-like,"EF at GLS = GCS = -20 % (% points): Stokke f 0.5, c 1 minus ours",,,0.5863115162949394,0.25321042390399257,0.09629189792659254,2.0001544976349983,0.9981948347945088,0.9982145670585295,,,,
+b like-for-like,"GLS for EF 60% (% points): Stokke f 0.5, c 1 minus ours",,,0.14598223093108675,0.06162018762897529,0.005429885491159414,0.440099032685079,0.9984044012449251,0.9981586081703092,,,,
+c published settings,"GLS for EF 60% (% points): Stokke f 0.33, c 0.95 minus ours",,,-2.4684575934798842,0.045761142925832214,-2.640930758389956,-2.3327285723054008,0.9982746387304461,0.9981586081703092,,,,
+c published settings,"median GLS for EF 60%, F: ours_gls",,-18.738753232562484,,,,,,,,,,
+c published settings,"median GLS for EF 60%, F: stk_pub_gls",,-21.19489576978473,,,,,,,,,,
+c published settings,"median GLS for EF 60%, M: ours_gls",,-18.417249664214058,,,,,,,,,,
+c published settings,"median GLS for EF 60%, M: stk_pub_gls",,-20.906440167515292,,,,,,,,,,
+c ellipticity slope,"ours: |GLS| z per ellipticity z, ellip_2mm",,0.07697948389516393,,,,,,,0.025304707314279203,0.12865426047604867,0.003558253339032979,1413.0
+c ellipticity slope,"ours: |GLS| z per ellipticity z, ellip_2mm + EDV, myo volume",,0.013273611993418012,,,,,,,0.00570019681786194,0.020847027168974085,0.0006093063541766969,1413.0
+c ellipticity slope,"ours: |GLS| z per ellipticity z, ellip_4mm",,0.061656809279464694,,,,,,,0.009742769285116602,0.11357084927381278,0.020060732425526567,1423.0
+c ellipticity slope,"ours: |GLS| z per ellipticity z, ellip_4mm + EDV, myo volume",,0.012767606862467322,,,,,,,0.005174517156486809,0.020360696568447835,0.0010060453522482264,1423.0
+c ellipticity slope,"Stokke f 0.33, c 0.95: |GLS| z per ellipticity z, ellip_2mm",,0.09414216065905592,,,,,,,0.042517850963492504,0.14576647035461934,0.00036306595565598434,1413.0
+c ellipticity slope,"Stokke f 0.33, c 0.95: |GLS| z per ellipticity z, ellip_2mm + EDV, myo volume",,0.03068549420817011,,,,,,,0.021067801648305965,0.04030318676803425,5.313619122742497e-10,1413.0
+c ellipticity slope,"Stokke f 0.33, c 0.95: |GLS| z per ellipticity z, ellip_4mm",,0.07835401762053493,,,,,,,0.026500927032187857,0.13020710820888198,0.003110188589833696,1423.0
+c ellipticity slope,"Stokke f 0.33, c 0.95: |GLS| z per ellipticity z, ellip_4mm + EDV, myo volume",,0.030126526463952,,,,,,,0.02049239267176261,0.03976066025614139,1.1436614961812268e-09,1423.0

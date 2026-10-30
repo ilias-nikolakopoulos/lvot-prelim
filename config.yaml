@@ -49,3 +49,5 @@ strain_model:   # STEP 10 — strain each end-diastolic geometry needs for a giv
   primary_ef: 0.60
   gcs_gls_ratio: [0.8, 1.0, 1.2]     # midwall circumferential / longitudinal strain, held fixed while solving
   primary_ratio: 1.0
+  stokke_f: 0.33                     # STEP 10.6 check: strain layer, fraction of wall from endocardium (Stokke default)
+  stokke_c: 0.95                     # STEP 10.6 check: systolic / diastolic myocardial volume (Stokke default)

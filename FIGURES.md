@@ -120,6 +120,17 @@ Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (
 | Input | `outputs/tables/lvot_all.csv`, `area_methods_by_mesh.csv`; scenarios in `config.yaml` (`strain_model`) |
 | What it shows | Left: the GLS each mesh would need for EF 60% (GCS = GLS), from its end-diastolic shape, against LVOT ellipticity at 2 mm. Right: the slope (z for sex, age and BMI) in every EF and GCS/GLS scenario, before and after adjusting for EDV and myocardial volume. Not measured strain. Tables: `strain_for_ef_by_mesh.csv`, `strain_for_ef_vs_ellipticity.csv` |
 
+**Model check against Stokke et al. 2017** (not a validation against measured strain):
+
+![Strain model check](outputs/figures/analysis/fig_strain_model_check.png)
+
+| | |
+|---|---|
+| File | [`outputs/figures/analysis/fig_strain_model_check.png`](outputs/figures/analysis/fig_strain_model_check.png) |
+| Code | [`scripts/26_strain_model_check.py`](scripts/26_strain_model_check.py), equations in [`src/strain.py`](src/strain.py) |
+| Run | `$PY scripts/26_strain_model_check.py` (seconds, after script 25) |
+| What it shows | The |GLS| each mesh needs for EF 60% (GCS = GLS) from our model vs Stokke's published Equation 1. Left: same assumptions (midwall strain, incompressible wall). Right: Stokke's published settings (strain layer one third into the wall, myocardium 5% compressible). Table: `strain_model_check.csv` |
+
 ---
 
 ### Rebuilding everything
