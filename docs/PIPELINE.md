@@ -147,6 +147,15 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 - **11.3** Forward test: EF from measured CMR feature-tracking GLS and GCS + geometry (our model; Stokke Equation 1 with f = 0, 0.33, 0.5) vs measured EF: per case after AVR (echo EF), group means for AS and hypertension (paper Table 1 CMR EF); controls use the paper's group-mean strain (Table 2), as the sheet has no control strain.
 - **11.4** Backward use: |GLS| needed for EF 60% (and at each group's measured EF) vs measured strain, by group and per case (Spearman); paired pre/post-AVR changes.
 
+## STEP 12 — Synthetic aortic stenosis: strain needed for EF by LVOT ellipticity (model estimate, exploratory)
+[`scripts/28_synthetic_as_strain.py`](../scripts/28_synthetic_as_strain.py) (about 35 s; needs STEP 10 and STEP 11 outputs) → `outputs/tables/synthetic_as_by_mesh.csv`, `synthetic_as_summary.csv`, `outputs/figures/analysis/fig_synthetic_as_strain.png`.
+- **12.1** Remodelling ratios from the Chan meshes (STEP 11): median EDV, myocardial volume and LV length of AS and post-AVR hearts divided by controls (`as_remodelling` in `config.yaml`). AS: EDV ×0.94, myocardium ×1.44, length ×1.00; post-AVR: ×0.90, ×1.18, ×0.94.
+- **12.2** Scenarios per UKB mesh: as measured, AS, post-AVR, and hypertrophy only (myocardium ×1.25 / 1.5 / 2.0). The strain models use only EDV, myocardial volume and length, so this equals a uniformly thickened wall; LVOT shape kept as measured.
+- **12.3** |GLS| needed for EF 55/60/65% (GCS = GLS), our model and Stokke Equation 1 (f 0.33, c 0.95); change from as measured.
+- **12.4** Ellipticity analysis as STEP 10.4 in each scenario (z within sex for age and BMI; + EDV and myocardial volume of the remodelled geometry).
+- **12.5** Heterogeneous hypertrophy: per-mesh myocardial ratio = 1.44 × exp(N(0, 0.19)), 0.19 = excess log-SD of AS over control myocardium in Chan; 200 draws.
+- **12.6** Figure.
+
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---

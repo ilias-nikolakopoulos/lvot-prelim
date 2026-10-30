@@ -147,3 +147,16 @@ Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (
 
 ### Rebuilding everything
 `bash run_all.sh` runs the whole pipeline in order. The two long steps (measuring all meshes and saving their outlines, about an hour each) need the raw meshes from Zenodo ([10.5281/zenodo.15649643](https://doi.org/10.5281/zenodo.15649643), CC0) and are resumable. All other figures can be redrawn from the tables already in `outputs/tables/`.
+
+## 11. Synthetic aortic stenosis: strain needed for EF by LVOT ellipticity (model estimate)
+
+![Synthetic AS strain](outputs/figures/analysis/fig_synthetic_as_strain.png)
+
+| | |
+|---|---|
+| File | [`outputs/figures/analysis/fig_synthetic_as_strain.png`](outputs/figures/analysis/fig_synthetic_as_strain.png) |
+| Code | [`scripts/28_synthetic_as_strain.py`](scripts/28_synthetic_as_strain.py) |
+| Run | `$PY scripts/28_synthetic_as_strain.py` (about 35 s; after scripts 25 and 27) |
+| Input | `lvot_all.csv`, `area_methods_by_mesh.csv`, `chan2024_by_mesh.csv` (remodelling ratios, Chan et al. 2024, CC BY 4.0) |
+| What it shows | Left: |GLS| needed for EF 60% (Stokke Equation 1) against LVOT ellipticity at 2 mm, UKB meshes as measured (faint, dashed) and with AS remodelling applied (solid). Right: ellipticity slope (SD per SD, 95% CI) in each remodelling scenario, both models, unadjusted and adjusted for EDV and myocardial volume. Tables: `synthetic_as_by_mesh.csv`, `synthetic_as_summary.csv` |
+
