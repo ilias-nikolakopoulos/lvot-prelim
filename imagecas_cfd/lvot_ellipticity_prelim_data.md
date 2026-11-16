@@ -1,4 +1,4 @@
-# LVOT ellipticity and echo stroke-volume error: steps, figures and code
+# LVOT ellipticity and CFD from CT
 
 Status as of 2026-11-15. Everything here runs from the `imagecas` folder:
 `cd "data/meshes/imagecas"`.
