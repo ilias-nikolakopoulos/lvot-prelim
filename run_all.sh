@@ -3,7 +3,6 @@
 # Run from this folder. The raw meshes must be at data_dir in config.yaml. About 4 h in total; the long steps
 # (01 --all, 09 --all, 22 --all) are resumable. On macOS run it under caffeinate in Terminal:
 #   caffeinate -i bash run_all.sh > outputs/logs/run_all.log 2>&1
-# STEPS 10-12 (strain models, scripts 25-28) are not part of the report and are not run here.
 set -euo pipefail
 cd "$(dirname "$0")"
 PY="${PY:-.venv/bin/python}"   # Python 3.11 with requirements.txt installed

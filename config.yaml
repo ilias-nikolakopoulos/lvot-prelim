@@ -43,27 +43,3 @@ wall:   # STEP 9 — regional wall thickness and aorto-septal angle (scripts/22,
   normal_z: 1.0                      # phenotypes: |z| below this = normal (z = residual after sex-specific age/BMI fit)
   abnormal_z: 1.5                    # phenotypes: |z| at or above this = different
   angle_cut_sensitivity_z: 1.0       # STEP 9.7 sensitivity: angle groups with this looser cut-off (more meshes per group)
-
-strain_model:   # STEP 10 — strain each end-diastolic geometry needs for a given EF (scripts/25); model estimate, not measured
-  ef: [0.55, 0.60, 0.65]             # ejection fractions solved for
-  primary_ef: 0.60
-  gcs_gls_ratio: [0.8, 1.0, 1.2]     # midwall circumferential / longitudinal strain, held fixed while solving
-  primary_ratio: 1.0
-  stokke_f: 0.33                     # STEP 10.6 check: strain layer, fraction of wall from endocardium (Stokke default)
-  stokke_c: 0.95                     # STEP 10.6 check: systolic / diastolic myocardial volume (Stokke default)
-
-as_remodelling:   # STEP 12 — synthetic AS geometry on the UKB meshes (scripts/28); ratios measured in Chan 2024 (STEP 11)
-  reference_group: Control           # Chan group the ratios are relative to
-  groups: [AS, AS post-AVR]          # Chan groups whose median EDV, myocardial volume and LV length ratios are applied
-  statistic: median                  # group summary used for the ratios (volumes are right-skewed)
-  hypertrophy_myo_ratio: [1.25, 1.5, 2.0]   # sensitivity: myocardial volume x ratio, EDV and length unchanged
-  heterogeneity_reps: 200            # sensitivity: per-mesh myocardial ratio drawn from the Chan AS / control spread
-  seed: 20261029
-
-external:   # third-party data (downloaded by the script that uses it; not committed)
-  chan2024_as:   # Chan et al., Circ Cardiovasc Imaging 2024 (doi:10.1161/CIRCIMAGING.123.016489); FigShare 10.6084/m9.figshare.25428604, CC BY 4.0
-    dir: data/external/chan2024_as
-    files:
-      infocases.xls: https://ndownloader.figshare.com/files/46382110
-      VTKmeshesAlignedDofs.zip: https://ndownloader.figshare.com/files/46374016
-    strain_layer_f: [0.0, 0.33, 0.5]   # STEP 11 sensitivity: feature-tracking strain layer is not stated (0 = endocardium)

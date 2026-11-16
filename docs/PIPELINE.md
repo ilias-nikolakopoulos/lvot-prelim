@@ -127,35 +127,6 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
     - **B sensitivity:** the same angle groups with a looser cut-off (|z| ≥ `wall.angle_cut_sensitivity_z`, 1.0), because only 42 of the 151 meshes with an extreme aorto-mitral angle have normal walls.
   - **9.7b** angles as continuous measures in all normal-wall meshes (n=998), no cut-off: Spearman ρ by sex, and OLS ellipticity z ~ angle z + female, then also adjusted for aortic annulus diameter z, septum z and other-wall mean z.
 
-## STEP 10 — Strain needed for a given EF (model estimate, exploratory)
-[`scripts/25_strain_for_ef.py`](../scripts/25_strain_for_ef.py) (table-only, seconds) → `outputs/tables/strain_for_ef_by_mesh.csv`, `strain_for_ef_vs_ellipticity.csv`, `outputs/figures/analysis/fig_strain_for_ef.png`. Not measured strain: the meshes are end-diastolic only.
-- **10.1** LV as a half prolate ellipsoid: long semi-axis = `lv_length`, short semi-axis from EDV, uniform wall thickness from myocardial volume.
-- **10.2** Systole: midwall short and long axes shorten by GCS and GLS; the wall thickens at constant myocardial volume; EF = 1 − ESV/EDV. Same idea and assumptions as Stokke et al. (JACC 2017), our own derivation. Check on the median mesh: GCS moves EF 2.0 times as much as GLS, as Stokke reported.
-- **10.3** For each mesh, solve the GLS (with GCS = ratio × GLS) that reaches the target EF. Scenarios: EF and ratio from `strain_model` in `config.yaml` (EF 55/60/65%, ratio 0.8/1.0/1.2; primary EF 60%, ratio 1.0).
-- **10.4** Needed |GLS| and ellipticity (2 and 4 mm) as within-sex z (as 9.6): Spearman ρ by sex, OLS slope + female, then also adjusted for EDV z and myocardial volume z.
-- **10.5** Figure: needed |GLS| vs ellipticity at 2 mm, and the slope in every scenario.
-- **10.6 (check)** [`scripts/26_strain_model_check.py`](../scripts/26_strain_model_check.py) → `outputs/tables/strain_model_check.csv`, `outputs/figures/analysis/fig_strain_model_check.png`. Model functions, including Stokke's Equation 1 (transcribed from the article), are in [`src/strain.py`](../src/strain.py).
-  - **a. Transcription:** our code of Equation 1 reproduces the paper's numbers (Figure 4A and 5A values given in its text).
-  - **b. Like-for-like:** Equation 1 with our assumptions (midwall strain f = 0.5, incompressible c = 1) vs our model on the same mesh geometry (d = 2r, w = T).
-  - **c. Published settings:** Equation 1 with Stokke's defaults (`strain_model.stokke_f` 0.33, `stokke_c` 0.95); STEP 10.4 ellipticity analysis repeated.
-
-## STEP 11 — Strain models in aortic stenosis hearts (external data, exploratory)
-[`scripts/27_chan2024_as_strain.py`](../scripts/27_chan2024_as_strain.py) (seconds; downloads ~6 MB on first run) → `outputs/tables/chan2024_by_mesh.csv`, `chan2024_summary.csv`, `outputs/figures/analysis/fig_chan2024_strain_check.png`.
-- **Data:** Chan et al., Circ Cardiovasc Imaging 2024 ([doi:10.1161/CIRCIMAGING.123.016489](https://doi.org/10.1161/CIRCIMAGING.123.016489)), FigShare [10.6084/m9.figshare.25428604](https://doi.org/10.6084/m9.figshare.25428604), CC BY 4.0. 108 end-diastolic LV meshes with a group (36 severe AS, 18 post-AVR, 19 hypertension, 35 controls) and a per-case sheet. Saved to `data/external/chan2024_as/` (git-ignored). LV only: no LVOT or valves.
-- **11.1** Download the sheet and VTK meshes if missing (`external.chan2024_as` in `config.yaml`).
-- **11.2** Per mesh: EDV (endocardium capped with a fan at its basal rim), myocardial volume (closed endo + epi + basal ring surface), LV length (rim centre to farthest endocardial point), median wall thickness; then r and T as STEP 10.1.
-- **11.3** Forward test: EF from measured CMR feature-tracking GLS and GCS + geometry (our model; Stokke Equation 1 with f = 0, 0.33, 0.5) vs measured EF: per case after AVR (echo EF), group means for AS and hypertension (paper Table 1 CMR EF); controls use the paper's group-mean strain (Table 2), as the sheet has no control strain.
-- **11.4** Backward use: |GLS| needed for EF 60% (and at each group's measured EF) vs measured strain, by group and per case (Spearman); paired pre/post-AVR changes.
-
-## STEP 12 — Synthetic aortic stenosis: strain needed for EF by LVOT ellipticity (model estimate, exploratory)
-[`scripts/28_synthetic_as_strain.py`](../scripts/28_synthetic_as_strain.py) (about 35 s; needs STEP 10 and STEP 11 outputs) → `outputs/tables/synthetic_as_by_mesh.csv`, `synthetic_as_summary.csv`, `outputs/figures/analysis/fig_synthetic_as_strain.png`.
-- **12.1** Remodelling ratios from the Chan meshes (STEP 11): median EDV, myocardial volume and LV length of AS and post-AVR hearts divided by controls (`as_remodelling` in `config.yaml`). AS: EDV ×0.94, myocardium ×1.44, length ×1.00; post-AVR: ×0.90, ×1.18, ×0.94.
-- **12.2** Scenarios per UKB mesh: as measured, AS, post-AVR, and hypertrophy only (myocardium ×1.25 / 1.5 / 2.0). The strain models use only EDV, myocardial volume and length, so this equals a uniformly thickened wall; LVOT shape kept as measured.
-- **12.3** |GLS| needed for EF 55/60/65% (GCS = GLS), our model and Stokke Equation 1 (f 0.33, c 0.95); change from as measured.
-- **12.4** Ellipticity analysis as STEP 10.4 in each scenario (z within sex for age and BMI; + EDV and myocardial volume of the remodelled geometry).
-- **12.5** Heterogeneous hypertrophy: per-mesh myocardial ratio = 1.44 × exp(N(0, 0.19)), 0.19 = excess log-SD of AS over control myocardium in Chan; 200 draws.
-- **12.6** Figure.
-
 ## STEP 7b — Highlights deck
 `outputs/LVOT_highlights.pptx` (12 slides): key messages, data and method, the short closed tube, size by sex and age (native charts), indexing, ellipticity, echo underestimation, area methods, caveats, reproducibility and next steps. Built from the current tables and figures by [`scripts/12_highlights_deck.js`](../scripts/12_highlights_deck.js) (pptxgenjs; run with `NODE_PATH` pointing to a folder where pptxgenjs is installed; theme colours applied with the pptx skill's `apply_theme.js`). Font Arial. The deferred PLAX-plane and two-view analyses are not shown.
 ---
