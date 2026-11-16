@@ -236,7 +236,7 @@ This file lists all the work done for the report (STEPS 0–9). For each step, i
 
 ---
 
-## Limits to state with the results
+## Limitations
 
 1. End-diastole only. Clinical LVOT measurements are taken in mid-systole.
 2. No mitral leaflets in the meshes. The LVOT is a closed tube for only 2–5 mm.
