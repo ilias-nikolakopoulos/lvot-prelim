@@ -112,13 +112,12 @@ This file lists all the work done for the report (STEPS 0–9). For each step, i
 - **What it does:**
   - Applies the exclusions.
   - Indexes size to LV size (÷ EDV^⅓, and % of LV length).
-  - Compares men and women in the 622 same-age, same-BMI pairs.
-  - Fits `y ~ age + sex + age×sex + BMI` on all meshes.
+  - Compares men and women in the 622 same-age, same-BMI pairs: paired difference overall and by age block. The 179 meshes without a partner are not in the sex comparison.
 - **Code:** [`scripts/03_analysis.py`](scripts/03_analysis.py)
 - **Run:** `$PY scripts/03_analysis.py`
 - **Outputs:**
-  - Tables: `outputs/tables/model_coefs.csv`, `sexdiff_by_age_block.csv`, `exclusions.csv`
-  - Figures: `outputs/figures/analysis/fig_raw.png` (all meshes), `fig_common.png` (matched pairs), `fig_adjusted.png` (model at BMI 27), `fig_sexdiff.png` (men − women by age)
+  - Tables: `outputs/tables/sexdiff_by_age_block.csv`, `exclusions.csv`
+  - Figures: `outputs/figures/analysis/fig_raw.png` (all meshes), `fig_common.png` (matched pairs), `fig_sexdiff.png` (men − women by age)
 
   ![Men minus women by age](outputs/figures/analysis/fig_sexdiff.png)
 

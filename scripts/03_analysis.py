@@ -4,8 +4,8 @@ Input: outputs/tables/<name>.csv from 01_measure.py (default lvot_all).
 Outputs (outputs/tables, outputs/figures/analysis):
   exclusions.csv            mesh_id, measure group, reason
   sexdiff_by_age_block.csv  common-support paired M-F differences by age block
-  model_coefs.csv           OLS y ~ age_c * sex + bmi (all meshes), sex difference at 50/65/80
-  fig_raw.png, fig_common.png, fig_adjusted.png, fig_sexdiff.png
+  fig_raw.png, fig_common.png, fig_sexdiff.png
+Sex comparison = matched pairs only (same age and BMI); the regression was removed (DECISIONS #42).
 Meshes are averages of many participants with unknown counts: CIs / p-values are descriptive.
 Usage: python scripts/03_analysis.py [--in lvot_all]
 """
@@ -38,8 +38,6 @@ FIG.mkdir(parents=True, exist_ok=True)
 A_ = load_config()["analysis"]
 COL = A_["colours"]  # Okabe-Ito vermillion / blue (validated CVD-safe)
 LAB = {"F": "Women", "M": "Men"}
-AGE_C = A_["age_centre"]
-BMI_REF = A_["bmi_ref"]
 BLOCKS = [tuple(b) for b in A_["age_blocks"]]
 
 d = pd.read_csv(T / f"{a.inp}.csv")
@@ -107,44 +105,10 @@ pairs = F.join(M, lsuffix="_F", rsuffix="_M", how="inner").reset_index().copy()
 print(f"{len(d)} meshes, {len(pairs)} common-support F/M pairs")
 
 
-def ols(y, X):
-    ok = np.isfinite(y) & np.all(np.isfinite(X), axis=1)
-    y, X = y[ok], X[ok]
-    b, *_ = np.linalg.lstsq(X, y, rcond=None)
-    res = y - X @ b
-    dof = len(y) - X.shape[1]
-    s2 = res @ res / dof
-    V = s2 * np.linalg.inv(X.T @ X)
-    return b, V, dof, ok
-
-
-def design(df):
-    age_c = df["age"].to_numpy() - AGE_C
-    male = (df["sex"] == "M").to_numpy().astype(float)
-    return np.column_stack([np.ones(len(df)), age_c, male, age_c * male, df["bmi"].to_numpy() - BMI_REF])
-
-
 tq = lambda dof: stats.t.ppf(0.975, dof)
-coef_rows, block_rows, fits = [], [], {}
-# STEP 6.4 — per measure: OLS y ~ age_c + sex + age_c x sex + BMI (all meshes); paired M-F by age block
+block_rows = []
+# STEP 6.4 — per measure: paired M-F differences by age block (matched pairs)
 for k, lab in MEAS:
-    b, V, dof, ok = ols(d[k].to_numpy(float), design(d))
-    fits[k] = (b, V, dof)
-    row = {"measure": k, "label": lab, "n": int(ok.sum())}
-    for i, nm in enumerate(["intercept_F65_bmi27", "age_per_yr_F", "sex_M_minus_F_at65", "age_x_sex", "bmi_per_unit"]):
-        se = np.sqrt(V[i, i])
-        row[nm] = b[i]; row[nm + "_lo"] = b[i] - tq(dof) * se; row[nm + "_hi"] = b[i] + tq(dof) * se
-        row[nm + "_p"] = 2 * stats.t.sf(abs(b[i] / se), dof)
-    row["age_per_yr_M"] = b[1] + b[3]
-    for age in (50, 65, 80):
-        c = np.array([0, 0, 1, age - AGE_C, 0.0])
-        est, se = c @ b, np.sqrt(c @ V @ c)
-        row[f"sexdiff_at{age}"] = est
-        row[f"sexdiff_at{age}_lo"], row[f"sexdiff_at{age}_hi"] = est - tq(dof) * se, est + tq(dof) * se
-        fem = np.array([1, age - AGE_C, 0, 0, 0.0]) @ b
-        row[f"sexdiff_pct_at{age}"] = 100 * est / fem
-    row["narrows_with_age"] = bool(np.sign(b[3]) == -np.sign(b[2]))
-    coef_rows.append(row)
     # common-support blocks
     for lo, hi in BLOCKS:
         p = pairs[(pairs.age >= lo) & (pairs.age <= hi)][[k + "_F", k + "_M"]].dropna()
@@ -157,9 +121,7 @@ for k, lab in MEAS:
                            "diff_M_minus_F": diff.mean(), "lo": diff.mean() - tq(len(p) - 1) * se,
                            "hi": diff.mean() + tq(len(p) - 1) * se,
                            "pct_diff": 100 * diff.mean() / p[k + "_F"].mean()})
-coefs = pd.DataFrame(coef_rows)
 blocks = pd.DataFrame(block_rows, columns=["measure", "age_block", "n_pairs", "mean_F", "mean_M", "diff_M_minus_F", "lo", "hi", "pct_diff"])
-coefs.round(4).to_csv(T / "model_coefs.csv", index=False)
 blocks.round(4).to_csv(T / "sexdiff_by_age_block.csv", index=False)
 pd.DataFrame(excl, columns=["mesh_id", "measure_group", "reason"]).to_csv(T / "exclusions.csv", index=False)
 
@@ -215,36 +177,13 @@ axs[0].legend(fontsize=8, frameon=False)
 fig.suptitle("BMI held fixed: common support only (same age and BMI in both sexes); dots = per-age mean, line = 3-yr rolling", fontsize=10)
 fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_common.png", dpi=120); plt.close(fig)
 
-# 3 adjusted model at BMI_REF
-ages = np.arange(46, 84)
-fig, axs = grid(len(MEAS))
-for ax, (k, lab) in zip(axs, MEAS):
-    b, V, dof = fits[k]
-    for sx in "FM":
-        q = d[(d.sex == sx) & d[k].notna()]
-        ax.scatter(q.age, q[k] - b[4] * (q.bmi - BMI_REF), s=4, color=COL[sx], alpha=.2, lw=0)
-        X = design(pd.DataFrame({"age": ages, "sex": sx, "bmi": BMI_REF}))
-        yh = X @ b
-        se = np.sqrt(np.einsum("ij,jk,ik->i", X, V, X))
-        ax.fill_between(ages, yh - tq(dof) * se, yh + tq(dof) * se, color=COL[sx], alpha=.2, lw=0)
-        ax.plot(ages, yh, color=COL[sx], lw=2, label=LAB[sx])
-    style(ax, lab)
-axs[0].legend(fontsize=8, frameon=False)
-fig.suptitle(f"Adjusted: OLS y ~ age + sex + age×sex + BMI (all meshes), predicted at BMI {BMI_REF} ± 95% CI; points = BMI-adjusted meshes", fontsize=10)
-fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_adjusted.png", dpi=120); plt.close(fig)
-
-# 4 sex difference vs age
+# 3 sex difference vs age
 fig, axs = grid(len(MEAS))
 for ax, (k, lab) in zip(axs, MEAS):
     q = pairs[["age", f"{k}_F", f"{k}_M"]].dropna()
     q = q.assign(diff=q[f"{k}_M"] - q[f"{k}_F"])
     g = q.groupby("age")["diff"]
-    ax.scatter(g.mean().index, g.mean(), s=10, color="0.35", lw=0, label="common-support per-age mean")
-    b, V, dof = fits[k]
-    C = np.column_stack([np.zeros_like(ages), np.zeros_like(ages), np.ones_like(ages), ages - AGE_C, np.zeros_like(ages)]).astype(float)
-    yh, se = C @ b, np.sqrt(np.einsum("ij,jk,ik->i", C, V, C))
-    ax.fill_between(ages, yh - tq(dof) * se, yh + tq(dof) * se, color="0.6", alpha=.3, lw=0)
-    ax.plot(ages, yh, color="k", lw=1.5, label="adjusted model ± 95% CI")
+    ax.scatter(g.mean().index, g.mean(), s=10, color="0.35", lw=0, label="per-age mean of pairs")
     bl = blocks[blocks.measure == k]
     for _, r in bl.iterrows():
         lo, hi = map(int, r.age_block.split("-"))
@@ -257,10 +196,9 @@ fig.suptitle("Sex difference (men − women) by age", fontsize=10)
 fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_sexdiff.png", dpi=120); plt.close(fig)
 
 pd.set_option("display.width", 250)
-show = coefs[["measure", "n", "sexdiff_at50", "sexdiff_at65", "sexdiff_at80", "sexdiff_pct_at50", "sexdiff_pct_at80",
-              "age_per_yr_F", "age_per_yr_M", "age_x_sex_p", "narrows_with_age"]]
+show = blocks[blocks.measure.isin(["ao_d_area", "lvot2_d_area", "lvot4cc_d_area", "lvot2_ellip_ratio", "lvot4cc_ellip_ratio"])]
 print(show.round(3).to_string(index=False))
 print(f"exclusions logged: {len(excl)}")
 log_run(__file__, input=a.inp, n_meshes=len(d), n_pairs=len(pairs), n_exclusions=len(excl),
-        outputs=["outputs/tables/model_coefs.csv", "outputs/tables/sexdiff_by_age_block.csv",
+        outputs=["outputs/tables/sexdiff_by_age_block.csv",
                  "outputs/tables/exclusions.csv", "outputs/figures/analysis/"])

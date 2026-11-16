@@ -98,7 +98,7 @@ KM.forEach(([big, col, head, sub], i) => {
   s.addText(head, { x: x + 0.35, y: y + 1.1, w: 5.3, h: 0.55, fontSize: 18, bold: true, color: C.text2, margin: 0, isTextBox: true, objectName: `Key message ${i + 1} headline` });
   s.addText(sub, { x: x + 0.35, y: y + 1.65, w: 5.3, h: 0.6, fontSize: 14, color: C.text1, margin: 0, valign: "top", isTextBox: true, objectName: `Key message ${i + 1} detail` });
 });
-s.addNotes("All values are from the end-diastolic meshes; BMI held fixed by comparing men and women with the same age and BMI (622 pairs) and by regression.");
+s.addNotes("All values are from the end-diastolic meshes; BMI held fixed by comparing men and women with the same age and BMI (622 pairs).");
 
 // ---------------- 3 Data and approach ----------------
 pres.addSection({ title: "Methods" });
@@ -183,7 +183,7 @@ s.addText([
   { text: "Both sexes lose ~0.7 mm from their 50s to late 70s", options: { bullet: true, fontSize: 14 } },
 ], { x: 9.85, y: 1.7, w: 2.65, h: 4.0, color: C.text1, valign: "top", paraSpaceAfter: 6, isTextBox: true, objectName: "Size takeaways text" });
 s.addText("Area-derived diameter, mean of 622 same-age, same-BMI pairs per age block", { x: 0.6, y: 6.1, w: 8.7, h: 0.35, fontSize: 11, color: "6B7B87", isTextBox: true, objectName: "Size chart caption" });
-s.addNotes("Adjusted regression (age, sex, age×sex, BMI): annulus interaction p = 0.002 (gap narrows), LVOT 2 mm p = 0.34, LVOT 4 mm p = 0.52.");
+s.addNotes("Paired men − women by age block: annulus gap 2.9 → 2.6 mm (narrows); LVOT 2 and 4 mm gap 2.8–2.9 mm in every block.");
 
 // ---------------- 7 Indexed size ----------------
 s = pres.addSlide({ masterName: "Title only", sectionTitle: "Results" });

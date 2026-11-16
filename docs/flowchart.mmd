@@ -46,13 +46,13 @@ flowchart TD
         S61["6.1 Exclusions with reasons"]
         S62["6.2 Index: diam / LV cavity vol^⅓, % LV length"]
         S63["6.3 Common support: F/M pairs, same age and BMI (622)"]
-        S64["6.4 OLS y ~ age + sex + age×sex + BMI<br/>paired M−F by age block"]
+        S64["6.4 paired M−F (same age and BMI)<br/>overall and by age block"]
         S65["6.5 Figures: raw, common support, adjusted, sex difference"]
     end
     S66["STEP 6.6 Area methods: outline area vs ellipses (moment, Feret, CT, two-view) and echo circle π/4·D_PLAX²<br/>[scripts/06_area_methods.py]"]
     S67["STEP 6.7 Area methods illustration<br/>[scripts/07_area_methods_demo.py]"]
     S68["STEP 6.8 Ellipticity by method: median and IQR<br/>[scripts/10_ellipticity_methods.py]"]
-    OUT[("model_coefs.csv · sexdiff_by_age_block.csv · exclusions.csv<br/>outputs/figures/analysis/")]
+    OUT[("sexdiff_by_age_block.csv · exclusions.csv<br/>outputs/figures/analysis/")]
     S7["STEP 7 — WRITEUP.md"]
     PROV[("outputs/logs/runs.jsonl<br/>provenance of every run")]
 

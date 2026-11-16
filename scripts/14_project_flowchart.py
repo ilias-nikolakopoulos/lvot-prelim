@@ -123,19 +123,20 @@ arrow(LC, Y["elig"][0], LC, Y["meas"][1]); arrow(RC, Y["elig"][0], RC, Y["meas"]
 box(MX0, Y["meas"][0], MX1, Y["meas"][1], ["Measured per mesh", "area (shoelace), diameters,",
                                            "ellipticity (3 ellipse methods), echo PLAX circle,", "LV volume and length"], size=10.5)
 
-# Analysis
+# Analysis: matched pairs only (regression removed, DECISIONS #42)
 phase(*Y["ana"], "Analysis")
-ys2 = split(Y["meas"][0], Y["ana"][1])
-box(MX0, Y["ana"][0], MC - .1, Y["ana"][1], ["BMI held fixed", f"{npair} same-age,", "same-BMI pairs",
-                                             f"({fmt(2 * npair)} meshes)"], size=10.5)
-box(MC + .1, Y["ana"][0], MX1, Y["ana"][1], ["Adjusted regression", f"all {fmt(N)} meshes", "age, sex, age×sex,", "BMI"], size=10.5)
-exclusion(Y["ana"][1] - .55, Y["ana"][1] + .55,
+arrow(MC, Y["meas"][0], MC, Y["ana"][1])
+gap2 = (Y["meas"][0] + Y["ana"][1]) / 2
+box(MX0, Y["ana"][0], MX1, Y["ana"][1], ["Men vs women, age and BMI held fixed",
+                                         f"{npair} same-age, same-BMI pairs ({fmt(2 * npair)} meshes)",
+                                         "paired difference, overall and by age group"], size=10.5)
+exclusion(gap2 - .55, gap2 + .55,
           ["No same-age, same-BMI partner", f"n = {len(F) + len(M) - 2 * npair}  ({len(F) - npair} women, {len(M) - npair} men)",
-           "used in the regression only"], ys2)
+           "not in the sex comparison"], gap2)
 
 # Results
 phase(*Y["res"], "Results")
-arrow(LC, Y["ana"][0], LC, Y["res"][1]); arrow(RC, Y["ana"][0], RC, Y["res"][1])
+arrow(MC, Y["ana"][0], MC, Y["res"][1])
 ax.add_patch(FancyBboxPatch((MX0, Y["res"][0]), EX1 - MX0, Y["res"][1] - Y["res"][0],
                             boxstyle="round,pad=0,rounding_size=0.08", fc="white", ec=NAVY, lw=1.6))
 RES = [("~3 mm", "men's annulus and LVOT larger at every age (15–16%);\n~6% after indexing to LV size", "#0072B2"),

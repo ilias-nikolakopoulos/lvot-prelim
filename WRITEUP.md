@@ -14,9 +14,7 @@ Full detail is in `docs/PIPELINE.md`; reasons for each choice are in `docs/DECIS
   - Secondary: the 4 mm section, where the open mitral side is bridged by a straight chord.
 - **Other measures:** mitral ring diameter, aorto-mitral plane angle, and the angle between the aortic axis and the LV long axis.
 - **Area methods:** the outline area (shoelace formula) is compared with ellipse estimates (π/4 × two diameters: moment axes, widest/narrowest calliper widths, CT-style longest + perpendicular through the centre, PLAX + perpendicular) and with the standard echo estimate π/4·D_PLAX². D_PLAX is the diameter along the parasternal long-axis direction, from the septum to the aorto-mitral side.
-- **Statistics:** measure vs age by sex, holding BMI fixed in two ways:
-  - common support: men and women with the same age and BMI (622 pairs);
-  - regression: y ~ age + sex + age×sex + BMI.
+- **Statistics:** men vs women with age and BMI held fixed: each woman's mesh is paired with the man's mesh of the same age and BMI (622 pairs). Paired differences are reported overall and by age block. Meshes without a partner (179) are not in the sex comparison. No regression model is used.
 
   Sizes are reported in mm and indexed to LV size (÷ EDV^(1/3), and as % of LV length).
 
@@ -60,19 +58,19 @@ The full table, with CIs for every block, is in `outputs/tables/sexdiff_by_age_b
 
 **Size (absolute)**
 - Men's annulus and LVOT are about **2.7–2.9 mm (15–16%) larger** than women's at every age.
-- **Annulus:** the gap narrows slightly with age, from 2.9 to 2.6 mm. The adjusted age×sex interaction is p = 0.002, because men's annulus shrinks a little with age (−0.016 mm/yr) while women's barely changes (−0.005 mm/yr).
-- **LVOT:** the gap does **not** narrow (interaction p = 0.34 at 2 mm, 0.52 at 4 mm). Both sexes lose about 0.7 mm of LVOT diameter between their 50s and late 70s (2 mm: −0.024 mm/yr in women, −0.027 mm/yr in men).
+- **Annulus:** the gap narrows slightly with age, from 2.9 mm (46–54) to 2.6 mm (75–83), because men's annulus gets a little smaller (20.7 → 20.2 mm) while women's barely changes (17.8 → 17.6 mm).
+- **LVOT:** the gap does **not** narrow (2.8–2.9 mm at 2 mm and 4 mm in every age block). Both sexes lose about 0.7 mm of LVOT diameter between the youngest and oldest blocks (2 mm: women 18.9 → 18.2 mm, men 21.8 → 21.1 mm).
 
 **Size (indexed to LV size)**
-- The LV cavity shrinks faster with age than the LVOT (EDV −0.7 to −0.8 mL/yr), so the LVOT and annulus get relatively larger with age, more so in women.
+- The LV cavity shrinks faster with age than the LVOT (EDV: women 125 → 106 mL, men 160 → 137 mL from the youngest to the oldest block), so the LVOT and annulus get relatively larger with age, more so in women.
 - Indexed to EDV^⅓, men's outflow is still about 5–7% larger, so the sex gap is not fully explained by LV size.
-- The indexed annulus gap narrows with age (7.2% → 5.4%, p = 0.004). The indexed LVOT gap stays at about 6%.
+- The indexed annulus gap narrows with age (7.2% → 5.4%). The indexed LVOT gap stays at about 6%.
 
 **Shape (ellipticity)**
 - The **annulus is nearly round** (major/minor about 1.14–1.15), with no sex or age difference.
 - The **LVOT just below is clearly oval**: about 1.46 in women and 1.39 in men at 2 mm, and about 1.55 vs 1.44 at 4 mm.
-- **Women's LVOT is more elliptical** at every age (−0.06 at 2 mm and −0.09 at 4 mm, men − women). This difference is constant with age (interaction p = 0.78 and 0.87).
-- Ellipticity falls only slightly with age (about −0.001 per year in both sexes, ≈ −0.04 over the age range).
+- **Women's LVOT is more elliptical** at every age (−0.06 at 2 mm and −0.09 at 4 mm, men − women). This difference is constant with age (−0.055 to −0.067 at 2 mm and −0.085 to −0.094 at 4 mm across the age blocks).
+- Ellipticity falls only slightly with age (2 mm: women 1.48 → 1.45, men 1.42 → 1.39 from the youngest to the oldest block).
 - The short axis runs from the aorto-mitral side to the septum; the long axis runs side to side.
 
 **Angles**
@@ -117,7 +115,6 @@ The three methods agree within 0.03 at every level. The annulus is nearly round 
 ### Figures (`outputs/figures/analysis/`)
 - `fig_raw.png`: all meshes.
 - `fig_common.png`: common support, BMI held fixed.
-- `fig_adjusted.png`: regression at BMI 27.
 - `fig_sexdiff.png`: men − women vs age.
 - `fig_area_methods.png`: area estimates.
 - `fig_area_methods_demo.png`: what each area estimate measures, drawn on one outline.

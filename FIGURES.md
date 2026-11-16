@@ -20,7 +20,7 @@ PY=python   # Python 3.11 with requirements.txt installed
 | Code | [`scripts/14_project_flowchart.py`](scripts/14_project_flowchart.py) |
 | Run | `$PY scripts/14_project_flowchart.py` |
 | Input | `outputs/tables/lvot_all.csv` (all counts are recomputed from it) |
-| What it shows | PRISMA-style study flow: 1,423 meshes, processing, eligibility of the 2 mm and 4 mm sections, measurement, analysis (622 matched pairs and the adjusted regression), key results; exclusions on the right |
+| What it shows | PRISMA-style study flow: 1,423 meshes, processing, eligibility of the 2 mm and 4 mm sections, measurement, analysis (622 matched same-age, same-BMI pairs; the 179 meshes without a partner are not in the sex comparison), key results; exclusions on the right |
 
 ## 2. Defining the echo PLAX view in the mesh
 
