@@ -252,4 +252,4 @@ This file lists all the work done for the report (STEPS 0–9). For each step, i
 
 - **Where:** `data/meshes/imagecas/` (on the external drive, not in this repository).
 - **What:** LVOT size and shape in 998 coronary CT scans (ImageCAS, CC BY-NC 4.0), the end of the aorto-mitral curtain as the end of the LVOT, and a CFD pilot that compares each real LVOT with a circular twin of the same area.
-- **Guide:** `REPRODUCE_CT_CFD.md` in that folder. Its plan is in `CFD_PLAN_imagecas.md` and `cfd/README_*.md`.
+- **Guide:** `lvot_ellipticity_prelim_data.md` in that folder. It gives the commands, versions, inputs, outputs and figures for: the download, the curtain-end rule, the LVOT measurements, the systolic flag, QC, case selection, the twin geometries, the CFD set-up and every CFD run so far, and the pilot results. The plan is in `CFD_PLAN_imagecas.md` and `cfd/README_*.md`. One CFD batch was still running on 2026-11-15.
