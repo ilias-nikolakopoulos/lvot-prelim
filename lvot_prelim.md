@@ -2,7 +2,7 @@
 
 This file lists all the work done for the report (STEPS 0–9). For each step, it gives what the step does, the code, the command, the outputs and the figure.
 
-- **Scope:** the final report covers STEPS 0–9 only. STEPS 10–12 (strain models) are in the repository, but they are not part of the report or this guide.
+- **Scope:** the final report covers STEPS 0–9 only.
 - **Phase:** every measurement is at end-diastole. The dataset has no systolic meshes (`docs/DECISIONS.md` #16).
 - **More detail:** method per sub-step in [`docs/PIPELINE.md`](docs/PIPELINE.md); reason for each choice in [`docs/DECISIONS.md`](docs/DECISIONS.md); results and caveats in [`WRITEUP.md`](WRITEUP.md).
 
