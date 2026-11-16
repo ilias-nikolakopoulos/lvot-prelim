@@ -1,0 +1,13 @@
+pair,arm,id,LV_myo_ratio,LV_ml,area_mm2_2mm,ellipticity_2mm,curtain_end_mm,note
+1,systolic,388,0.54,56.3,493.4,1.18,,
+1,diastolic,142,1.04,118.7,498.8,1.183,9.949999999999935,"small aorta label islands at +2 mm, not in LVOT lumen"
+2,systolic,576,0.48,45.6,302.8,1.232,,"very bright contrast, clean"
+2,diastolic,167,1.0,86.2,313.2,1.237,8.199999999999942,
+3,systolic,33,0.45,29.6,341.2,1.239,,
+3,diastolic,978,1.01,82.7,333.8,1.239,7.999999999999943,
+4,systolic,586,0.53,37.4,291.5,1.273,,high noise (210 HU) but clean labels
+4,diastolic,587,1.04,88.9,297.4,1.275,7.399999999999945,
+5,systolic,253,0.52,43.5,368.7,1.329,,
+5,diastolic,467,0.9,87.2,378.0,1.33,7.099999999999946,
+6,systolic,146,0.5,53.3,451.9,1.367,,lower contrast; kept for ellipticity range
+6,diastolic,663,1.13,151.5,452.7,1.362,8.69999999999994,

@@ -174,3 +174,7 @@ One entry per choice: what was tried, what was seen, what was decided, and where
     - **Consequence:** the 179 meshes without a partner (139 women, 40 men, mostly at extreme BMI) are not in the sex comparison. Age trends are now given as paired block means (youngest vs oldest block) instead of slopes and interaction p-values.
     - **Not affected:** the within-sex z-scores of STEPS 8–9 (age/BMI fits used only to standardise each measure).
 
+43. **ImageCAS / CFD code and results copied into the repo (user, 2026-11-16).**
+    - **Choice:** the code, docs, result tables and QC figures of the ImageCAS CT and CFD arm are copied into `imagecas_cfd/` by `scripts/sync_imagecas_cfd.sh` (read-only on `data/meshes/imagecas`, which stays the working copy).
+    - **Left out:** the CT images and labels (about 100 GB, ImageCAS licence), the OpenFOAM run folders (15 GB) and the 3D meshes (stl/vtp/vtu), and the per-case QC renders in `lvot_out/qc/`.
+    - **Consequence:** `imagecas_cfd/` is a snapshot, not part of STEPS 0–9 or `run_all.sh`. Rerun the sync script and commit to refresh it. The scripts there still use the external-drive paths.
