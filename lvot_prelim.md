@@ -243,4 +243,3 @@ This file lists all the work done for the report (STEPS 0–9). For each step, i
 2. No mitral leaflets in the meshes. The LVOT is a closed tube for only 2–5 mm.
 3. Each mesh is an average of many people, so the n is 1,423 averages, not 1,423 people.
 4. The annulus is where the aortic plug meets the LV, and it is not known whether this corresponds to the exact true level of the aortic valve annulus.
-5. The data are cross-sectional.
