@@ -100,8 +100,8 @@ Code: [`scripts/03_analysis.py`](../scripts/03_analysis.py).
 ## STEP 7d — "What is a mesh?" slide
 [`scripts/16_mesh_explainer.py`](../scripts/16_mesh_explainer.py) → `outputs/figures/mesh_explainer.png`; [`scripts/17_mesh_slide.js`](../scripts/17_mesh_slide.js) → `outputs/slide_what_is_a_mesh.pptx` (one slide, full-slide figure, speaker notes).
 
-## STEP 7e — Ellipticity slide figure (two messages, two builds)
-[`scripts/19_ellipticity_depth_slide.py`](../scripts/19_ellipticity_depth_slide.py) → `outputs/figures/slides/ellipticity_depth_{dark,light}_build{1,2}.png`. One panel: depth on the x-axis, women vs men; build 1 = depth message (grey + arrow), build 2 = sex message (colours + gap brackets). Minor–major axis ellipse, matched pairs.
+## STEP 7e — Ellipticity slide figure (depth profile + paired sex difference, two builds)
+[`scripts/19_ellipticity_depth_slide.py`](../scripts/19_ellipticity_depth_slide.py) → `outputs/figures/slides/ellipticity_depth_{dark,light}_build{1,2}.png`. Two panels, same layout in both builds. A: ellipticity vs level below the annulus (annulus, 2 mm, 4 mm chord-closed), median line and IQR band; build 1 pooled (grey), build 2 women vs men. B (build 2): paired women − men difference per level, mean and 95% CI (t), band = IQR of the pair differences. Minor–major axis ellipse, same-age, same-BMI pairs.
 
 ## STEP 7f — Ellipticity slide (ready to present)
 [`scripts/20_ellipticity_slide.js`](../scripts/20_ellipticity_slide.js) → `outputs/slide_ellipticity_static.pptx` (two slides: build 1, build 2) and `outputs/slide_ellipticity_animated.pptx` (one slide); [`scripts/20_add_click_build.py`](../scripts/20_add_click_build.py) then adds the on-click build to the animated slide (headline 2 and the coloured chart appear, the grey chart disappears). Dark green background, Roboto, "women's" in the women colour, footnote with method and sample.
