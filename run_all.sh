@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Reproduce the LVOT report (STEPS 0-9) end to end. See REPRODUCE.md (what each step makes) and docs/PIPELINE.md (methods).
+# Reproduce the LVOT report (STEPS 0-9) end to end. See lvot_prelim.md (what each step makes) and docs/PIPELINE.md (methods).
 # Run from this folder. The raw meshes must be at data_dir in config.yaml. About 4 h in total; the long steps
 # (01 --all, 09 --all, 22 --all) are resumable. On macOS run it under caffeinate in Terminal:
 #   caffeinate -i bash run_all.sh > outputs/logs/run_all.log 2>&1
@@ -37,5 +37,5 @@ $PY scripts/14_project_flowchart.py                   # STEP 7c   study flowchar
 $PY scripts/19_ellipticity_depth_slide.py             # STEP 7e   ellipticity slide figures
 $PY scripts/21_shape_vs_ellipticity.py                # STEP 8.1  shape vs ellipticity (tables)
 $PY scripts/23_wall_phenotypes.py                     # STEP 9.6-9.8 feature map + phenotypes
-# PowerPoint files (optional, need Node.js + pptxgenjs): see REPRODUCE.md, STEP 7
+# PowerPoint files (optional, need Node.js + pptxgenjs): see lvot_prelim.md, STEP 7
 echo "done; provenance in outputs/logs/runs.jsonl"

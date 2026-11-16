@@ -6,7 +6,7 @@ This is a personal side project, kept separate from `../ukb-mesh/`. It reuses on
 Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0) at `data/meshes`. Each mesh is the average of the participants with the same sex, age (46–83) and integer BMI. The results therefore describe typical hearts, not individuals, and CIs and p-values are descriptive only (participant counts per mesh are unknown).
 
 ## Start here
-- **Reproduce every result and figure (STEPS 0–9), step by step:** [`REPRODUCE.md`](REPRODUCE.md).
+- **Reproduce every result and figure (STEPS 0–9), step by step:** [`lvot_prelim.md`](lvot_prelim.md).
 - **Figures and the code for each:** [`FIGURES.md`](FIGURES.md).
 - **Results and caveats:** [`WRITEUP.md`](WRITEUP.md).
 - **Setup on a new machine:**
