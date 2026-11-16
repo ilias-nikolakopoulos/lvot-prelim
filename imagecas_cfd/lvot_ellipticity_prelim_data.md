@@ -1,9 +1,5 @@
 # LVOT ellipticity and CFD from CT
 
-Status as of 2026-11-15. Everything here runs from the `imagecas` folder:
-`cd "data/meshes/imagecas"`.
-More detail is in the step READMEs linked in each section.
-
 **Question.**
 - Echo estimates stroke volume as SV = π·(AP/2)² × VTI. The AP diameter and the PW-Doppler gate are both placed at the LVOT centre.
 - The real LVOT is elliptical, and its long axis is mediolateral, which echo can't see.
