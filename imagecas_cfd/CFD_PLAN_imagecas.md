@@ -96,7 +96,7 @@ Keep the flow rate constant, so that geometry is the only variable.
 - End-systolic gated CT geometry, pressure drop from LV apex to neo-LVOT: Pasta et al. (TMVR CFD).
 - Steady mean systolic flow with one LV inlet: Kirchner et al., Front Cardiovasc Med 2025;10.3389/fcvm.2025.1665934.
 
-## 12. Limits (write these in the paper)
+## 12. Limitations
 1. Flow rate is from normal reference data, not from each patient.
 2. No wall motion. No aortic valve leaflets.
 3. Steady flow at one instant (peak systole).
