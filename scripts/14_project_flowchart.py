@@ -123,7 +123,7 @@ arrow(LC, Y["elig"][0], LC, Y["meas"][1]); arrow(RC, Y["elig"][0], RC, Y["meas"]
 box(MX0, Y["meas"][0], MX1, Y["meas"][1], ["Measured per mesh", "area (shoelace), diameters,",
                                            "ellipticity (3 ellipse methods), echo PLAX circle,", "LV volume and length"], size=10.5)
 
-# Analysis: matched pairs only (regression removed, DECISIONS #42)
+# Analysis: matched pairs only
 phase(*Y["ana"], "Analysis")
 arrow(MC, Y["meas"][0], MC, Y["ana"][1])
 gap2 = (Y["meas"][0] + Y["ana"][1]) / 2

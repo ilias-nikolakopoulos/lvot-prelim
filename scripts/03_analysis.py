@@ -5,7 +5,7 @@ Outputs (outputs/tables, outputs/figures/analysis):
   exclusions.csv            mesh_id, measure group, reason
   sexdiff_by_age_block.csv  common-support paired M-F differences by age block
   fig_raw.png, fig_common.png, fig_sexdiff.png
-Sex comparison = matched pairs only (same age and BMI); the regression was removed (DECISIONS #42).
+Sex comparison = matched pairs only (same age and BMI).
 Meshes are averages of many participants with unknown counts: CIs / p-values are descriptive.
 Usage: python scripts/03_analysis.py [--in lvot_all]
 """

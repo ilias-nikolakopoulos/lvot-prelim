@@ -5,4 +5,4 @@
 - **CFD:** `cfd/` holds the case selection, the geometry builders (`build_twins.py`, `build_lv_twins.py`), the OpenFOAM case generator and post-processing (`cfd/openfoam/`, see [`README_cfd_run.md`](cfd/openfoam/README_cfd_run.md)), the result tables (`cfd_results_*.csv`, `echo_spectrum_*.csv`, `peak_displacement_*.csv`) and QC figures (`cfd/qc/`).
 - **Not included:** the CT images and labels (download from Kaggle with `get_imagecas_chunk.sh`; ImageCAS licence applies), the OpenFOAM run folders (15 GB), the 3D meshes (stl/vtp/vtu) and the per-case QC renders in `lvot_out/qc/`.
 - **Paths:** the scripts use the external-drive paths. To run them elsewhere, change the paths at the top of each script.
-- **Refresh:** `bash scripts/sync_imagecas_cfd.sh` from the repo root, then commit. See `docs/DECISIONS.md` #43.
+- **Refresh:** `bash scripts/sync_imagecas_cfd.sh` from the repo root, then commit.

@@ -78,7 +78,7 @@ These are geometry only: the `.fiber.vtu` file is read once and µm are converte
 - `fig_raw`: all meshes vs age (BMI not held fixed).
 - `fig_common`: common support only (same age and BMI present in both sexes; 622 pairs), per-age means.
 - `fig_sexdiff`: M − F by age, showing the common-support per-age paired mean, the model line ± 95% CI, and paired age-block means.
-- Table: `sexdiff_by_age_block.csv` (paired men − women, same age and BMI, mean ± 95% CI; age blocks 46–54, 55–59, 60–64, 65–69, 70–74, 75–83). No regression model (DECISIONS #42).
+- Table: `sexdiff_by_age_block.csv` (paired men − women, same age and BMI, mean ± 95% CI; age blocks 46–54, 55–59, 60–64, 65–69, 70–74, 75–83).
 - Indexed size: diameter / LV cavity volume^(1/3) (mm/mL^⅓) and diameter as % of LV length.
 
 ## Results
