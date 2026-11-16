@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this code or its results, please cite it as below."
+title: "LVOT size and ellipticity by sex and age in 1,423 UK Biobank representative heart meshes"
+type: software
+authors:
+  - given-names: Ilias
+    family-names: Nikolakopoulos
+repository-code: "https://github.com/ilias-nikolakopoulos/lvot-prelim"
+url: "https://github.com/ilias-nikolakopoulos/lvot-prelim"
+license: MIT
+version: "0.1.0"
+date-released: "2026-11-16"
+keywords:
+  - left ventricular outflow tract
+  - LVOT
+  - ellipticity
+  - UK Biobank
+  - cardiac mesh
+references:
+  - type: dataset
+    title: "Representative biventricular meshes from UK Biobank"
+    authors:
+      - family-names: Ugurlu
+    doi: "10.5281/zenodo.15649643"
+    license: CC0-1.0
