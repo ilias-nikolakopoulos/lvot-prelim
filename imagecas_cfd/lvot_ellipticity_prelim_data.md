@@ -62,7 +62,7 @@
 ---
 
 ## 2. LVOT measurement on all 998 scans: end of the aorto-mitral curtain
-Full rule: [README_lvot_curtain.md](README_lvot_curtain.md). Code: [lvot_curtain.py](lvot_curtain.py).
+Full rule: [README_lvot_curtain.md](README_lvot_curtain.md). Code: [lvot_curtain.py](lvot_curtain.py). Why the rule is like this: [RATIONALE_aortomitral_curtain.md](RATIONALE_aortomitral_curtain.md).
 
 **Method**
 1. **Valve plane and LVOT axis.** The LV–aorta label interface gives the valve plane (0 mm). The LVOT axis is perpendicular to it.
