@@ -1,7 +1,5 @@
 # ImageCAS CT and CFD arm (snapshot)
 
-This folder is a copy of the code, docs, result tables and QC figures from `data/meshes/imagecas`, the working folder of the CT/CFD study. It is **not** part of the UK Biobank report (STEPS 0–9) and is not run by `run_all.sh`.
-
 - **Start here:** [`lvot_ellipticity_prelim_data.md`](lvot_ellipticity_prelim_data.md) is the step-by-step guide. The plan is in [`CFD_PLAN_imagecas.md`](CFD_PLAN_imagecas.md).
 - **CT LVOT geometry:** `lvot_cas.py`, `lvot_curtain.py` ([`README_lvot_curtain.md`](README_lvot_curtain.md)), results in `lvot_out/` and the top-level CSVs.
 - **CFD:** `cfd/` holds the case selection, the geometry builders (`build_twins.py`, `build_lv_twins.py`), the OpenFOAM case generator and post-processing (`cfd/openfoam/`, see [`README_cfd_run.md`](cfd/openfoam/README_cfd_run.md)), the result tables (`cfd_results_*.csv`, `echo_spectrum_*.csv`, `peak_displacement_*.csv`) and QC figures (`cfd/qc/`).
