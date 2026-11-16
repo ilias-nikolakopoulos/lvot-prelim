@@ -233,12 +233,13 @@ def ring_measure(X: np.ndarray, into_lv: np.ndarray, nbins: int = P_["ring_bins"
     el = me
     centre3 = c + cen[0] * e1 + cen[1] * e2
     return {
-        "centre": centre3, "normal": n, "e1": e1, "e2": e2, "n_nodes": len(X),
+        "centre": centre3, "plane_origin": c, "normal": n, "e1": e1, "e2": e2, "n_nodes": len(X),
         "dmax": me["dmax"], "dmin": me["dmin"], "theta": me["theta"],
         "feret_max": me["feret_max"], "feret_min": me["feret_min"],
         "d_area": 2 * np.sqrt(area / np.pi), "d_perim": perim / np.pi,
         "area": area, "cover": cover, "planarity_rms": float(np.sqrt(np.mean(d ** 2))),
-        "band_max_depth": float(d.max()), "xy": xy, "poly": poly + cen, "ell": el,
+        "band_max_depth": float(d.max()), "poly": poly + cen, "ell": el,
+        "xy": xy,  # relative to plane_origin (node mean), not to centre
     }
 
 

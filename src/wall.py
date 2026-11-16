@@ -50,7 +50,7 @@ def wall_geometry(G: dict) -> dict:
     thick = np.where(septal, d_rv, d_epi)
 
     ao, mv = G["rings"]["ao"], G["rings"]["mv"]
-    ring_pts = np.vstack([r["centre"] + r["xy"] @ np.vstack([r["e1"], r["e2"]]) for r in (ao, mv)])
+    ring_pts = np.vstack([r["plane_origin"] + r["xy"] @ np.vstack([r["e1"], r["e2"]]) for r in (ao, mv)])
     keep = cKDTree(ring_pts).query(X)[0] > W_["ring_exclude_mm"]
 
     # STEP 9.3 — long-axis frame and segments

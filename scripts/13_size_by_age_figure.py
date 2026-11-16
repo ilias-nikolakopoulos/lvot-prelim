@@ -92,7 +92,7 @@ axs[0].set_ylabel(f"{'Outline area' if AREA else 'Area-derived diameter'}, {UNIT
 axs[0].set_ylim(lo_ - pad * 1.0, hi_ + pad * 1.4)
 dmed = np.median(np.concatenate([STATS[m].d_med.values for m, _, _ in PANELS]))
 TITLE = (f"Men's outflow area is ~{round(dmed, -1):.0f} mm² larger at every age" if AREA
-         else "Men's outflow is ~3 mm wider at every age")
+         else f"Men's outflow is ~{dmed:.0f} mm wider at every age")
 fig.suptitle(TITLE, fontsize=16, fontweight="bold", y=0.99)
 fig.text(0.5, 0.01, "Medians of the same-age, same-BMI pairs per age block; error bars and values in parentheses = interquartile range",
          ha="center", fontsize=10, color="0.4")

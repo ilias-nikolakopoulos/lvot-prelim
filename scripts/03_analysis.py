@@ -61,8 +61,9 @@ for m in d.mesh_id[d["lvot2_d_area"].isna() & d["ao_d_area"].notna()]:
     r = d.loc[d.mesh_id == m, "section_reasons"].iloc[0]
     excl.append((m, "LVOT 2 mm (strict)", "section at 2 mm not a closed tube: " + str(r)[:120]))
 for m in d.mesh_id[d["lvot4cc_d_area"].isna() & d["ao_d_area"].notna()]:
-    g = d.loc[d.mesh_id == m, "lvot4cc_gap_deg"].iloc[0]
-    excl.append((m, "LVOT 4 mm (chord-closed)", f"gap {g:.0f} deg > 120"))
+    g, r = d.loc[d.mesh_id == m, ["lvot4cc_gap_deg", "section_reasons"]].iloc[0]
+    why = f"gap {g:.0f} deg > 120" if g > 120 else "section at 4 mm not chord-closed: " + str(r)[:120]
+    excl.append((m, "LVOT 4 mm (chord-closed)", why))
 if flags.str.contains("surface_regions").any():
     for m in d.mesh_id[flags.str.contains("surface_regions")]:
         excl.append((m, "note (kept)", "unexpected number of surface components"))

@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 SRC="${SRC:-data/meshes/imagecas}"
-rsync -a --delete --prune-empty-dirs --filter 'P /README.md' \
+rsync -a --delete --prune-empty-dirs --exclude '/README.md' \
   --exclude '__pycache__/' --exclude '*.pyc' --exclude '*.bak' --exclude '.DS_Store' \
   --exclude '/ImageCAS_*/' --exclude '/labels_DTU/' --exclude '/cfd/runs/' --exclude '/lvot_out/qc/' \
   --exclude '*.tar' --exclude '*.zip' --exclude '*.log' \

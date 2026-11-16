@@ -41,9 +41,10 @@ for mid in ids:
     fig, axs = plt.subplots(1, 2, figsize=(12, 5.6))
     ax = axs[0]
     # ring (projected relative to section origin, which is on the ring axis)
-    rc = ao["centre"] - (org - ao["band_max_depth"] * n)  # zero
-    ax.scatter(ao["xy"][:, 0], ao["xy"][:, 1], s=4, c="k", alpha=.4, label=f"Ao ring nodes (d_area {ao['d_area']:.1f})")
-    ax.plot(*ell_xy(ao["ell"]).T, "k-", lw=1.5)
+    # ao["xy"] and ao["ell"] are relative to the node mean; shift them to the section origin (on the ring axis)
+    cxy = np.array([(ao["centre"] - ao["plane_origin"]) @ e1, (ao["centre"] - ao["plane_origin"]) @ e2])
+    ax.scatter(*(ao["xy"] - cxy).T, s=4, c="k", alpha=.4, label=f"Ao ring nodes (d_area {ao['d_area']:.1f})")
+    ax.plot(*(ell_xy(ao["ell"]) - cxy).T, "k-", lw=1.5)
     cmap = plt.get_cmap("viridis")
     for s in G["sections"]:
         col = cmap(s["depth"] / 10)
@@ -78,7 +79,7 @@ for mid in ids:
     sel = (np.abs(perp) < 1.5) & (dep > -8) & (dep < 30) & (np.abs(side) < 40)
     ax.scatter(side[sel], -dep[sel], s=1, c="tab:blue", alpha=.5, label="LV endo (|off-plane| < 1.5 mm)")
     for name, R, c in (("Ao ring", ao, "k"), ("MV ring", mv, "tab:red")):
-        Xr = R["xy"][:, 0][:, None] * R["e1"] + R["xy"][:, 1][:, None] * R["e2"] + (R["centre"] - R["xy"].mean(0)[0] * R["e1"] - R["xy"].mean(0)[1] * R["e2"]) - org
+        Xr = R["xy"][:, 0][:, None] * R["e1"] + R["xy"][:, 1][:, None] * R["e2"] + R["plane_origin"] - org
         ax.scatter(Xr @ u3, -(Xr @ n), s=2, c=c, alpha=.4, label=name)
     for d in (0, 2, 4, 6, 8, 10):
         ax.axhline(-d, color=cmap(d / 10), lw=.6, ls="--")
