@@ -152,7 +152,7 @@ def figure(df):
     import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
     fig = plt.figure(figsize=(15, 9.5))
     gs = fig.add_gridspec(2, 3, height_ratios=[1, 1.05], hspace=0.42, wspace=0.28)
-    # top: example spectra (real twin, 7.5 mm, LV inflow): a large diastolic LV, 388, and the small LV 33
+    # top: example spectra (real twin, 7.5 mm, LV inflow): three cases, 142 (diastolic), 388 and 33 (both systolic)
     for k, cid in enumerate((142, 388, 33)):
         ax = fig.add_subplot(gs[0, k])
         case = os.path.join(CFD, 'runs', 'lv_lam_h1', f'{cid}_real')
