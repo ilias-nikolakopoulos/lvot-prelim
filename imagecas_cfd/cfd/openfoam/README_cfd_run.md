@@ -207,3 +207,17 @@ Files: `cfd_results_lv_lam_h1.csv`, `peak_displacement_lv_lam_h1.csv`, `qc/veloc
 - The spectrum is the volume-weighted histogram of beam velocity (2 cm/s bins). Read-outs: mean, modal, and max (97.5th percentile). Beam angle 0, ±10, ±20°.
 - **Result:** modal ≈ mean (+0–4%), max = mean +3–8%. Real-LVOT echo SV with the max read-out is 0.73–0.96 (median 0.85, LV inflow), so the read-out does not explain Huh's +29% VTI. Angle ±10° changes SV ≤ 4%, ±20° up to −10%.
 - Outputs: `cfd/echo_spectrum_{lam_h1,lv_lam_h1}.csv`, `cfd/echo_spectrum_summary.csv`, `qc/echo_spectrum_readout.png`.
+
+## Enlarged-LV sensitivity (`lv_big_lam_h1`, 2026-11-16)
+- The 6 systolic scans with the LV cavity grown to 88 mL (`build_lv_twins.py --grow-to 88`; offset tapered 16→28 mm below the valve, LVOT untouched). Then `make_cases.py --variant lv_big`, run 09:38–11:38. All 12 converged.
+- Real LVOT, spectral max, median: over-read 1.31 (systolic LV, 45 mL) → 1.18 (grown, 88 mL), vs 1.15 for the paired diastolic scans. So LV size explains about 80% of the systolic–diastolic gap.
+- Echo SV ÷ true (max): 0.95 → 0.87 (diastolic 0.76). The rest of the gap is the area ratio.
+- Script: `lv_big_compare.py`. Figure: `qc/lv_big_compare.png`.
+
+## Pulsatile systole (`lv_lam_pulse_h1`, 2026-11-16)
+- pimpleFoam, one systole from rest: raised-cosine Q to 400 mL/s at 110 ms, 0 at 330 ms (SV 66 mL). Pair 388/142, real and circle twins, mesh from `lv_lam_h1`.
+- The PW gate is sampled every 1 ms during the run (`echo_spectrum.py write --runtime 0.001` → `system/echoGateFO`, included by the controlDict). Run 11:38–13:05.
+- `pulse_vti.py` gives the spectral mean, modal and max per ms, then the VTI ratio and SV ratio. The ring-probe VTI agrees with the gate-mean VTI within 1%.
+- Over-read at peak flow is only 1.06–1.15. It climbs to 1.6–1.8 in late deceleration. Over the beat, the VTI ratio is within 4% of the steady peak ratio.
+- Max VTI ratio: 142 = 1.17, 388 = 1.23. Echo SV ÷ true: 0.75–0.94 (142) and 0.93–1.00 (388). This still falls short of Huh 2022 (+29% VTI).
+- Figure: `qc/pulse_vti_lv_lam_pulse_h1.png`. CSVs: `pulse_vti_lv_lam_pulse_h1.csv` and `pulse_vti_timeseries_lv_lam_pulse_h1.csv`.

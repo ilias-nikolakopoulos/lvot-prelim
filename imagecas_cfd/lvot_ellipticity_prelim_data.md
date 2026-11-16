@@ -451,6 +451,88 @@ uv run --python 3.12 --with numpy --with scipy --with pandas --with matplotlib p
   3. No intrinsic spectral broadening (finite transit time and aperture). Real spectra are wider, which raises a traced outer edge but not the mode.
   4. No valve leaflets, and a rigid wall.
   5. Gate depth: clinicians often sample nearer the annulus.
+  Reason 1 is tested in step 14.
+
+## 13. Enlarged-LV sensitivity: is the systolic over-read caused by the small LV? (`lv_big_lam_h1`)
+**Why.** With LV inflow the gate over-reads much more in systolic scans (max +31%) than in diastolic ones (+15%). Systolic scans have small (end-systolic) LV cavities, but they also have a different LVOT. This test keeps each systolic LVOT unchanged and grows only its LV cavity to 88 mL, the median diastolic volume.
+
+**How the LV is grown** ([cfd/build_lv_twins.py](cfd/build_lv_twins.py), `--grow-to`)
+- The LV wall is moved outward by an offset that is zero at the valve and full from 28 mm below it (linear taper from 16 to 28 mm). So the LVOT and the first 16 mm stay exactly as segmented.
+- The offset is found by bisection so that the cavity holds 88 mL (offsets 5.1–10.9 mm). The twin cross-sections at 5–10 mm match the originals within 0.6%.
+- Each case also gets a QC image `cfd/geometry/<id>/qc_lv_big.png` and its settings in `lv_info_big.json`.
+
+**Run** (12 cases, steady, about 2 h; the solver run is a `caffeinate` command for the user)
+```bash
+uv run --python 3.12 --with nibabel --with scipy --with numpy --with scikit-image --with matplotlib python -I cfd/build_lv_twins.py --ids 388,576,33,586,253,146 --grow-to 88
+uv run --python 3.12 --with numpy python -I cfd/openfoam/make_cases.py --ids 388,576,33,586,253,146 --variant lv_big
+caffeinate -i cfd/openfoam/run_all.sh lv_big_lam_h1 > cfd/runs/lv_big_lam_h1.log 2>&1
+uv run --python 3.12 --with numpy --with pandas python -I cfd/openfoam/postprocess.py --tag lv_big_lam_h1
+uv run --python 3.12 --with numpy python -I cfd/openfoam/echo_spectrum.py write --tags lv_big_lam_h1
+bash cfd/openfoam/echo_spectrum_sample.sh lv_big_lam_h1
+uv run --python 3.12 --with numpy --with scipy --with pandas --with matplotlib python -I cfd/openfoam/echo_spectrum.py analyse --tags lam_h1,lv_lam_h1,lv_big_lam_h1
+uv run --python 3.12 --with numpy --with pandas --with matplotlib python -I cfd/openfoam/lv_big_compare.py
+```
+All 12 runs converged (probe swing over the last 200 iterations ≤ 1%).
+
+**Outputs**
+- [cfd_results_lv_big_lam_h1.csv](cfd/cfd_results_lv_big_lam_h1.csv), [echo_spectrum_lv_big_lam_h1.csv](cfd/echo_spectrum_lv_big_lam_h1.csv)
+- ![](cfd/qc/lv_big_compare.png)
+
+**Result (real LVOT, spectral max, median of the 6 systolic scans, each the median over 5 / 7.5 / 10 mm)**
+
+| | LV volume | Gate max ÷ mean | Echo SV ÷ true |
+|---|---|---|---|
+| Systolic, LV as segmented | 45 mL | 1.31 | 0.95 |
+| Same systolic LVOT, LV grown | 88 mL | 1.18 | 0.87 |
+| Paired diastolic scan | 88 mL | 1.15 | 0.76 |
+
+**What it shows**
+- **LV size explains most (about 80%) of the systolic–diastolic difference in over-read.** Growing the LV alone drops the over-read from +31% to +18%, close to the diastolic +15%. In every pair the over-read fell. The biggest drops were in the smallest LVs (33: 1.36 → 1.22; 253: 1.33 → 1.18).
+- **The rest of the SV difference comes from the area.** The systolic AP-diameter area is less underestimated (area ratio about 0.75 vs 0.67 diastolic), so echo SV stays nearer to true in systolic scans even with a large LV.
+- The circle twins moved the same way, so the LVOT shape effect stays small.
+
+## 14. Pulsatile systole: full-beat VTI instead of steady peak flow (`lv_lam_pulse_h1`)
+**Why.** All runs so far use constant peak flow, so they give a peak-velocity ratio, not a VTI. The profile may be more skewed in early and late systole (reason 1 in step 12).
+
+**Set-up** ([cfd/openfoam/make_cases.py](cfd/openfoam/make_cases.py) `--pulse`)
+- pimpleFoam, one systole from rest, patient LV inflow (`lv` variant, mesh copied from `lv_lam_h1`).
+- Flow waveform: raised-cosine rise to Q = 400 mL/s at 110 ms, raised-cosine fall to 0 at 330 ms (SV 66 mL).
+- The PW gate of step 12 is sampled during the run every 1 ms (`system/echoGateFO`). The ring probes are written every time step.
+- Cases: pair 1, 142 (diastolic) and 388 (systolic), real and circle twins.
+
+**VTI analysis** ([cfd/openfoam/pulse_vti.py](cfd/openfoam/pulse_vti.py))
+- For each 1 ms snapshot, the spectral mean, modal and max (step 12) and the true mean velocity Q(t)/A.
+- VTI = the time integral over ejection. VTI ratio = read-out VTI ÷ true VTI. SV ratio = area ratio × VTI ratio.
+- Cross-check: the ring-probe VTI agrees with the gate-mean VTI within 1%.
+
+**Run** (4 cases, about 1.5 h)
+```bash
+uv run --python 3.12 --with numpy python -I cfd/openfoam/make_cases.py --ids 388,142 --variant lv --pulse --init-from lv_lam_h1
+uv run --python 3.12 --with numpy python -I cfd/openfoam/echo_spectrum.py write --tags lv_lam_pulse_h1 --runtime 0.001
+caffeinate -i cfd/openfoam/run_all.sh lv_lam_pulse_h1 > cfd/runs/lv_lam_pulse_h1.log 2>&1
+uv run --python 3.12 --with numpy --with scipy --with pandas --with matplotlib python -I cfd/openfoam/pulse_vti.py
+```
+
+**Outputs**
+- [pulse_vti_lv_lam_pulse_h1.csv](cfd/pulse_vti_lv_lam_pulse_h1.csv) (one row per case and depth) and [pulse_vti_timeseries_lv_lam_pulse_h1.csv](cfd/pulse_vti_timeseries_lv_lam_pulse_h1.csv)
+- ![](cfd/qc/pulse_vti_lv_lam_pulse_h1.png)
+
+**Result (real LVOT, 5 / 7.5 / 10 mm)**
+
+| Case | Read-out | Steady peak ratio | Pulsatile, at peak flow | Pulsatile VTI ratio | Echo SV ÷ true |
+|---|---|---|---|---|---|
+| 142 diastolic | mean | 1.13 / 1.12 / 1.12 | 1.06 / 1.06 / 1.06 | 1.13 / 1.12 / 1.11 | 0.92 / 0.82 / 0.71 |
+| 142 diastolic | max | 1.16 / 1.17 / 1.18 | 1.09 / 1.10 / 1.12 | 1.16 / 1.17 / 1.18 | 0.94 / 0.86 / 0.75 |
+| 388 systolic | mean | 1.19 / 1.17 / 1.20 | 1.07 / 1.06 / 1.07 | 1.16 / 1.14 / 1.15 | 0.93 / 0.87 / 0.87 |
+| 388 systolic | max | 1.24 / 1.24 / 1.27 | 1.12 / 1.12 / 1.15 | 1.24 / 1.22 / 1.23 | 1.00 / 0.93 / 0.93 |
+
+The modal read-out lies between the mean and max, as in step 12.
+
+**What it shows**
+- **The over-read changes through systole.** While the flow accelerates the profile is flatter, and the gate reads only 5–12% above the mean at peak flow. During deceleration the core keeps moving while flow near the wall slows or reverses, so the over-read climbs to 1.6–1.8 late in ejection (panel C). The gate still reads 2–9 cm/s at end-ejection, when the net flow is zero.
+- **Over a whole beat these effects balance out.** The pulsatile VTI ratio is within 0–4% of the steady peak-flow ratio. So the steady runs were a fair stand-in for VTI.
+- **The beat still does not reach Huh's +29%.** The pulsatile max VTI is +17% (diastolic) and +23% (systolic), so echo SV still underestimates by 7–25%.
+- **Real ≈ circle** for the pulsatile VTI too (the circle twins read 0–3% higher).
 
 ---
 
@@ -459,10 +541,12 @@ uv run --python 3.12 --with numpy --with scipy --with pandas --with matplotlib p
 2. **The velocity profile partly offsets it.** The gate reads 6–21% above the mean in most scans. With realistic LV inflow, small (end-systolic) LV cavities push this to 40–50%. The net echo SV ratio is about 0.7–0.95 for the real LVOT. In 2 of 12 scans (small systolic LVs) echo overestimates SV near the valve.
 3. **The LVOT shape itself barely changes the profile.** With LV inflow, real vs circle differs by ≤4% in all 12 scans. The LV inflow sets the skew, which points to the septal side and matches Tsujino 2001.
 4. **The results are robust** to mesh, turbulence model and unsteadiness (≤1.5% on the mean, with ±3% beat-to-beat noise).
+5. **The large over-read in systolic scans is mainly an LV-size effect.** Growing the systolic LV to diastolic size brings the over-read most of the way down (+31% → +18%, vs +15% diastolic).
+6. **Steady peak flow is a fair stand-in for the full-beat VTI** (within 4%). The emulated spectral read-out (max VTI +17–23%) does not reach the +29% VTI that Huh et al. 2022 found against 4D flow, so echo SV still underestimates in our model.
 
 ## Limitations
 - Rigid walls and no valve leaflets.
-- Constant peak flow, not a pulsatile waveform.
+- Constant peak flow in most runs. The pulsatile check (step 14) covers only one pair and one idealised waveform from rest.
 - Uniform LV-wall inflow.
 - No diastolic filling or LV vortex: each run models ejection only, starting from rest, so it has no memory of the diastolic vortex.
 - No in-vivo flow validation.
