@@ -2,8 +2,6 @@
 
 Rule locked on 2026-11-11. Script: `lvot_curtain.py`.
 
-**Why the rule is like this:** see [RATIONALE_aortomitral_curtain.md](RATIONALE_aortomitral_curtain.md). It gives the anatomy, the reason for the gap signal, the alternatives that were tried, the reason for each parameter, the checks and the known weaknesses.
-
 ## 1. Data
 
 - CT: ImageCAS (Kaggle `xiaoweixumedicalai/imagecas`, CC BY-NC 4.0). Cite Zeng et al., CMIG 2023.
