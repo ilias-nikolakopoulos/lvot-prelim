@@ -11,7 +11,7 @@ Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Z
   python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
   ```
   Then set `data_dir` in `config.yaml` to the unzipped meshes from Zenodo, and use `PY=.venv/bin/python`.
-- **ImageCAS CT and CFD arm (not part of the report):** code, tables and QC figures in [`imagecas_cfd/`](imagecas_cfd/README.md); refresh with `bash scripts/sync_imagecas_cfd.sh`.
+- **Separate validation from CT images:** code, tables and QC figures in [`imagecas_cfd/`](imagecas_cfd/README.md); refresh with `bash scripts/sync_imagecas_cfd.sh`.
 - **Without the meshes:** the tables in `outputs/tables/` are included, so the analysis figures can be redrawn without the raw meshes.
 
 ## Reproduce
