@@ -73,7 +73,7 @@ PARAS = [
     ("ul", ["Repeat the key measures (LVOT ellipticity and aorto-mitral angle) in individual UK Biobank CMR scans, in "
             "systole and diastole.",
             "Test whether a narrow aorto-mitral angle with a rounder LVOT is more common in HCM or in carriers of HCM variants."]),
-    ("p", "Code, tables and full methods are in the private GitHub repository (ilias-nikolakopoulos/lvot-ukb). Happy to "
+    ("p", "Code, tables and full methods are in the private GitHub repository (ilias-nikolakopoulos/lvot-prelim). Happy to "
           "go through any of it."),
     ("p", "Best wishes,<br>[Name]"),
 ]
