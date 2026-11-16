@@ -1,8 +1,5 @@
 # LVOT size and ellipticity in UK Biobank representative meshes
 
-This is a personal side project, kept separate from `../ukb-mesh/`. It reuses only that project's `.venv` (labels are rebuilt locally) and never modifies it or the raw data.
-> **All measurements are end-diastolic.** The released meshes were built from end-diastolic frames only (Ugurlu et al. 2025), so systolic LVOT size and shape cannot be measured here. See `docs/DECISIONS.md` #16.
-
 Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0) at `data/meshes`. Each mesh is the average of the participants with the same sex, age (46–83) and integer BMI. The results therefore describe typical hearts, not individuals, and CIs and p-values are descriptive only (participant counts per mesh are unknown).
 
 ## Start here
