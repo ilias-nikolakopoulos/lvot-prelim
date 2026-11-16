@@ -83,3 +83,6 @@ These are geometry only: the `.fiber.vtu` file is read once and µm are converte
 
 ## Results
 _See [`WRITEUP.md`](WRITEUP.md) (caveats final; results after the full run)._
+
+## Licence
+Code: MIT ([`LICENSE`](LICENSE)). Source data keep their own terms: UK Biobank representative meshes CC0 (Ugurlu et al. 2025), Chan et al. 2024 data CC BY 4.0, ImageCAS under its own licence.
