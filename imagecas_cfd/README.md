@@ -1,4 +1,4 @@
-# ImageCAS CT and CFD arm (snapshot)
+# ImageCAS CT and CFD arm
 
 - **Start here:** [`lvot_ellipticity_prelim_data.md`](lvot_ellipticity_prelim_data.md) is the step-by-step guide. The plan is in [`CFD_PLAN_imagecas.md`](CFD_PLAN_imagecas.md).
 - **CT LVOT geometry:** `lvot_cas.py`, `lvot_curtain.py` ([`README_lvot_curtain.md`](README_lvot_curtain.md)), results in `lvot_out/` and the top-level CSVs.
