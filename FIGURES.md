@@ -92,7 +92,7 @@ PY=python   # Python 3.11 with requirements.txt installed
 | Code | [`scripts/19_ellipticity_depth_slide.py`](scripts/19_ellipticity_depth_slide.py) |
 | Run | `$PY scripts/19_ellipticity_depth_slide.py` |
 | Input | `outputs/tables/area_methods_by_mesh.csv` |
-| What it shows | Two panels (minor–major axis ellipse, same-age, same-BMI pairs). A: ellipticity at the annulus, 2 mm and 4 mm, median and IQR (build 1 pooled, build 2 women vs men). B (build 2 only): paired women − men difference at each level, mean and 95% CI, band = IQR of the pair differences: +0.00 at the annulus, +0.06 at 2 mm, +0.08 at 4 mm |
+| What it shows | Two panels (minor–major axis ellipse, same-age, same-BMI pairs). A: ellipticity at the annulus, 2 mm and 4 mm as box plots (box = IQR, whiskers = 5th–95th percentile) with a line through the medians (build 1 pooled, build 2 women vs men). B (build 2 only): box plots of the paired women − men differences with a line through the medians (+0.00 at the annulus, +0.06 at 2 mm, +0.09 at 4 mm) and the mean ± 95% CI overlaid (+0.00, +0.06, +0.08) |
 
 Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (one slide, on-click build) and `outputs/slide_ellipticity_static.pptx` (two slides). Code: [`scripts/20_ellipticity_slide.js`](scripts/20_ellipticity_slide.js) + [`scripts/20_add_click_build.py`](scripts/20_add_click_build.py).
 

@@ -2,8 +2,9 @@
 
 One method (minor-major axis ellipse: longest diameter through the centre / the diameter at 90 deg, as in a CT
 reading), matched same-age, same-BMI pairs (one woman's and one man's mesh per pair).
-  A  ellipticity vs depth below the annulus (annulus, 2 mm, 4 mm chord-closed): median line and IQR band
-  B  paired difference women - men at each depth: mean and 95% CI (t), band = IQR of the pair differences
+  A  ellipticity vs depth below the annulus (annulus, 2 mm, 4 mm chord-closed): box plots, line through the medians
+  B  paired difference women - men at each depth: box plots, line through the medians; mean and 95% CI (t) overlaid
+Box = IQR, line in box = median, whiskers = 5th-95th percentile.
 Builds (same layout, so the slide does not jump):
   build 1  A only, both sexes pooled (grey): the LVOT gets more elliptical below the annulus
   build 2  A by sex (coloured) + B: women's LVOT is more elliptical, and the gap grows with depth
@@ -44,26 +45,33 @@ A["ellip"] = A.ct_long / A.ct_short
 X = np.array([dp for _, dp, _ in LEVELS], float)
 
 
-def q(v):
-    return np.percentile(v, [25, 50, 75])
-
-
-# panel A: median and IQR by depth, pooled and by sex
-PROF = {g: np.array([q(A[(A.level == lv) & ((A.sex == g) if g != "all" else True)].ellip.dropna()) for lv, _, _ in LEVELS])
-        for g in ("all", "F", "M")}
-# panel B: paired women - men (same age and BMI) at each depth
-DIFF = []
+# panel A: values by level, pooled and by sex
+V = {g: [A[(A.level == lv) & ((A.sex == g) if g != "all" else True)].ellip.dropna().values for lv, _, _ in LEVELS]
+     for g in ("all", "F", "M")}
+# panel B: paired women - men (same age and BMI) at each level
+D, DIFF = [], []
 for lv, dp, _ in LEVELS:
-    s = A[A.level == lv]
-    p = s[s.sex == "F"].merge(s[s.sex == "M"], on=["age", "bmi"], suffixes=("_F", "_M"))[["ellip_F", "ellip_M"]].dropna()
-    dd = p.ellip_F - p.ellip_M
+    s_ = A[A.level == lv]
+    p = s_[s_.sex == "F"].merge(s_[s_.sex == "M"], on=["age", "bmi"], suffixes=("_F", "_M"))[["ellip_F", "ellip_M"]].dropna()
+    dd = (p.ellip_F - p.ellip_M).values
     half = stats.t.ppf(.975, len(dd) - 1) * dd.std(ddof=1) / np.sqrt(len(dd))
-    DIFF.append(dict(level=lv, depth=dp, n=len(dd), mean=dd.mean(), lo=dd.mean() - half, hi=dd.mean() + half,
-                     q25=dd.quantile(.25), q75=dd.quantile(.75)))
+    D.append(dd)
+    DIFF.append(dict(level=lv, depth=dp, n=len(dd), median=np.median(dd), mean=dd.mean(), lo=dd.mean() - half,
+                     hi=dd.mean() + half))
 DIFF = pd.DataFrame(DIFF)
-for (lv, _, _), f, m in zip(LEVELS, PROF["F"], PROF["M"]):
-    print(f"{lv:26s} median women {f[1]:.2f}  men {m[1]:.2f}")
+for (lv, _, _), f, m in zip(LEVELS, V["F"], V["M"]):
+    print(f"{lv:26s} median women {np.median(f):.2f}  men {np.median(m):.2f}")
 print(DIFF.round(3).to_string(index=False))
+
+
+def boxes(ax, data, xs, col, t, w):
+    bp = ax.boxplot(data, positions=xs, widths=w, whis=(5, 95), showfliers=False, patch_artist=True,
+                    medianprops=dict(color=t["fg"], lw=2.2), whiskerprops=dict(color=col, lw=1.4),
+                    capprops=dict(color=col, lw=1.4), boxprops=dict(edgecolor=col, lw=1.6), manage_ticks=False)
+    for bx in bp["boxes"]:
+        bx.set_facecolor(col); bx.set_alpha(.55)
+    ax.plot(xs, [np.median(v) for v in data], "-", color=col, lw=2.4, zorder=3)
+
 
 ODIR = ROOT / "outputs/figures/slides"
 ODIR.mkdir(parents=True, exist_ok=True)
@@ -91,45 +99,43 @@ def draw(theme, build):
     else:
         fig.patch.set_facecolor(t["bg"])
 
-    # A: ellipticity profile
-    groups = [("all", t["grey"], "Women and\nmen")] if build == 1 else [("F", SEXC["F"], "Women"), ("M", SEXC["M"], "Men")]
-    for g, col, lab in groups:
-        P = PROF[g]
-        a.fill_between(X, P[:, 0], P[:, 2], color=col, alpha=.18, lw=0)
-        a.plot(X, P[:, 1], "-o", color=col, lw=2.6, ms=8, zorder=3)
-        a.text(X[-1] + .18, P[-1, 1], lab, color=col, fontsize=15, fontweight="bold", va="center")
+    # A: ellipticity by level, box plots + line through the medians
+    groups = [("all", t["grey"], "Women and\nmen", 0)] if build == 1 else \
+        [("F", SEXC["F"], "Women", -.38), ("M", SEXC["M"], "Men", .38)]
+    for k, (g, col, lab, dx) in enumerate(groups):
+        boxes(a, V[g], X + dx, col, t, .62)
+        a.text(-.6, 1.66 - .065 * k, lab.replace("\n", " "), color=col, fontsize=15, fontweight="bold", va="center")
     a.axhline(1.0, color=t["muted"], lw=1, ls=":")
-    a.text(-.4, 1.005, "1.0 = circle", fontsize=12, color=t["muted"], va="bottom")
-    a.set_ylim(.97, 1.68)
+    a.text(-.75, 1.005, "1.0 = circle", fontsize=12, color=t["muted"], va="bottom")
+    a.set_ylim(.97, 1.72)
     a.set_ylabel("Ellipticity (major / minor diameter)", fontsize=15, color=t["fg"])
     a.set_title("A  More elliptical below the annulus", loc="left", fontsize=17, fontweight="bold", color=t["fg"])
     style(a, t)
-    a.set_xlim(-.5, 5.3)
+    a.set_xlim(-.8, 4.8)
 
-    # B: paired difference women - men
+    # B: paired difference women - men, box plots + line through the medians, mean and 95% CI overlaid
     b.set_title("B  Women − men, same age and BMI", loc="left", fontsize=17, fontweight="bold", color=t["fg"])
     b.axhline(0, color=t["muted"], lw=1.2)
-    b.set_ylim(-.04, .14)
+    b.set_ylim(-.09, .22)
     b.set_ylabel("Difference in ellipticity", fontsize=15, color=t["fg"])
     style(b, t)
-    b.set_xlim(-.5, 4.9)
+    b.set_xlim(-.7, 5.1)
     if build == 1:
         b.set_visible(False)
     else:
-        b.fill_between(X, DIFF.q25, DIFF.q75, color=SEXC["F"], alpha=.15, lw=0)
-        b.plot(X, DIFF["mean"], "-", color=SEXC["F"], lw=2.2)
-        b.errorbar(X, DIFF["mean"], yerr=[DIFF["mean"] - DIFF.lo, DIFF.hi - DIFF["mean"]], fmt="o", ms=8,
-                   color=SEXC["F"], capsize=5, lw=2, zorder=3)
+        boxes(b, D, X, SEXC["F"], t, .62)
+        b.errorbar(X, DIFF["mean"], yerr=[DIFF["mean"] - DIFF.lo, DIFF.hi - DIFF["mean"]], fmt="D", ms=6,
+                   mfc="white", mec=t["fg"], color=t["fg"], capsize=3, lw=1.4, zorder=4)
         for x_, r in zip(X, DIFF.itertuples()):
-            b.text(x_ + .2, r.mean, f"{r.mean:+.2f}", ha="left", va="center", fontsize=14, fontweight="bold",
+            b.text(x_ + .36, r.median, f"{r.median:+.2f}", ha="left", va="center", fontsize=14, fontweight="bold",
                    color=t["fg"])
-        b.text(4.45, -.004, "0 = no difference", fontsize=12, color=t["muted"], ha="right", va="top")
+        b.text(3.0, -.006, "0 = no difference", fontsize=12, color=t["muted"], ha="center", va="top")
 
-    note = ("Minor–major axis ellipse; A: median and IQR" +
-            ("; B: mean and 95% CI of the paired differences, band = IQR" if build == 2 else "") +
-            f". {DIFF.n.min()}–{DIFF.n.max()} same-age, same-BMI pairs; 4 mm section closed with a chord; end-diastole.")
+    note = ("Minor–major axis ellipse; box = IQR, whiskers = 5th–95th percentile, line = medians" +
+            ("; B: paired differences, white diamond = mean and 95% CI, numbers = medians" if build == 2 else "") + ".\n" +
+            f"{DIFF.n.min()}–{DIFF.n.max()} same-age, same-BMI pairs; 4 mm section closed with a chord; end-diastole.")
     fig.text(.01, .01, note, fontsize=10.5, color=t["muted"], ha="left", va="bottom")
-    fig.subplots_adjust(left=.07, right=.98, top=.9, bottom=.2)
+    fig.subplots_adjust(left=.07, right=.98, top=.9, bottom=.22)
     out = ODIR / f"ellipticity_depth_{theme}_build{build}.png"
     fig.savefig(out, dpi=200, transparent=t["bg"] is None)
     plt.close(fig)
