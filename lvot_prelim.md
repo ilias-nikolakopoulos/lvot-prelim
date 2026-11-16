@@ -1,4 +1,4 @@
-# LVOT ellipticity: how to reproduce every result and figure
+# LVOT ellipticity from UK Biobank meshes
 
 This file lists all the work done for the report (STEPS 0–9). For each step, it gives what the step does, the code, the command, the outputs and the figure.
 
