@@ -45,7 +45,7 @@ Full run (~70 min). Run it yourself in Terminal from this folder:
 `caffeinate -i ../ukb-mesh/.venv/bin/python scripts/01_measure.py --all > outputs/logs/measure_all.log 2>&1`
 
 ## Results
-_See [`WRITEUP.md`](WRITEUP.md) (caveats final; results after the full run)._
+_See [`WRITEUP.md`](WRITEUP.md)._
 
 ## Licence
 Code: MIT ([`LICENSE`](LICENSE)). Source data keep their own terms: UK Biobank representative meshes CC0 (Ugurlu et al. 2025), Chan et al. 2024 data CC BY 4.0, ImageCAS under its own licence.
