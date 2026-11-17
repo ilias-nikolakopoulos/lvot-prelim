@@ -1,4 +1,4 @@
-# LVOT size and ellipticity in UK Biobank representative meshes
+# LVOT size and ellipticity in UK Biobank meshes
 
 Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0). Each mesh is the average of the participants with the same sex, age (46–83) and BMI.
 
