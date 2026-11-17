@@ -37,7 +37,6 @@ $PY scripts/23_wall_phenotypes.py             # STEP 9.6-9.8 wall feature map + 
 ```bash
 bash run_all.sh
 ```
-The long steps (`01_measure.py --all`, `09_save_outlines.py --all`, `22_wall_geometry.py --all`) are resumable. [`lvot_prelim.md`](lvot_prelim.md) lists what each step makes.
 
 ## Results
 _See [`WRITEUP.md`](WRITEUP.md)._
