@@ -5,3 +5,5 @@ outputs/logs/*.log
 data/outlines/
 data/external/
 outputs/share/
+CLAUDE.md
+.claude/
