@@ -35,7 +35,7 @@ This file lists all the work done for the report (STEPS 0–9). For each step, i
 | Measurement code | [`src/lvot.py`](src/lvot.py) (STEPS 1–5), [`src/wall.py`](src/wall.py) (STEP 9) |
 | Scripts | [`scripts/`](scripts) (numbered in the order they were written; run order is in `run_all.sh`) |
 | Step markers | every step is marked `# STEP x.y` in the code |
-| Font for figures | Roboto, in [`assets/fonts/`](assets/fonts) (Apache 2.0) |
+| Font for figures | Roboto (Apache 2.0, [Google Fonts](https://fonts.google.com/specimen/Roboto)); put the static TTFs in `assets/fonts/` (not in the repository). Without them the figures use matplotlib's default font. |
 
 ---
 

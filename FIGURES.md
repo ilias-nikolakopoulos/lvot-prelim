@@ -2,7 +2,7 @@
 
 Each figure below lists the script that draws it, the command to run it (from the repository root), and what it needs as input. All scripts read the per-mesh table `outputs/tables/lvot_all.csv`, which `scripts/01_measure.py` builds from the raw meshes (see [README.md](README.md) and [docs/PIPELINE.md](docs/PIPELINE.md) for the full pipeline).
 
-Shared settings live in [`config.yaml`](config.yaml). The house style (Roboto font, level colours, women lighter and men darker) comes from [`assets/fonts/`](assets/fonts) and is set at the top of each figure script.
+Shared settings live in [`config.yaml`](config.yaml). The house style (Roboto font, level colours, women lighter and men darker) is set at the top of each figure script. Roboto is read from `assets/fonts/` if present (download from Google Fonts; not in the repository); otherwise matplotlib uses its default font.
 
 ```bash
 PY=python   # Python 3.11 with requirements.txt installed
