@@ -101,3 +101,4 @@ Keep the flow rate constant, so that geometry is the only variable.
 2. No wall motion. No aortic valve leaflets.
 3. Steady flow at one instant (peak systole).
 4. The LVOT end in systolic cases is from manual marks.
+5. The LV cavity in the LV-inflow runs is the traced LV contour. It includes the papillary muscles and trabeculae, and the model treats all of it as blood.

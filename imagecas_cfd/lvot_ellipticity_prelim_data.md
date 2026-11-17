@@ -544,6 +544,7 @@ The modal read-out lies between the mean and max, as in step 12.
 - Rigid walls and no valve leaflets.
 - Constant peak flow in most runs. The pulsatile check (step 14) covers only one pair and one idealised waveform from rest.
 - Uniform LV-wall inflow.
+- The LV cavity is the traced LV contour, which includes the papillary muscles and trabeculae (the standard way to trace the LV). The LV-inflow runs treat all of it as blood. In the 6 systolic scans, 16–21% of the traced cavity is muscle and not blood (6–10% in the 6 diastolic scans; a CT threshold, counted more than about 1 mm inside the contour). So the model cavity is larger and smoother than the real blood pool, mostly deep in the ventricle. The LVOT segment (2–12 mm) is not affected.
 - No diastolic filling or LV vortex: each run models ejection only, starting from rest, so it has no memory of the diastolic vortex.
 - No in-vivo flow validation.
 - End-systolic rather than peak-ejection geometry.
