@@ -117,9 +117,7 @@ This file lists all the work done for the report (STEPS 0–9). For each step, i
 - **Run:** `$PY scripts/03_analysis.py`
 - **Outputs:**
   - Tables: `outputs/tables/sexdiff_by_age_block.csv`, `exclusions.csv`
-  - Figures: `outputs/figures/analysis/fig_raw.png` (all meshes), `fig_common.png` (matched pairs), `fig_sexdiff.png` (men − women by age)
-
-  ![Men minus women by age](outputs/figures/analysis/fig_sexdiff.png)
+  - Figures: `outputs/figures/analysis/fig_raw.png` (all meshes), `fig_common.png` (matched pairs)
 
 - **Main results** (medians, end-diastole):
   - LVOT 2 mm area-derived diameter: women 18.5 mm, men 21.4 mm. Men's LVOT is about 2.9 mm larger at every age.

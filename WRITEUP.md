@@ -115,7 +115,6 @@ The three methods agree within 0.03 at every level. The annulus is nearly round 
 ### Figures (`outputs/figures/analysis/`)
 - `fig_raw.png`: all meshes.
 - `fig_common.png`: common support, BMI held fixed.
-- `fig_sexdiff.png`: men − women vs age.
 - `fig_area_methods.png`: area estimates.
 - `fig_area_methods_demo.png`: what each area estimate measures, drawn on one outline.
 - `fig_ellipticity_methods.png`: ellipticity by method, level and sex (box plots).

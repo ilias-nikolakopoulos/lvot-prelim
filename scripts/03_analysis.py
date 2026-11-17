@@ -4,7 +4,7 @@ Input: outputs/tables/<name>.csv from 01_measure.py (default lvot_all).
 Outputs (outputs/tables, outputs/figures/analysis):
   exclusions.csv            mesh_id, measure group, reason
   sexdiff_by_age_block.csv  common-support paired M-F differences by age block
-  fig_raw.png, fig_common.png, fig_sexdiff.png
+  fig_raw.png, fig_common.png
 Sex comparison = matched pairs only (same age and BMI).
 Meshes are averages of many participants with unknown counts: CIs / p-values are descriptive.
 Usage: python scripts/03_analysis.py [--in lvot_all]
@@ -177,25 +177,6 @@ for ax, (k, lab) in zip(axs, MEAS):
 axs[0].legend(fontsize=8, frameon=False)
 fig.suptitle("BMI held fixed: common support only (same age and BMI in both sexes); dots = per-age mean, line = 3-yr rolling", fontsize=10)
 fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_common.png", dpi=120); plt.close(fig)
-
-# 3 sex difference vs age
-fig, axs = grid(len(MEAS))
-for ax, (k, lab) in zip(axs, MEAS):
-    q = pairs[["age", f"{k}_F", f"{k}_M"]].dropna()
-    q = q.assign(diff=q[f"{k}_M"] - q[f"{k}_F"])
-    g = q.groupby("age")["diff"]
-    ax.scatter(g.mean().index, g.mean(), s=10, color="0.35", lw=0, label="per-age mean of pairs")
-    bl = blocks[blocks.measure == k]
-    for _, r in bl.iterrows():
-        lo, hi = map(int, r.age_block.split("-"))
-        ax.errorbar((lo + hi) / 2, r.diff_M_minus_F, yerr=[[r.diff_M_minus_F - r.lo], [r.hi - r.diff_M_minus_F]],
-                    fmt="s", ms=4, color="#009E73", capsize=2, lw=1, label="age block (paired) ± 95% CI" if lo == 46 else None)
-    ax.axhline(0, color="0.5", lw=.8)
-    style(ax, "M − F: " + lab)
-axs[0].legend(fontsize=7, frameon=False)
-fig.suptitle("Sex difference (men − women) by age", fontsize=10)
-fig.tight_layout(rect=(0, 0, 1, 0.97)); fig.savefig(FIG / "fig_sexdiff.png", dpi=120); plt.close(fig)
-
 pd.set_option("display.width", 250)
 show = blocks[blocks.measure.isin(["ao_d_area", "lvot2_d_area", "lvot4cc_d_area", "lvot2_ellip_ratio", "lvot4cc_ellip_ratio"])]
 print(show.round(3).to_string(index=False))
