@@ -1,6 +1,6 @@
 # LVOT size and ellipticity in UK Biobank representative meshes
 
-Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0). Each mesh is the average of the participants with the same sex, age (46–83) and integer BMI. The results therefore describe typical hearts, not individuals, and CIs and p-values are descriptive only (participant counts per mesh are unknown).
+Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Zenodo 10.5281/zenodo.15649643, CC0). Each mesh is the average of the participants with the same sex, age (46–83) and BMI.
 
 ## Start here
 - **Reproduce every result and figure (STEPS 0–9), step by step:** [`lvot_prelim.md`](lvot_prelim.md).

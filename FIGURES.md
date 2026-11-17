@@ -82,7 +82,7 @@ PY=python   # Python 3.11 with requirements.txt installed
 | Input | `outputs/tables/lvot_all.csv`, `data/outlines/` (from `scripts/09_save_outlines.py`), raw meshes for the example outline |
 | What it shows | top: one LVOT outline (woman, 65, BMI 26, 2 mm below the annulus) with the diameters each method uses and the shape it assumes; bottom: mean ± SD % difference from the measured outline area by method, level and sex (matched pairs). Table: `outputs/tables/area_methods_summary.csv` |
 
-## 7. Slide version: ellipticity by depth and sex
+## 7. Ellipticity by depth and sex
 
 ![Ellipticity slide, build 2](outputs/figures/slides/ellipticity_depth_light_build2.png)
 
