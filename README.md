@@ -14,7 +14,7 @@ Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Z
 - **Separate validation from CT images (still in progress):** code, tables and QC figures in [`imagecas_cfd/`](imagecas_cfd/README.md); refresh with `bash scripts/sync_imagecas_cfd.sh`.
 
 ## Reproduce the CMR mesh analysis
-- **Docs:** step-by-step pipeline with the code for each step in [`docs/PIPELINE.md`](docs/PIPELINE.md); flowchart in [`docs/flowchart.mmd`](docs/flowchart.mmd) (Mermaid); reasons for each choice in [`docs/DECISIONS.md`](docs/DECISIONS.md).
+- **Docs:** step-by-step pipeline with the code for each step in [`docs/PIPELINE.md`](docs/PIPELINE.md); flowchart in [`docs/flowchart.mmd`](docs/flowchart.mmd); reasons for each choice in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 - **Parameters:** everything in [`config.yaml`](config.yaml).
 - **Environment:** Python 3.11 + [`requirements.txt`](requirements.txt).
 - **Provenance:** every run appends to `outputs/logs/runs.jsonl` (code/config hash, package versions).

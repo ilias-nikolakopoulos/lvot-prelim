@@ -12,17 +12,18 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from src.config import load_config  # noqa: E402
+from src.config import load_config, mesh_folder  # noqa: E402
 from src.lvot import parse_name  # noqa: E402
 from src.provenance import log_run  # noqa: E402
 
 cfg = load_config()
 rows = []
-for vtu in Path(cfg["data_dir"]).rglob("*.fiber.vtu"):
+DATA = mesh_folder("")  # data_dir as a full path
+for vtu in DATA.rglob("*.fiber.vtu"):
     if vtu.name.startswith("._") or any(p.startswith(".") for p in vtu.parts[-3:-1]):
         continue
     mid = vtu.name[: -len(".fiber.vtu")]
-    rows.append({**parse_name(mid), "folder": str(vtu.parent)})
+    rows.append({**parse_name(mid), "folder": str(vtu.parent.relative_to(DATA))})  # relative: no local paths in git
 lab = pd.DataFrame(rows).sort_values("mesh_id").reset_index(drop=True)
 assert lab.mesh_id.is_unique, "duplicate mesh ids"
 assert not lab.duplicated(["sex", "age", "bmi"]).any(), "more than one mesh per sex x age x BMI"

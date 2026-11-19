@@ -13,7 +13,8 @@ Rule locked on 2026-11-11. Script: `lvot_curtain.py`.
 
 ### 2.1 Set the reference
 1. Find the boundary between the LV label and the aorta label.
-2. Use this boundary as the aortic valve plane (0 mm).
+2. Use this boundary as the reference plane (0 mm). This file calls it the "valve plane".
+   NOTE: It is not the annulus. The label boundary crosses the closed cusps and the sinus floors, so it is about 1–2 mm above the annulus (automatic estimate: median 1.6 mm). See section 2.9 and section 6.
 3. Make the LVOT axis perpendicular to this plane.
 
 ### 2.2 Make the long-axis planes
@@ -56,18 +57,25 @@ Rule locked on 2026-11-11. Script: `lvot_curtain.py`.
 2. Report the number of "not found" cases.
 3. Mark systolic scans manually (column `systolic_flag` = True, LV/myocardium volume ratio < 0.6).
 
+### 2.9 Exclude scans with a sinus at 2 mm (added 2026-11-18)
+1. Cut the short-axis plane at 2 mm below the valve plane. Use the labels only.
+2. Exclude the scan if the aorta label covers 1% or more of the central LV+aorta section (a sinus inside the section).
+3. Exclude the scan if an aorta-label region of 5 mm² or more comes within 3 mm of the section (a sinus beside the section).
+4. Script: `sinus_2mm_check.py`. Output: `sinus_2mm_out/sinus_2mm_flags.csv`.
+5. Result: 125 of 998 scans are excluded (93 inside, 33 beside). 873 scans are analysed.
+
 NOTE: In systole, the closed leaflet stays against the LA. The gap does not open, so the rule cannot find the curtain end.
 
 ## 3. LVOT measurements
 The script cuts short-axis planes perpendicular to the LVOT axis. It measures the LV label cross-section at each level:
-- `2mm`: 2 mm below the valve plane (all cases).
+- `2mm`: 2 mm below the LV–aorta label boundary (all cases). This is not 2 mm below the annulus. It is close to the annulus level (see section 2.1).
 - `mid`: half of the curtain end depth (only if the curtain end is found).
 - `curtain_end`: at the curtain end (only if found).
 
 For each level: area (mm²), ellipticity (√ of the ratio of the second-moment eigenvalues), equivalent diameter, major and minor axis.
 
 ## 4. How to run (Claude Code on the Mac)
-1. Open Terminal. Go to this folder: `cd "data/meshes/imagecas"`.
+1. Open Terminal. Go to the imagecas folder on the external drive (`cd` to it).
 2. Start Claude Code in this folder. Tell it: "Read README_lvot_curtain.md and run the LVOT pipeline on all downloaded chunks."
 3. Or run it yourself. One command does all five chunks:
 
@@ -92,3 +100,6 @@ caffeinate -i uv run --python 3.12 --with nibabel --with scipy --with numpy --wi
 - The curtain end depends on the LA label edge. A label that is 0.5–1 mm out of position can move the curtain end by 1–2 mm when the gap increases slowly.
 - In the 29 test cases, the rule found the curtain end in 23 (79%). Median 7.2 mm, range 3.0–10.8 mm.
 - Reference hand mark: case 119 = 5.3 mm (rule: not found).
+- 0 mm is the LV–aorta label boundary, not the annulus. It is about 1–2 mm above the annulus. Thus all depths (2 mm, mid, curtain end) are measured from a level above the annulus. The cross-section at the curtain end is not affected; only its reported depth is.
+- Scans where the 2 mm plane still cuts a sinus are excluded (section 2.9). This removes 125 of 998 scans (13%). Their LVOTs may differ from the rest.
+- Possible later fix (not done): find the annulus in each scan from the three cusp nadirs in 3-D multiplanar reconstruction (MPR), and measure the depths from it. An automatic estimate is in `annulus_offset.py`; it was not checked against hand marks, because the annulus cannot be marked reliably without MPR.

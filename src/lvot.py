@@ -24,7 +24,7 @@ from pathlib import Path
 import numpy as np
 
 UM_TO_MM = 1e-3
-from src.config import load_config
+from src.config import load_config, mesh_folder
 
 P_ = load_config()["measure"]  # all tunable parameters live in config.yaml
 DEPTHS = tuple(float(d) for d in P_["depths_mm"])  # section planes below the ring
@@ -258,7 +258,7 @@ def measure_mesh(folder: str | Path, depths=DEPTHS, keep_geometry: bool = False)
     import pyvista as pv
 
     # STEP 1.1 — read the .vtu once, check tets only, convert um -> mm
-    folder = Path(folder)
+    folder = mesh_folder(folder)  # labels.csv holds paths relative to data_dir
     mid = folder.name
     g = pv.read(folder / f"{mid}.fiber.vtu")
     tags = np.asarray(g.cell_data["elemTag"])

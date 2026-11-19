@@ -65,15 +65,16 @@
 Full rule: [README_lvot_curtain.md](README_lvot_curtain.md). Code: [lvot_curtain.py](lvot_curtain.py).
 
 **Method**
-1. **Valve plane and LVOT axis.** The LV–aorta label interface gives the valve plane (0 mm). The LVOT axis is perpendicular to it.
+1. **Reference plane and LVOT axis.** The LV–aorta label interface gives the reference plane (0 mm), called the "valve plane" here. The LVOT axis is perpendicular to it. This plane is about 1–2 mm above the annulus (see the limitations).
 2. **Five long-axis planes** run toward the LA, 2 mm apart.
 3. **Wall trace.** In each plane, trace the posterior wall (the curtain, then the anterior mitral leaflet) as the darkest point near the LA edge, with safeguards.
 4. **Curtain end.** This is the depth where the wall-to-LA gap starts to open. Each case uses the median over the planes, or the mean when only 2 planes agree.
-5. **Short-axis cross-sections** at 2 mm, at mid-curtain and at the curtain end give:
+5. **Short-axis cross-sections** at 2 mm below the label boundary, at mid-curtain and at the curtain end give:
    - area
    - ellipticity (√ of the ratio of the second-moment eigenvalues)
    - equivalent diameter
    - major and minor axes
+6. **Exclusion.** Scans whose 2 mm plane still cuts an aortic sinus are excluded: aorta label covers 1% or more of the section, or an aorta-label region of 5 mm² or more lies within 3 mm of it. Script: [sinus_2mm_check.py](sinus_2mm_check.py).
 
 **Run** (about half a day; restartable; 4 workers ≈ 8 GB):
 ```bash
@@ -83,20 +84,24 @@ caffeinate -i uv run --python 3.12 --with nibabel --with scipy --with numpy --wi
   --lab-dir labels_DTU/ImageCAS-STACOM2025-02-10-2025/segmentations \
   --out lvot_out --workers 4
 uv run --python 3.12 --with pandas --with numpy --with matplotlib python -I lvot_out/plot_summary.py
+caffeinate -i uv run --python 3.12 --with nibabel --with scipy --with numpy python sinus_2mm_check.py --out sinus_2mm_out
+uv run --python 3.12 --with pandas --with numpy --with matplotlib python -I lvot_out/summary_sinus_excluded.py
 ```
 
 **Outputs**
 - [lvot_out/lvot_curtain_results.csv](lvot_out/lvot_curtain_results.csv): one row per case.
 - `lvot_out/cases/{id}.json`
 - `lvot_out/qc/{id}.png`: one per case, showing the five planes, the trace and the curtain end.
-- Summary figure: ![](lvot_out/lvot_curtain_summary.png)
+- Summary figure, without the excluded scans: ![](lvot_out/lvot_curtain_summary_v2.png)
+- All scans vs kept scans: [lvot_out/summary_v1_vs_v2.csv](lvot_out/summary_v1_vs_v2.csv). The version-1 figure (all scans) is `lvot_out/lvot_curtain_summary.png`.
 
 **Results**
-- 998 cases, 0 errors.
-- The curtain end was found in 762 cases: median 7.4 mm below the valve.
-- Ellipticity rises with depth, from 1.27 at 2 mm to 1.49 at the curtain end.
-- The long axis is mediolateral, and the AP axis stays at about 20 mm.
-- So echo area (π·AP²/4) underestimates true area by 21–32%.
+- 998 cases, 0 errors. 125 are excluded because the 2 mm plane still cuts a sinus, so **873 are analysed**.
+- The curtain end was found in 683 of 873 (78%): median 7.3 mm below the label boundary (IQR 6.2–8.3).
+- Ellipticity rises with depth: 1.27 at 2 mm, 1.35 at mid-curtain, 1.50 at the curtain end.
+- The long axis is mediolateral, and the AP (minor) axis stays at about 20 mm.
+- So echo area (π·AP²/4) underestimates true area by a median of 21% at 2 mm, 26% at mid-curtain and 32% at the curtain end.
+- The exclusion changes these numbers very little (all 998 scans: curtain end 7.4 mm; ellipticity 1.27 / 1.35 / 1.49; echo error 21 / 25 / 32%).
 
 **Known limit.** In systolic scans the closed mitral leaflet lies against the LA, so the rule usually can't find the curtain end.
 
@@ -549,3 +554,7 @@ The modal read-out lies between the mean and max, as in step 12.
 - No in-vivo flow validation.
 - End-systolic rather than peak-ejection geometry.
 - A small pilot: 6 pairs.
+- **The reference plane (0 mm) is not the annulus.** It is the LV–aorta label boundary, which crosses the closed cusps and sinus floors. It is about 1–2 mm above the annulus (automatic estimate: median 1.6 mm, not checked against hand marks). So "2 mm" is close to the annulus level, and all other depths (mid-curtain, curtain end, the CFD read-outs at 5, 7.5 and 10 mm) are measured from a level above the annulus. The curtain-end cross-section itself is not affected.
+- **Scans with a sinus at 2 mm are excluded** from the CT analysis: 125 of 998 (13%), including 3 of the 14 systolic-flagged scans. If these hearts differ (for example, a lower annulus), the kept scans are not fully representative.
+- **Two CFD scans meet the exclusion rule:** 576 (pair 2, a sinus beside the lumen) and 663 (pair 6, a sinus tip at exactly the 1% cut-off). The sinus is not in either CFD lumen, because the CFD geometry starts at 2 mm and the outlet repeats the 2 mm slice.
+- **Possible later fix (not done):** find the annulus in each scan from the three cusp nadirs in 3-D multiplanar reconstruction (MPR) and measure all depths from it. An automatic estimate is in `annulus_offset.py`. It was not validated, because the annulus cannot be marked reliably on fixed slices.

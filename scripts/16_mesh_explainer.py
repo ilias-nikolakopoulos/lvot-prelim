@@ -22,7 +22,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from src.config import load_config  # noqa: E402
+from src.config import load_config, mesh_folder  # noqa: E402
 from src.provenance import log_run  # noqa: E402
 
 for f_ in sorted((ROOT / "assets/fonts").glob("Roboto-*.ttf")):
@@ -35,7 +35,7 @@ TAGN = {0: "RV wall", 1: "LV wall", 4: "mitral valve cap", 5: "aortic valve cap"
 
 mid = sys.argv[1] if len(sys.argv) > 1 else "female_age_65_bmi_26"
 lab = pd.read_csv(ROOT / load_config()["labels"]).set_index("mesh_id")
-g = pv.read(Path(lab.loc[mid, "folder"]) / f"{mid}.fiber.vtu")
+g = pv.read(mesh_folder(lab.loc[mid, "folder"]) / f"{mid}.fiber.vtu")
 tags = np.asarray(g.cell_data["elemTag"])
 conn = g.cells.reshape(-1, 5)[:, 1:]
 g.points = np.asarray(g.points) * 1e-3

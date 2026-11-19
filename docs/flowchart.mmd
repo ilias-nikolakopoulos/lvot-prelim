@@ -1,7 +1,7 @@
 %% LVOT pipeline flowchart (Mermaid). Node text: step id, what it does, [code location].
 %% Render: paste into https://mermaid.live or any Mermaid viewer.
 flowchart TD
-    RAW[("Raw meshes, read-only<br/>data/meshes<br/>1,423 × .fiber.vtu")]
+    RAW[("Raw meshes, read-only<br/>external drive (config data_dir)<br/>1,423 × .fiber.vtu")]
     CFG[/"config.yaml<br/>all parameters"/]
 
     S0["STEP 0 — Label table<br/>parse sex / age / BMI from folder names<br/>[scripts/00_labels.py]"]

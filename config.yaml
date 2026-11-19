@@ -1,5 +1,5 @@
 # All parameters for the LVOT pipeline. Change here, not in code; every run logs a hash of this file.
-data_dir: "data/meshes"   # raw meshes (read-only, external SSD)
+data_dir: "data/meshes"   # raw meshes (read-only). Local link to the mesh folder; not in git. Make it once: ln -s <mesh folder> data/meshes
 labels: "data/labels.csv"              # built by scripts/00_labels.py from folder names
 seed: 2026
 

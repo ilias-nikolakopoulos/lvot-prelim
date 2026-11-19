@@ -22,7 +22,7 @@ import pyvista as pv
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from src.config import load_config  # noqa: E402
+from src.config import load_config, mesh_folder  # noqa: E402
 from src.lvot import ring_measure  # noqa: E402
 from src.provenance import log_run  # noqa: E402
 
@@ -38,7 +38,7 @@ NAME = {4: "mitral?", 5: "aortic?", 6: "tricuspid?", 7: "pulmonary?"}
 
 rows = []
 for k, mid in enumerate(ids, 1):
-    g = pv.read(Path(lab.loc[mid, "folder"]) / f"{mid}.fiber.vtu")
+    g = pv.read(mesh_folder(lab.loc[mid, "folder"]) / f"{mid}.fiber.vtu")
     tags = np.asarray(g.cell_data["elemTag"])
     conn = g.cells.reshape(-1, 5)[:, 1:]
     P = np.asarray(g.points) * 1e-3
