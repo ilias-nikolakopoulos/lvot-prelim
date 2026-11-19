@@ -492,6 +492,15 @@ All 12 runs converged (probe swing over the last 200 iterations ≤ 1%).
 - **The rest of the SV difference comes from the area.** The systolic AP-diameter area is less underestimated (area ratio about 0.75 vs 0.67 diastolic), so echo SV stays nearer to true in systolic scans even with a large LV.
 - The circle twins moved the same way, so the LVOT shape effect stays small.
 
+**Peak position with the grown LV (added 2026-11-19)**
+```bash
+uv run --python 3.12 --with numpy --with scipy --with pandas --with matplotlib python -I cfd/openfoam/plane_figures.py --tag lv_big_lam_h1 --one 253
+```
+- Outputs: [peak_displacement_lv_big_lam_h1.csv](cfd/peak_displacement_lv_big_lam_h1.csv), `cfd/qc/velocity_sections_lv_big_lam_h1_d*.png`, [velocity_sections_lv_big_lam_h1_253.png](cfd/qc/velocity_sections_lv_big_lam_h1_253.png).
+- Why: in scan 253 (systolic, pair 5) the velocity maximum at 5 mm was only 2.5 mm from the sample volume (0.23 of the radius); in the other systolic scans it was 0.34–0.89.
+- Result (real twin, 5 mm): with the grown LV, the 253 maximum moves out to 7.8 mm (0.71 of the radius), the same range as the diastolic scans (0.64–1.07). The peak drops from 1.29 to 1.19 × mean. The other systolic scans move by 0.04–0.21 of the radius.
+- So the central maximum in 253 comes from its small LV. The profile at 5 mm is then flat (about 1.15 × mean across the core), so the exact position of the maximum is not robust.
+
 ## 14. Pulsatile systole: full-beat VTI instead of steady peak flow (`lv_lam_pulse_h1`)
 **Why.** All runs so far use constant peak flow, so they give a peak-velocity ratio, not a VTI. The profile may be more skewed in early and late systole (reason 1 in step 12).
 
