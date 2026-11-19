@@ -10,7 +10,7 @@ Data: 1,423 representative biventricular meshes (Ugurlu et al., PLoS One 2025; Z
   ```bash
   python3.11 -m venv .venv && .venv/bin/pip install -r requirements.txt
   ```
-  Then set `data_dir` in `config.yaml` to the unzipped meshes from Zenodo, and use `PY=.venv/bin/python`.
+  Then link the unzipped meshes from Zenodo to `data/meshes` (`ln -s <mesh folder> data/meshes`; or set `data_dir` in `config.yaml` to that folder), and use `PY=.venv/bin/python`.
 - **Separate validation from CT images (still in progress):** code, tables and QC figures in [`imagecas_cfd/`](imagecas_cfd/README.md); refresh with `bash scripts/sync_imagecas_cfd.sh`.
 
 ## Reproduce the CMR mesh analysis
@@ -33,7 +33,7 @@ $PY scripts/21_shape_vs_ellipticity.py        # STEP 8.1 shape vs ellipticity
 $PY scripts/23_wall_phenotypes.py             # STEP 9.6-9.8 wall feature map + phenotypes
 ```
 
-**With the meshes (full pipeline, about 4 h).** Download and unzip the meshes from Zenodo ([10.5281/zenodo.15649643](https://doi.org/10.5281/zenodo.15649643)), set `data_dir` in `config.yaml` to that folder, then run everything in order:
+**With the meshes (full pipeline, about 4 h).** Download and unzip the meshes from Zenodo ([10.5281/zenodo.15649643](https://doi.org/10.5281/zenodo.15649643)), link that folder to `data/meshes` (`ln -s <mesh folder> data/meshes`; or set `data_dir` in `config.yaml` to it), then run everything in order:
 ```bash
 bash run_all.sh
 ```
