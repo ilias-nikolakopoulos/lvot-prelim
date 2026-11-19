@@ -539,11 +539,17 @@ The modal read-out lies between the mean and max, as in step 12.
 
 ## Main conclusions so far
 1. **The real LVOT is elliptical** with its long axis mediolateral. The echo AP diameter misses the long axis, so echo area is 21–37% too small. This is the main source of echo SV error.
+   - Figure: [twins_contours_systolic.png](cfd/qc/twins_contours_systolic.png) (real lumen vs same-area circle); echo-circle error by depth in [lvot_curtain_summary_v2.png](lvot_out/lvot_curtain_summary_v2.png).
 2. **The velocity profile partly offsets it.** The gate reads 6–21% above the mean in most scans. With realistic LV inflow, small (end-systolic) LV cavities push this to 40–50%. The net echo SV ratio is about 0.7–0.95 for the real LVOT. In 2 of 12 scans (small systolic LVs) echo overestimates SV near the valve.
+   - Figure: [velocity_sections_lv_lam_h1_d5p0.png](cfd/qc/velocity_sections_lv_lam_h1_d5p0.png) (velocity ÷ mean at 5 mm; the strongest jets are in systolic 576 and 33).
 3. **The LVOT shape itself barely changes the profile.** With LV inflow, real vs circle differs by ≤4% in all 12 scans. The LV inflow sets the skew, which points to the septal side and matches Tsujino 2001.
+   - Figure: same 5 mm sections (real and circle columns look alike); skew on the long axis in [long_axis_flow_388_real.png](cfd/qc/long_axis_flow_388_real.png).
 4. **The results are robust** to mesh, turbulence model and unsteadiness (≤1.5% on the mean, with ±3% beat-to-beat noise).
+   - Figure: [transient_trace_lv_apical_lam_tr_h1.png](cfd/qc/transient_trace_lv_apical_lam_tr_h1.png) (unsteadiness). Mesh and turbulence checks have tables only (section 5a).
 5. **The large over-read in systolic scans is mainly an LV-size effect.** Growing the systolic LV to diastolic size brings the over-read most of the way down (+31% → +18%, vs +15% diastolic).
+   - Figure: [lv_big_compare.png](cfd/qc/lv_big_compare.png).
 6. **Steady peak flow is a fair stand-in for the full-beat VTI** (within 4%). The emulated spectral read-out (max VTI +17–23%) does not reach the +29% VTI that Huh et al. 2022 found against 4D flow, so echo SV still underestimates in our model.
+   - Figures: [pulse_vti_lv_lam_pulse_h1.png](cfd/qc/pulse_vti_lv_lam_pulse_h1.png) (steady vs full beat); [echo_spectrum_readout.png](cfd/qc/echo_spectrum_readout.png) (spectral read-out).
 
 ## Limitations
 - Rigid walls and no valve leaflets.
