@@ -107,3 +107,15 @@ Ready-made slide using these images: `outputs/slide_ellipticity_animated.pptx` (
 | Run | `$PY scripts/22_wall_geometry.py --all` (~1.5 h, needs the raw meshes) then `$PY scripts/23_wall_phenotypes.py` |
 | Input | `outputs/tables/wall_all.csv`, `lvot_all.csv`, `area_methods_by_mesh.csv` |
 | What it shows | Spearman ρ between each feature and LVOT ellipticity, all 1,423 meshes. Every value is first expressed as a z-score for the mesh's sex, age and BMI. Phenotype comparisons: `outputs/tables/wall_all_phenotypes.csv` |
+
+## 9. Echo area and VTI errors pull in opposite directions but don't cancel per patient
+
+![Opposing errors](outputs/figures/analysis/fig_opposing_errors.png)
+
+| | |
+|---|---|
+| File | [`outputs/figures/analysis/fig_opposing_errors.png`](outputs/figures/analysis/fig_opposing_errors.png) |
+| Code | [`scripts/29_opposing_errors_figure.py`](scripts/29_opposing_errors_figure.py) |
+| Run | `$PY scripts/29_opposing_errors_figure.py [--depth 5]` |
+| Input | `imagecas_cfd/cfd/cfd_results_lv_lam_h1.csv` (CT-based CFD twins, 12 cases, steady laminar flow) |
+| What it shows | A: per case, the echo area error (circle from one diameter vs true lumen), the VTI error (core velocity vs true mean) and their product, the SV error, on a log axis so the bars add. B: area error vs VTI error with lines of equal SV error. On average area −25% and VTI +19% (SV −11%), but the SV error ranges from −22% to +23% between cases |
